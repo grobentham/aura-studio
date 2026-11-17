@@ -16,9 +16,11 @@ let instrumentCategory='All',instrumentSearch='',instrumentPreview=null,instrume
 let favoriteSounds=new Set();try{favoriteSounds=new Set(JSON.parse(localStorage.getItem('aura-favorite-sounds')||'[]').filter(n=>soundByName.has(n)));}catch(e){}
 function bankForTrack(t){return t.type==='drums'?SAMPLE_KITS.get(t.kit)?.bank:SAMPLE_INSTRUMENTS.get(t.preset)?.bank;}
 function updateInstrumentStatus(){
-  const{t}=getSel(),bank=t&&bankForTrack(t),el=$('#instrumentStatus');if(!el)return;
-  el.textContent=!bank?'Synthesized · ready':sampleBanks.has(bank)?'Sampled · ready':sampleLoads.has(bank)?'Loading recorded sound…':sampleErrors.has(bank)?'Sound unavailable · retry in Instruments':'Sampled · load to play';
-  el.dataset.state=sampleErrors.has(bank)?'error':sampleLoads.has(bank)?'loading':'ready';
+  const{t}=getSel(),bank=t&&bankForTrack(t),el=$('#instrumentStatus');
+  if(el){
+    el.textContent=!bank?'Synthesized · ready':sampleBanks.has(bank)?'Sampled · ready':sampleLoads.has(bank)?'Loading recorded sound…':sampleErrors.has(bank)?'Sound unavailable · retry in Instruments':'Sampled · load to play';
+    el.dataset.state=sampleErrors.has(bank)?'error':sampleLoads.has(bank)?'loading':'ready';
+  }
   if(libraryTab==='instruments')renderInstrumentCards();
 }
 function evictUnusedBanks(keep){
