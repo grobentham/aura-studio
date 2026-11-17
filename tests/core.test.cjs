@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const path=require('node:path');
 const core=require('../studio-core.js');
-test('all browser scripts parse',()=>{const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(match[1]);new vm.Script(fs.readFileSync(path.join(__dirname,'../studio-pro.js'),'utf8'));});
+test('all browser scripts parse',()=>{const html=fs.readFileSync(path.join(__dirname,'../index.html'),'utf8');for(const match of html.matchAll(/<script>([\s\S]*?)<\/script>/g))new vm.Script(match[1]);for(const file of ['studio-pro.js','studio-ui.js','tests/interface-runner.js'])new vm.Script(fs.readFileSync(path.join(__dirname,'../'+file),'utf8'));});
 test('PCM WAV preserves stereo interleaving, signed endpoints, bit depth and sample rate',()=>{
   const channels=[new Float32Array([-1,0,1]),new Float32Array([1,.5,-.5])],buffer={numberOfChannels:2,length:3,sampleRate:48000,getChannelData:i=>channels[i]};
   for(const bits of [16,24]){const bytes=core.wavBytes(buffer,bits),v=new DataView(bytes.buffer);assert.equal(Buffer.from(bytes.slice(0,4)).toString(),'RIFF');assert.equal(v.getUint32(24,true),48000);assert.equal(v.getUint16(34,true),bits);assert.equal(v.getUint32(40,true),3*2*bits/8);if(bits===16){assert.equal(v.getInt16(44,true),-32768);assert.equal(v.getInt16(46,true),32767);assert.equal(v.getInt16(54,true),-16384);}else{assert.deepEqual([...bytes.slice(44,50)],[0,0,128,255,255,127]);}}
