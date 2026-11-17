@@ -32,7 +32,7 @@ WAV and stems use the entire song or cycle range, with a three-second effect tai
 
 ## Run and validate
 
-Run `node serve.mjs`, then open http://127.0.0.1:4173. The development server binds only to loopback. Production needs index.html, studio-core.js, studio-pro.js, studio-pro.css, and .nojekyll.
+Run `node serve.mjs`, then open http://127.0.0.1:4173. The development server binds only to loopback. Production includes index.html, the studio and instrument JavaScript/CSS files, the samples/ directory, and .nojekyll.
 
 Run `node --test tests/core.test.cjs` for syntax, PCM sample/header values, MIDI events/channels, clip splitting, and ZIP integrity. Open http://127.0.0.1:4173/tests/browser.html and choose Run diagnostics for actual audio renders/decoding, channel processing, fades, persistence/recovery, split/undo, transport, export actions, and note recording with count-in. Diagnostics use a dedicated session and move it to Recently removed afterwards.
 
@@ -44,6 +44,23 @@ This remains a static GitHub Pages site. In Settings > Pages, use Deploy from a 
 
 ## Current scope
 
-This release strengthens music creation; it does not claim full BandLab parity. There are no accounts, cloud projects, collaboration, community publishing, vocal pitch correction, time stretching, VST/AU hosting, track automation, simultaneous multichannel recording, or MIDI-file import. Instruments are synthesized. Audio-interface latency is not automatically calibrated.
+This release strengthens music creation; it does not claim full BandLab parity. There are no accounts, cloud projects, collaboration, community publishing, vocal pitch correction, time stretching, VST/AU hosting, track automation, simultaneous multichannel recording, or MIDI-file import. The expanded collection includes 18 recorded melodic instruments and one recorded acoustic kit, alongside the original synthesized sounds. Audio-interface latency is not automatically calibrated.
 
 Audio stays on the device or in downloaded files. Fonts may load from Google Fonts; system fallbacks work offline after the application files are loaded.
+
+
+## Recorded instruments
+
+The collection now has 34 sounds: 18 new recorded melodic instruments, the Session Acoustic kit, 11 original synthesized instruments, and four original synthesized kits. The new sounds include Concert/Bright Grand, two electric pianos, four guitars, three basses, ensemble/solo strings, flute, sax, trumpet, and vibraphone.
+
+Open Sound library > Instruments to search, filter by family, star favorites, preview, add tracks, or replace the selected compatible track. Acoustic Morning creates a separate arranged demo with recorded piano, steel guitar, upright bass, and acoustic percussion. Sampled instruments offer brightness/release controls. Guitar chord pads strum their notes over time. Percussion alternates two takes per voice and closes an open hat when the closed hat hits.
+
+Banks are served from this same site, loaded on demand, and cached in Cache Storage when available. Playback and export wait for required banks; a failed download reports an error instead of silently substituting an oscillator. Existing preset names and projects retain their original sounds. Projects store built-in instrument assignments, not copies of factory sample banks. Reopening on another device requires downloading those built-in banks once. The sample cache is not a project backup.
+
+The melodic samples have one recorded velocity layer, with velocity-dependent gain and filtering; they are not a large multi-layer commercial sample library. Recorded roots are 3–4 semitones apart; intervening pitches are shifted from the nearest sample. Strings/winds use crossfaded sustain sections. The kit combines acoustic percussion recordings, rather than claiming to reproduce a named drum set. The packaged banks total about 8.3 MB.
+
+Sources, pinned commits, modifications, licenses, and hashes are in samples/CREDITS.md and samples/manifest.json. Credits are available in the interface and carried in WAV INFO metadata, stem ZIP text, and MIDI text. MIDI exports include General MIDI program changes for the recorded melodic instruments.
+
+Run node --test tests/core.test.cjs tests/instruments.test.cjs for all Node checks. Open /tests/instruments.html for actual decode/render checks of every recorded instrument, velocity, sustained strings, drum exports, caching, error handling, persistence, search, demo rendering, and credited WAV decoding. Run /tests/browser.html for the existing creation-workflow regression checks.
+
+To reproduce the banks, run node scripts/build-sample-banks.mjs. It downloads pinned licensed source data and does not execute downloaded JavaScript. After changing banks, bump the instrument Cache Storage version in instruments.js to avoid stale copies.
