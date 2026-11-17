@@ -4,6 +4,10 @@ A browser music studio for composing, recording, arranging, mixing, and exportin
 
 ## Creation workspace
 
+- A dedicated project header and transport keep playback, tempo, key, save status and export in consistent positions.
+- Arrange, Edit, Play and Mix are available at every screen size. Double-click a clip (or press Enter on a focused clip) to edit. Expand the editor for focused work; rename clips in its header.
+- The navigation rail opens instruments, loops, recording and projects. On phones, Sounds opens a dismissible browser with keyboard focus contained in the drawer.
+- Instrument cards include family icons, previews and saved favorites. Adding a sound opens its playing surface. Fit song frames the arrangement on desktop.
 - Play keyboards, guitar chord pads, synths, and drums with touch, mouse, computer keyboard, or an opt-in MIDI controller.
 - Record notes or microphone/audio-interface takes with an optional one- or two-bar count-in.
 - Generate chords, beats, basslines, arpeggios, and melodies. Quantize, humanize, transpose, and use scale lock.
@@ -32,11 +36,13 @@ WAV and stems use the entire song or cycle range, with a three-second effect tai
 
 ## Run and validate
 
-Run `node serve.mjs`, then open http://127.0.0.1:4173. The development server binds only to loopback. Production includes index.html, the studio and instrument JavaScript/CSS files, the samples/ directory, and .nojekyll.
+Run `node serve.mjs`, then open http://127.0.0.1:4173. The development server binds only to loopback. Production includes index.html, the studio, instrument and studio-ui JavaScript/CSS files, the samples/ directory, and .nojekyll.
 
 Run `node --test tests/core.test.cjs` for syntax, PCM sample/header values, MIDI events/channels, clip splitting, and ZIP integrity. Open http://127.0.0.1:4173/tests/browser.html and choose Run diagnostics for actual audio renders/decoding, channel processing, fades, persistence/recovery, split/undo, transport, export actions, and note recording with count-in. Diagnostics use a dedicated session and move it to Recently removed afterwards.
 
 Microphones and Web MIDI require HTTPS or localhost. MIDI permission is requested only after Connect MIDI is clicked; no system-exclusive permission is requested. Web MIDI support varies; use a supported browser such as Chrome or Edge. Physical microphones/interfaces, driver latency, MIDI controllers, mobile multi-touch, and cross-browser performance require hardware/browser testing. Diagnostics do not assess acoustic or mastering quality.
+
+Open /tests/interface.html and run interface diagnostics for workspace navigation, clip rename, editor expansion, instrument-to-editor navigation, and responsive layouts at 1440, 1024, 800, 600, 390 and 360 pixels. It uses a separate local project and restores the original session afterwards.
 
 ## GitHub Pages
 
