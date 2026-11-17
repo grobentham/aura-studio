@@ -214,7 +214,9 @@ button:disabled{opacity:.4;cursor:default}button:focus-visible{outline-offset:3p
 <link rel="stylesheet" href="studio-pro.css">
 <link rel="stylesheet" href="instruments.css">
 <link rel="stylesheet" href="studio-ui.css">
+<link rel="stylesheet" href="studio-production.css">
 <script src="studio-core.js"></script>
+<script src="production-core.js"></script>
 </head>
 <body>
 <header id="top">
@@ -497,8 +499,9 @@ function syncNodes(){if(!ctx)return;const ids=new Set(state.tracks.map(t=>t.id))
 const cutoffHz=c=>c>=.99?20000:60*Math.pow(2,c*8.3);
 function updateMix(){if(!ctx)return;const now=ctx.currentTime;const solo=state.tracks.some(t=>t.solo);
   for(const t of state.tracks){const n=nodes.get(t.id);if(!n)continue;const aud=!t.mute&&(!solo||t.solo);
-    n.vol.gain.setTargetAtTime(t.vol*t.vol*1.2,now,.02);n.pan.pan.setTargetAtTime(t.pan,now,.02);n.filter.frequency.setTargetAtTime(cutoffHz(t.cutoff),now,.02);
-    n.mute.gain.setTargetAtTime(aud?1:0,now,.01);n.rv.gain.setTargetAtTime(t.rev,now,.02);n.dl.gain.setTargetAtTime(t.dly*.8,now,.02);}
+    const value=key=>sched.playing&&typeof AuraProduction!=='undefined'?AuraProduction.automationAt(t.automation?.[key],curBeat(),t[key]):t[key],volume=value('vol');
+    n.vol.gain.setTargetAtTime(volume*volume*1.2,now,.02);n.pan.pan.setTargetAtTime(value('pan'),now,.02);n.filter.frequency.setTargetAtTime(cutoffHz(value('cutoff')),now,.02);
+    n.mute.gain.setTargetAtTime(aud?1:0,now,.01);n.rv.gain.setTargetAtTime(value('rev'),now,.02);n.dl.gain.setTargetAtTime(value('dly')*.8,now,.02);}
   master.gain.setTargetAtTime(state.masterVol,now,.02);}
 function track(src){if(src.context===ctx){sched.srcs.add(src);src.addEventListener('ended',()=>sched.srcs.delete(src));}return src;}
 
@@ -566,7 +569,7 @@ function noteOn(key,p,vel=.85){ensureAudio();const t=trackById(view.selTrack);if
   live.set(key,{voice,p,v:vel,b0:sched.playing?curBeat():null,tid:t.id,type:t.type});}
 function noteOff(key){const L=live.get(key);if(!L)return;live.delete(key);if(L.voice)L.voice.release(ctx.currentTime);
   if(rec.armed&&sched.playing&&L.b0!=null){let d=curBeat()-L.b0;if(d<=0||L.type==='drums')d=.25;recordNote(L.tid,L.p,L.b0,Math.max(.0625,d),L.v);}}
-function recordNote(tid,p,b,d,v){const t=trackById(tid);if(!t)return;if(!rec.undoPushed){pushUndo();rec.undoPushed=true;}
+function recordNote(tid,p,b,d,v){const t=trackById(tid);if(!t)return;if(typeof productionPrefs!=='undefined')b=Math.max(0,b-(productionPrefs.recordingOffset||0)/1000/spb());if(!rec.undoPushed){pushUndo();rec.undoPushed=true;}
   let r=t.regions.find(r=>b>=r.start&&b<r.start+r.len);
   if(!r){if(rec.region&&rec.region.tid===tid&&b>=rec.region.r.start)r=rec.region.r;else{r=mkRegion(Math.floor(b/4)*4,4,[],{name:'Recording'});t.regions.push(r);}}
   r.notes.push({p,t:b-r.start,d,v});r.len=Math.max(r.len,Math.ceil((b-r.start+d)/4)*4);rec.region={tid,r};view.selTrack=tid;view.selRegion=r.id;renderArrange();renderEditor();save();}
@@ -583,7 +586,7 @@ function renderStarterSelect(){const s=$('#starter');s.innerHTML='';s.append(h('
    Rendering: arrange
    ========================================================= */
 const hdrs=$('#hdrs'),lanes=$('#lanes'),laneWrap=$('#laneWrap'),timeline=$('#timeline');
-function instLabel(t){return t.type==='drums'?t.kit:t.type==='audio'?'Audio file':t.preset;}
+function instLabel(t){return t.sampler?.name|| (t.type==='drums'?t.kit:t.type==='audio'?'Audio file':t.preset);}
 function instSelect(t,cls){if(t.type==='audio')return h('span',{class:'ttag'},'Audio');
   const opts=t.type==='drums'?Object.keys(KITS):Object.keys(PRESETS);
   return mkSelect(opts,t.type==='drums'?t.kit:t.preset,v=>{pushUndo();if(t.type==='drums')t.kit=v;else t.preset=v;audition(t,t.type==='drums'?0:60);renderAll();save();},{'aria-label':'Instrument for '+t.name,class:cls||''});}
@@ -842,8 +845,12 @@ function drawSpectrum(){const c=$('#spec');if(!c)return;const W=c.clientWidth,H=
    ========================================================= */
 const KEYMAP={a:0,w:1,s:2,e:3,d:4,f:5,t:6,g:7,y:8,h:9,u:10,j:11,k:12,o:13,l:14,p:15,';':16,"'":17};
 const DRUMKEYS={a:0,s:1,d:2,f:3,g:4,h:5,j:6,k:7};
-document.addEventListener('keydown',e=>{if(sched.bouncing||document.querySelector('.overlay:not([hidden])'))return;const tag=e.target.tagName;if(tag==='BUTTON'||tag==='INPUT'&&!['range','checkbox'].includes(e.target.type)||tag==='SELECT'||tag==='TEXTAREA')return;
+document.addEventListener('keydown',e=>{if(sched.bouncing||document.querySelector('.overlay:not([hidden])'))return;const tag=e.target.tagName;if(e.target.isContentEditable||tag==='INPUT'&&!['range','checkbox'].includes(e.target.type)||tag==='SELECT'||tag==='TEXTAREA')return;
   const k=e.key.toLowerCase();const mod=e.ctrlKey||e.metaKey;
+  // Preserve native control activation, while keeping musical typing available after Record/Play.
+  const control=tag==='BUTTON'||tag==='INPUT';
+  if(control&&!mod&&(['Enter',' ','Delete','Backspace'].includes(e.key)||e.key.startsWith('Arrow')))return;
+  if(control&&!mod&&!rec.armed&&!performanceOpen)return;
   if(mod&&k==='z'){e.preventDefault();e.shiftKey?redo():undo();return;}
   if(mod&&k==='y'){e.preventDefault();redo();return;}
   if(mod&&k==='d'){e.preventDefault();dupRegion();return;}
@@ -862,6 +869,7 @@ document.addEventListener('keydown',e=>{if(sched.bouncing||document.querySelecto
   if(k==='c'){state.loop.on=!state.loop.on;renderTransport();drawRuler(totalBeats()*view.ppb);save();return;}
   if(k==='m'){state.metro=!state.metro;renderTransport();return;}
   const t=trackById(view.selTrack);if(!t)return;
+  if(t.sampler?.mode==='pads'&&k in DRUMKEYS){noteOn('k'+k,60+DRUMKEYS[k],.9);return;}
   if(t.type==='drums'&&k in DRUMKEYS){noteOn('k'+k,DRUMKEYS[k],.9);return;}
   if(t.type==='synth'&&k in KEYMAP){noteOn('k'+k,12*(view.octave+1)+KEYMAP[k],.85);}});
 document.addEventListener('keyup',e=>{noteOff('k'+e.key.toLowerCase());});
@@ -933,14 +941,15 @@ const inputCapture={stream:null,source:null,analyser:null,recorder:null,recordin
 function assetDB(){if(!assetDBPromise)assetDBPromise=new Promise((resolve,reject)=>{const request=indexedDB.open('aura-audio-v2',1);request.onupgradeneeded=()=>request.result.createObjectStore('audio');request.onsuccess=()=>resolve(request.result);request.onerror=()=>reject(request.error);});return assetDBPromise;}
 async function storeAudio(id,ab){try{const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(wavBlob(ab),id);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);});}catch(e){toast('Audio is ready. Browser storage is unavailable; use Save to keep this take.');}}
 async function readStoredAudio(id){const db=await assetDB();return new Promise((resolve,reject)=>{const r=db.transaction('audio').objectStore('audio').get(id);r.onsuccess=()=>resolve(r.result);r.onerror=()=>reject(r.error);});}
-function usedAudio(){return [...new Set(state.tracks.filter(t=>t.type==='audio').flatMap(t=>t.regions.map(r=>r.buf)).filter(Boolean))];}
+function projectAudioIds(project=state){return [...new Set(project.tracks.flatMap(t=>[...(t.type==='audio'?t.regions.map(r=>r.buf):[]),...(t.sampler?.zones||[]).map(z=>z.buf)]).filter(id=>typeof id==='string'))];}
+function usedAudio(){return projectAudioIds();}
 async function restoreAudioAssets(){const ids=usedAudio();if(!ids.length)return;ensureAudio();let missing=0;for(const id of ids){if(buffers.has(id))continue;try{const blob=await readStoredAudio(id);if(blob)buffers.set(id,await ctx.decodeAudioData(await blob.arrayBuffer()));else missing++;}catch(e){missing++;}}renderAll();if(missing)toast(`${missing} audio asset(s) unavailable. Open the saved project with embedded audio.`);}
 function wavBlob(ab){const channels=ab.numberOfChannels,frames=ab.length,size=frames*channels*2;const bytes=new ArrayBuffer(44+size),v=new DataView(bytes);const str=(at,s)=>{for(let i=0;i<s.length;i++)v.setUint8(at+i,s.charCodeAt(i));};str(0,'RIFF');v.setUint32(4,36+size,true);str(8,'WAVE');str(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,channels,true);v.setUint32(24,ab.sampleRate,true);v.setUint32(28,ab.sampleRate*channels*2,true);v.setUint16(32,channels*2,true);v.setUint16(34,16,true);str(36,'data');v.setUint32(40,size,true);const data=Array.from({length:channels},(_,i)=>ab.getChannelData(i));let k=44;for(let i=0;i<frames;i++)for(let c=0;c<channels;c++){const s=clamp(data[c][i],-1,1);v.setInt16(k,s<0?s*32768:s*32767,true);k+=2;}return new Blob([bytes],{type:'audio/wav'});}
 function blobBase64(blob){return new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve(reader.result.split(',')[1]);reader.onerror=reject;reader.readAsDataURL(blob);});}
 function decodeBase64(value){const raw=atob(value),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes.buffer;}
 offerFile=async function(filename,data){try{const blob=data instanceof Blob?data:new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob),a=h('a',{href:url,download:filename});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast(`Downloaded ${filename}`);return true;}catch(e){toast('Download failed. Try opening Aura in a full browser.');return false;}};
 saveProject=async function(){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before saving.');const button=$('#bSave');button.disabled=true;try{const project={app:'aura-studio',version:2,...JSON.parse(snapshot()),masterVol:state.masterVol,assets:{}};for(const id of usedAudio()){const ab=buffers.get(id);if(!ab)throw new Error('A sample is missing. Reimport it before saving.');project.assets[id]=await blobBase64(wavBlob(ab));}await offerFile(fileSafe(state.title)+'.json',JSON.stringify(project));}catch(e){toast(e.message||'Could not save this project.');}finally{button.disabled=false;}};
-openProjectFile=async function(f){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before opening a project.');try{if(f.size>100*1024*1024)throw Error();const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.tracks)||o.tracks.length>128)throw Error();if(o.app&&o.app!=='aura-studio')throw Error();const finite=n=>typeof n==='number'&&Number.isFinite(n);for(const t of o.tracks){if(!['synth','drums','audio'].includes(t.type)||typeof t.id!=='string'||!Array.isArray(t.regions))throw Error();for(const r of t.regions){if(!finite(r.start)||r.start<0||!finite(r.len)||r.len<=0||!Array.isArray(r.notes))throw Error();if(r.notes.some(n=>!finite(n.p)||!finite(n.t)||!finite(n.d)||!finite(n.v)||n.t<0||n.d<=0))throw Error();}}const ids=new Set();for(const t of o.tracks){if(ids.has(t.id))throw Error();ids.add(t.id);t.name=String(t.name||'Track');t.color=/^#[0-9a-f]{6}$/i.test(t.color)?t.color:COLORS[0];for(const[key,min,max,def]of [['vol',0,1,.8],['pan',-1,1,0],['cutoff',0,1,1],['rev',0,1,.15],['dly',0,1,0]])t[key]=finite(t[key])?clamp(t[key],min,max):def;t.eq=Object.fromEntries(['low','mid','high'].map(k=>[k,finite(t.eq?.[k])?clamp(t.eq[k],-18,18):0]));t.compression=finite(t.compression)?clamp(t.compression,0,1):0;t.mute=!!t.mute;t.solo=!!t.solo;if(!PRESETS[t.preset])t.preset='Warm Keys';if(!KITS[t.kit])t.kit='Studio 808';for(const r of t.regions){if(typeof r.id!=='string'||ids.has(r.id))throw Error();ids.add(r.id);r.name=String(r.name||'');for(const key of ['fadeIn','fadeOut'])r[key]=finite(r[key])?clamp(r[key],0,r.len*30/clamp(Number(o.bpm)||120,40,240)):0;r.offset=finite(r.offset)?Math.max(0,r.offset):0;r.gain=finite(r.gain)?clamp(r.gain,0,100000):1;for(const n of r.notes){n.p=clamp(Math.round(n.p),0,t.type==='drums'?7:127);n.v=clamp(n.v,0,1);}}}o.title=String(o.title||'Untitled');const decoded=new Map();if(o.assets){ensureAudio();for(const id of [...new Set(o.tracks.filter(t=>t.type==='audio').flatMap(t=>t.regions.map(r=>r.buf)))]){if(o.assets[id])decoded.set(id,await ctx.decodeAudioData(decodeBase64(o.assets[id])));}}if(sched.playing)stop();pushUndo();const s=newState();for(const key of ['title','bpm','root','scale','bars','loop','masterVol','tracks'])if(o[key]!==undefined)s[key]=o[key];s.bpm=clamp(Number(s.bpm)||120,40,240);s.root=clamp(Math.round(Number(s.root)||0),0,11);if(!SCALES[s.scale])s.scale='Major';s.masterVol=clamp(Number.isFinite(s.masterVol)?s.masterVol:.9,0,1.2);if(!s.loop||!finite(s.loop.start)||!finite(s.loop.end)||s.loop.start<0||s.loop.end<=s.loop.start)s.loop={on:false,start:0,end:16};s.bars=clamp(Number(s.bars)||16,1,1000);state=s;for(const[id,ab]of decoded){buffers.set(id,ab);await storeAudio(id,ab);}view.selTrack=state.tracks[0]?.id;view.selRegion=null;ed.sel.clear();syncNodes();updateDelayTime();renderAll();save();await restoreAudioAssets();toast(`Opened ${state.title}.`);}catch(e){toast('Could not open this project. Choose a valid Aura JSON file.');}};
+openProjectFile=async function(f){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before opening a project.');try{if(f.size>100*1024*1024)throw Error();const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.tracks)||o.tracks.length>128)throw Error();if(o.app&&o.app!=='aura-studio')throw Error();const finite=n=>typeof n==='number'&&Number.isFinite(n);for(const t of o.tracks){if(!['synth','drums','audio'].includes(t.type)||typeof t.id!=='string'||!Array.isArray(t.regions))throw Error();for(const r of t.regions){if(!finite(r.start)||r.start<0||!finite(r.len)||r.len<=0||!Array.isArray(r.notes))throw Error();if(r.notes.some(n=>!finite(n.p)||!finite(n.t)||!finite(n.d)||!finite(n.v)||n.t<0||n.d<=0))throw Error();}}const ids=new Set();for(const t of o.tracks){if(ids.has(t.id))throw Error();ids.add(t.id);t.name=String(t.name||'Track');t.color=/^#[0-9a-f]{6}$/i.test(t.color)?t.color:COLORS[0];for(const[key,min,max,def]of [['vol',0,1,.8],['pan',-1,1,0],['cutoff',0,1,1],['rev',0,1,.15],['dly',0,1,0]])t[key]=finite(t[key])?clamp(t[key],min,max):def;t.eq=Object.fromEntries(['low','mid','high'].map(k=>[k,finite(t.eq?.[k])?clamp(t.eq[k],-18,18):0]));t.compression=finite(t.compression)?clamp(t.compression,0,1):0;t.mute=!!t.mute;t.solo=!!t.solo;if(!PRESETS[t.preset])t.preset='Warm Keys';if(!KITS[t.kit])t.kit='Studio 808';for(const r of t.regions){if(typeof r.id!=='string'||ids.has(r.id))throw Error();ids.add(r.id);r.name=String(r.name||'');for(const key of ['fadeIn','fadeOut'])r[key]=finite(r[key])?clamp(r[key],0,r.len*30/clamp(Number(o.bpm)||120,40,240)):0;r.offset=finite(r.offset)?Math.max(0,r.offset):0;r.gain=finite(r.gain)?clamp(r.gain,0,100000):1;for(const n of r.notes){n.p=clamp(Math.round(n.p),0,t.type==='drums'?7:127);n.v=clamp(n.v,0,1);}}}o.title=String(o.title||'Untitled');const decoded=new Map();if(o.assets){ensureAudio();for(const id of projectAudioIds(o)){if(o.assets[id])decoded.set(id,await ctx.decodeAudioData(decodeBase64(o.assets[id])));}}if(sched.playing)stop();pushUndo();const s=newState();for(const key of ['title','bpm','root','scale','bars','loop','masterVol','tracks'])if(o[key]!==undefined)s[key]=o[key];s.bpm=clamp(Number(s.bpm)||120,40,240);s.root=clamp(Math.round(Number(s.root)||0),0,11);if(!SCALES[s.scale])s.scale='Major';s.masterVol=clamp(Number.isFinite(s.masterVol)?s.masterVol:.9,0,1.2);if(!s.loop||!finite(s.loop.start)||!finite(s.loop.end)||s.loop.start<0||s.loop.end<=s.loop.start)s.loop={on:false,start:0,end:16};s.bars=clamp(Number(s.bars)||16,1,1000);state=s;for(const[id,ab]of decoded){buffers.set(id,ab);await storeAudio(id,ab);}view.selTrack=state.tracks[0]?.id;view.selRegion=null;ed.sel.clear();syncNodes();updateDelayTime();renderAll();save();await restoreAudioAssets();toast(`Opened ${state.title}.`);}catch(e){toast('Could not open this project. Choose a valid Aura JSON file.');}};
 importAudio=async function(files,beat=state.pos){if(!files.length)return;ensureAudio();let count=0;for(const f of files){try{const ab=await ctx.decodeAudioData(await f.arrayBuffer());const id=uid();buffers.set(id,ab);pushUndo();const t=addT('audio',{name:f.name.replace(/\.[^.]+$/,'').slice(0,32),rev:0});const r=mkRegion(beat,ab.duration/spb(),[],{name:f.name,buf:id,offset:0});t.regions.push(r);view.selTrack=t.id;view.selRegion=r.id;syncNodes();count++;await storeAudio(id,ab);}catch(e){toast(`Could not read ${f.name}. Try WAV, MP3, OGG or M4A.`);}}if(count)performanceOpen=false;renderAll();save();if(count)toast(`Imported ${count} audio file${count===1?'':'s'}. Use Save to download a project with audio.`);};
 
 const LOOP_LIBRARY=[
@@ -1011,5 +1020,7 @@ initStudio();
 <script src="instrument-catalog.js"></script>
 <script src="instruments.js"></script>
 <script src="studio-ui.js"></script>
+<script src="studio-production.js"></script>
+<script src="cloud-client.js"></script>
 </body>
 </html>

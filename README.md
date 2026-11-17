@@ -1,6 +1,6 @@
 # Aura Studio
 
-A browser music studio for composing, recording, arranging, mixing, and exporting. No installation, build step, runtime dependencies, account, or upload server.
+A browser music studio for composing, recording, arranging, mixing, and exporting. The public GitHub Pages studio runs locally in the browser. A separate private Sites workspace adds authenticated cloud saving.
 
 ## Creation workspace
 
@@ -12,7 +12,7 @@ A browser music studio for composing, recording, arranging, mixing, and exportin
 - Record notes or microphone/audio-interface takes with an optional one- or two-bar count-in.
 - Generate chords, beats, basslines, arpeggios, and melodies. Quantize, humanize, transpose, and use scale lock.
 - Arrange MIDI/audio clips with precise start and length, split at playhead, duplicate, resize, and undo. Right-click opens clip actions.
-- Trim, split, normalize, and fade audio. Audio stays at its original playback speed when project tempo changes; it is not time-stretched.
+- Trim, split, normalize, and fade audio. Project tempo changes preserve recorded playback speed. Pitch / stretch explicitly renders a new audio asset with independent pitch and speed.
 - Mix volume, pan, tone, reverb, and echo. Select a mixer channel for three-band EQ and compression. The master includes compression and limiting.
 - Collapse or resize the editor. On narrow screens use Arrange, Edit, Play, and Mix.
 
@@ -24,12 +24,12 @@ Edits autosave to IndexedDB after a short debounce. The status beside the title 
 
 Projects > Download project creates portable JSON with embedded audio. Import project restores it. The previous single-session localStorage format is retained as a recovery fallback and migrated into the project library on first use. The audio asset store remains compatible with existing projects.
 
-Storage belongs to this browser, profile, device, and site origin. Clearing site data removes local projects. Changing origins does not transfer projects. Keep downloaded backups. There is no cloud synchronization.
+Storage belongs to this browser, profile, device, and site origin. Clearing site data removes local projects. Changing origins does not transfer projects. Keep downloaded backups. Cloud saving is available in the separate private Cloud workspace. Download a project here and import it there to transfer it; the two origins have separate browser storage.
 
 ## Exports
 
 - Stereo WAV: offline rendering at 44.1/48 kHz, 16/24-bit PCM, with instruments, channel effects, and master processing.
-- Stems ZIP: one aligned WAV per audible track, with matching start and duration. Each stem includes channel effects and master processing. Summing stems differs from the compressed full mix.
+- Stems ZIP: one aligned WAV per audible track, with matching start and duration. Choose dry pre-fader audio or processed channels. Master compression/limiting is optional; summing individually compressed stems differs from the compressed full mix.
 - MIDI: Standard MIDI format 1, 480 ticks/quarter note, tempo, track names, notes, velocities, and General MIDI drum mapping. Audio clips, instruments, and effects are not embedded.
 
 WAV and stems use the entire song or cycle range, with a three-second effect tail. Muted tracks and tracks excluded by solo are omitted. MIDI includes every instrument/drum track and the full arrangement so musical material remains editable. Audio exports are limited to ten minutes per range and an estimated 350 MB per download to bound browser memory use. Cancellation discards the output after the current offline render completes.
@@ -50,23 +50,23 @@ This remains a static GitHub Pages site. In Settings > Pages, use Deploy from a 
 
 ## Current scope
 
-This release strengthens music creation; it does not claim full BandLab parity. There are no accounts, cloud projects, collaboration, community publishing, vocal pitch correction, time stretching, VST/AU hosting, track automation, simultaneous multichannel recording, or MIDI-file import. The expanded collection includes 18 recorded melodic instruments and one recorded acoustic kit, alongside the original synthesized sounds. Audio-interface latency is not automatically calibrated.
-
-Audio stays on the device or in downloaded files. Fonts may load from Google Fonts; system fallbacks work offline after the application files are loaded.
+This release adds production editing and a separate private cloud workspace; it does not claim full BandLab parity. Current limits include no real-time co-editing, community publishing, automatic vocal pitch correction, VST/AU hosting, simultaneous multichannel recording, punch/loop takes, or automatic round-trip latency calibration. Imported MIDI stores controller data but playback currently uses notes, velocities and the initial instrument assignment; tempo maps and non-4/4 arrangements are not fully supported.
 
 
-## Recorded instruments
+## Production upgrade
 
-The collection now has 34 sounds: 18 new recorded melodic instruments, the Session Acoustic kit, 11 original synthesized instruments, and four original synthesized kits. The new sounds include Concert/Bright Grand, two electric pianos, four guitars, three basses, ensemble/solo strings, flute, sax, trumpet, and vibraphone.
+Tools opens MIDI import, track automation, a custom sampler, studio settings, portable backup, and the private Cloud workspace. Editing headers expose note velocities, quantize with strength/swing, reverse audio, and independent pitch/time stretch. Desktop and mobile workspaces retain Arrange, Edit, Play and Mix. Tools dismisses after selection and dialogs support Escape, focus return and Tab containment. Workspace zoom, count-in and editor height persist locally. Backup reminders appear every 20 minutes unless disabled.
 
-Open Sound library > Instruments to search, filter by family, star favorites, preview, add tracks, or replace the selected compatible track. Acoustic Morning creates a separate arranged demo with recorded piano, steel guitar, upright bass, and acoustic percussion. Sampled instruments offer brightness/release controls. Guitar chord pads strum their notes over time. Percussion alternates two takes per voice and closes an open hat when the closed hat hits.
+Track automation supports volume, pan, tone, reverb and echo. Add or drag curve points, edit exact values, or create fades. Automation runs during playback and is scheduled into offline exports. Dry exports bypass mixer automation, channel effects, pan, faders and master dynamics while retaining the clip's edits and instrument sound.
 
-Banks are served from this same site, loaded on demand, and cached in Cache Storage when available. Playback and export wait for required banks; a failed download reports an error instead of silently substituting an oscillator. Existing preset names and projects retain their original sounds. Projects store built-in instrument assignments, not copies of factory sample banks. Reopening on another device requires downloading those built-in banks once. The sample cache is not a project backup.
+MIDI import accepts Standard MIDI format 0/1 with PPQ timing. It separates tracks/channels, maps General MIDI programs and eight drum voices, preserves note velocity and sustain lengths, and retains controller metadata. Import uses the initial tempo when the project is empty, and warns about tempo changes or meter limitations. SMPTE timing is rejected. Import is capped at 20 MB, 128 file tracks and 100,000 notes.
 
-The melodic samples have one recorded velocity layer, with velocity-dependent gain and filtering; they are not a large multi-layer commercial sample library. Recorded roots are 3–4 semitones apart; intervening pitches are shifted from the nearest sample. Strings/winds use crossfaded sustain sections. The kit combines acoustic percussion recordings, rather than claiming to reproduce a named drum set. The packaged banks total about 8.3 MB.
+The custom sampler has eight independent pads mapped to A S D F G H J K or chromatic playback of the first loaded recording. Each upload is limited to 20 MB / 60 seconds. Trim start/end, tune, gain and play-to-end are editable. Sampler recordings travel with portable projects and cloud projects.
 
-Sources, pinned commits, modifications, licenses, and hashes are in samples/CREDITS.md and samples/manifest.json. Credits are available in the interface and carried in WAV INFO metadata, stem ZIP text, and MIDI text. MIDI exports include General MIDI program changes for the recorded melodic instruments.
+Pitch / stretch uses the vendored SoundTouch AudioWorklet 2.1.1 (MPL-2.0) to render a new audio asset. Pitch is limited to ±12 semitones and speed to 50–200%. The original is retained through Undo. Offline tone tests verify pitch and duration independently; transient alignment, polyphonic quality and extreme settings still need listening tests. Manual recording offset is available in settings; the displayed output-latency estimate is not a measured round-trip calibration.
 
-Run node --test tests/core.test.cjs tests/instruments.test.cjs for all Node checks. Open /tests/instruments.html for actual decode/render checks of every recorded instrument, velocity, sustained strings, drum exports, caching, error handling, persistence, search, demo rendering, and credited WAV decoding. Run /tests/browser.html for the existing creation-workflow regression checks.
+Dynamic Upright uses 23 recorded roots / four layers across the 88-key range. Expressive Nylon and Expressive Steel use 12 recorded roots / three layers each. Their 164 unchanged OGG recordings total about 16.6 MB. Downloads are lazy, with only needed roots decoded. Pinned CC0 provenance and hashes are in samples/dynamic-manifest.json and samples/meta-open-sound/. SoundTouch source, licenses and provenance are preserved in vendor/soundtouch/.
 
-To reproduce the banks, run node scripts/build-sample-banks.mjs. It downloads pinned licensed source data and does not execute downloaded JavaScript. After changing banks, bump the instrument Cache Storage version in instruments.js to avoid stale copies.
+Run node --test tests/core.test.cjs tests/instruments.test.cjs tests/production.test.cjs. Browser suites: tests/browser.html, tests/instruments.html, tests/interface.html, tests/production.html. The production suite tests Record focus, mixer Undo, starter isolation, automation/dry exports, sampler persistence, actual AudioWorklet transforms and genuine velocity-layer dynamics.
+
+To reproduce new sample preparation, run node scripts/prepare-assets.mjs. It writes scripts/prepared; copy its samples output into samples and retain the sources/notices. The existing sample-generation script reproduces the legacy banks.

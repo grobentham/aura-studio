@@ -19,7 +19,7 @@ function saveStatus(label,kind='saved'){
 async function persistProject(id,data,generation,force=false){
   const fingerprint=JSON.stringify(data);if(!force&&projectFingerprints.get(id)===fingerprint){if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');return;}
   // Persist samples before acknowledging a saved project that references them.
-  for(const asset of new Set(data.tracks.filter(t=>t.type==='audio').flatMap(t=>t.regions.map(r=>r.buf)))){
+  for(const asset of projectAudioIds(data)){
     const ab=buffers.get(asset);if(!ab)throw Error('An audio sample is missing. Import the project backup.');
     if(!await readStoredAudio(asset)){
       const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
@@ -53,7 +53,7 @@ save=function(){
   try{localStorage.setItem('aura-studio-v1',JSON.stringify({...state,pos:0}));localStorage.setItem('aura-active-project',activeProjectId);}catch(e){}
   projectTimer=setTimeout(()=>queueProjectSave(),650);
 };
-function canLeaveProject(){if(inputCapture.recording||inputCapture.pending||sched.bouncing||countIn.active){toast('Finish recording or exporting before changing projects.');return false;}return true;}
+function canLeaveProject(){if(inputCapture.recording||inputCapture.pending||sched.bouncing||countIn.active||typeof productionBusy!=='undefined'&&productionBusy){toast('Finish recording or exporting before changing projects.');return false;}return true;}
 function applyProject(data){
   if(sched.playing)stop();releaseTouch();stopLoopPreview();rec.armed=false;state={...newState(),...structuredClone(data),pos:0};
   view.selTrack=state.tracks[0]?.id||null;const first=state.tracks.find(t=>t.regions.length);view.selRegion=first?.regions[0]?.id||null;if(first)view.selTrack=first.id;
@@ -124,11 +124,11 @@ function renderTrackFX(){
   const amount=h('output',{},`${Math.round((t.compression||0)*100)}%`);
   panel.append(h('label',{},'Compress',h('input',{type:'range',min:0,max:1,step:.05,value:t.compression||0,'aria-label':`${t.name} compression`,onpointerdown:()=>pushUndo(),oninput:e=>{t.compression=+e.target.value;amount.textContent=Math.round(t.compression*100)+'%';updateMix();},onchange:save}),amount),h('button',{onclick:()=>{pushUndo();t.eq={low:0,mid:0,high:0};t.compression=0;updateMix();renderTrackFX();save();}},'Reset FX'));
 }
-function createOfflineGraph(audio,tracks,masterVolume){
+function createOfflineGraph(audio,tracks,masterVolume,options={}){
   const output=audio.createGain();output.gain.value=masterVolume;
   const comp=audio.createDynamicsCompressor();comp.threshold.value=-16;comp.ratio.value=3;comp.attack.value=.01;comp.release.value=.2;
   const limiter=audio.createDynamicsCompressor();limiter.threshold.value=-1.5;limiter.ratio.value=20;limiter.attack.value=.002;limiter.release.value=.08;
-  output.connect(comp);comp.connect(limiter);limiter.connect(audio.destination);
+  if(options.masterProcessing===false)output.connect(audio.destination);else{output.connect(comp);comp.connect(limiter);limiter.connect(audio.destination);}
   const conv=audio.createConvolver(),impulse=audio.createBuffer(2,Math.ceil(audio.sampleRate*2.8),audio.sampleRate),random=rng(8921);
   for(let c=0;c<2;c++){const d=impulse.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(random()*2-1)*Math.pow(1-i/d.length,2.4);}conv.buffer=impulse;
   const reverb=audio.createGain();reverb.gain.value=.8;conv.connect(reverb);reverb.connect(output);
@@ -137,6 +137,7 @@ function createOfflineGraph(audio,tracks,masterVolume){
     const input=audio.createGain(),tone=audio.createBiquadFilter(),volume=audio.createGain(),pan=audio.createStereoPanner(),rev=audio.createGain(),dly=audio.createGain();
     tone.type='lowpass';tone.Q.value=.7;tone.frequency.value=cutoffHz(t.cutoff);volume.gain.value=t.vol*t.vol*1.2;pan.pan.value=t.pan;rev.gain.value=t.rev;dly.gain.value=t.dly*.8;
     input.connect(tone);addTrackProcessing(audio,tone,volume,t);volume.connect(pan);pan.connect(output);pan.connect(rev);rev.connect(conv);pan.connect(dly);dly.connect(delay);channels.set(t.id,input);
+    if(typeof scheduleTrackAutomation==='function')scheduleTrackAutomation(audio,t,[['vol',volume.gain,v=>v*v*1.2],['pan',pan.pan,v=>v],['cutoff',tone.frequency,cutoffHz],['rev',rev.gain,v=>v],['dly',dly.gain,v=>v*.8]],options);
   }
   return channels;
 }
@@ -164,9 +165,10 @@ scheduleRange=function(from,to,first){
     else if(first){const elapsed=(from-r.start)*spb();scheduleAudioClip(ctx,ab,beatToTime(from),(r.offset||0)+elapsed,(r.start+r.len-from)*spb(),dest,r,elapsed);}
   }}
 };
-async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol}={}){
+async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
+  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{}}));masterVolume=1;masterProcessing=false;}
   const seconds=(end-start)*spb()+tail;if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
-  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume);
+  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing});
   const noise=audio.createBuffer(1,sampleRate*2,sampleRate),nd=noise.getChannelData(0),random=rng(382);for(let i=0;i<nd.length;i++)nd[i]=random()*2-1;
   for(const t of tracks){const dest=destinations.get(t.id);for(const r of t.regions){
     if(r.start>=end||r.start+r.len<=start)continue;
@@ -186,8 +188,8 @@ function openExport(){if(!canLeaveProject())return;if(songEnd()<=0)return toast(
 function updateExportEstimate(){
   const cycle=$('#exportRange').value==='cycle',start=cycle?state.loop.start:0,end=cycle?state.loop.end:songEnd(),seconds=(end-start)*spb()+3,rate=Number($('#exportRate').value),bits=Number($('#exportBits').value),kind=$('#exportKind').value;
   const count=kind==='stems'?state.tracks.filter(t=>!t.mute&&(!state.tracks.some(t=>t.solo)||t.solo)).length:1;
-  $('#exportEstimate').textContent=kind==='midi'?'Editable notes and tempo only. Audio tracks and effects are not included.':`${Math.max(0,seconds).toFixed(1)} seconds including effect tails · approximately ${(Math.max(0,seconds)*rate*2*bits/8*count/1048576).toFixed(1)} MB. ${kind==='stems'?'Each audible track starts at the same point, with its effects and master processing.':'WAV is rendered offline; it does not record your speakers or microphone.'}`;
-  $('#exportRate').disabled=$('#exportBits').disabled=$('#exportRange').disabled=kind==='midi';
+  $('#exportEstimate').textContent=kind==='midi'?'Editable notes and tempo only. Audio tracks and effects are not included.':`${Math.max(0,seconds).toFixed(1)} seconds including effect tails · approximately ${(Math.max(0,seconds)*rate*2*bits/8*count/1048576).toFixed(1)} MB. ${kind==='stems'?'Each audible track starts at the same point. Choose dry or processed channels; master dynamics are optional.':'WAV is rendered offline; it does not record your speakers or microphone.'}`;
+  $('#exportRate').disabled=$('#exportBits').disabled=$('#exportRange').disabled=kind==='midi';if($('#exportChannels')){$('#exportChannels').disabled=kind==='midi';$('#exportMaster').disabled=kind==='midi'||$('#exportChannels').value==='dry';}
 }
 async function runExport(){
   if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take first.');
@@ -198,10 +200,10 @@ async function runExport(){
   const estimated=((end-start)*spb()+3)*rate*2*(bits/8)*(kind==='stems'?tracks.length:1);if(estimated>350*1048576)return toast('This export is too large for a browser session. Choose a shorter cycle or export tracks separately.');
   if(sched.playing)stop();releaseTouch();stopLoopPreview();sched.bouncing=true;bounceCancel=false;$('#exportModal').hidden=true;$('#bounce').hidden=false;$('#bounce h2').textContent=kind==='stems'?'Rendering multitrack stems':'Rendering your WAV';$('#bounce p').textContent='Rendering instruments and effects offline. Keep this tab open. Your microphone is never included.';$('#bounceBar').style.width='5%';
   try{
-    const options={sampleRate:rate,start,end},files=[];
+    const channelEffects=$('#exportChannels').value!=='dry',masterProcessing=$('#exportMaster').checked&&channelEffects,options={sampleRate:rate,start,end,channelEffects,masterProcessing},files=[];
     if(kind==='stems'){
       for(let i=0;i<tracks.length;i++){if(bounceCancel)break;$('#bounce p').textContent=`Rendering ${i+1} of ${tracks.length}: ${tracks[i].name}`;const buffer=await renderOffline([tracks[i]],options);if(bounceCancel)break;files.push({name:`${String(i+1).padStart(2,'0')}-${fileSafe(tracks[i].name)}.wav`,data:AuraCore.wavBytes(buffer,bits)});$('#bounceBar').style.width=(5+90*(i+1)/tracks.length)+'%';}
-      if(!bounceCancel){files.push({name:'README.txt',data:new TextEncoder().encode(`Aura Studio — ${state.title}\n${state.bpm} BPM. ${rate} Hz, ${bits}-bit PCM WAV.\nAll files begin at the same export position and include a 3-second effect tail.\nStems include channel effects and master processing; summing them will differ from the compressed full mix.\nMuted tracks and tracks excluded by solo are omitted.\n`)});await offerFile(fileSafe(state.title)+'-stems.zip',new Blob([AuraCore.zipBytes(files)],{type:'application/zip'}));}
+      if(!bounceCancel){files.push({name:'README.txt',data:new TextEncoder().encode(`Aura Studio — ${state.title}\n${state.bpm} BPM. ${rate} Hz, ${bits}-bit PCM WAV.\nAll files begin at the same export position and include a 3-second effect tail.\nChannel processing: ${channelEffects?'included':'bypassed (pre-fader)'}. Master compression/limiting: ${masterProcessing?'included':'bypassed'}.\nSumming processed stems can differ from the full mix when master dynamics are enabled.\nMuted tracks and tracks excluded by solo are omitted.\n`)});await offerFile(fileSafe(state.title)+'-stems.zip',new Blob([AuraCore.zipBytes(files)],{type:'application/zip'}));}
     }else{
       const buffer=await renderOffline(tracks,options);if(!bounceCancel){$('#bounceBar').style.width='95%';await offerFile(fileSafe(state.title)+'.wav',new Blob([AuraCore.wavBytes(buffer,bits)],{type:'audio/wav'}));}
     }
@@ -298,6 +300,7 @@ function setupProWorkspace(){
   $('#bSave').textContent='Save';$('#bSave').title='Save a recovery checkpoint on this device';$('#bSave').onclick=()=>flushProject(true).then(()=>toast('Saved a recovery checkpoint.')).catch(()=>toast('Save failed. Download a project backup.'));
   $('#bOpen').textContent='Import project';$('#bOpen').title='Import a downloaded Aura JSON project';$('#bExport').onclick=openExport;
   $('#bInput').textContent='● Record audio';$('#bRec').classList.add('record-notes');$('#bRec').append(h('span',{},'Notes'));$('#bTouch').textContent='Play instruments';
+  for(const id of ['starter','starter2','starter3'])$('#'+id).onchange=async e=>{const name=e.target.value;e.target.value='';if(!name)return;await newProject(name);document.body.classList.remove('library-open');if(typeof syncStudioLibrary==='function')syncStudioLibrary();};
   $('#bLibrary').onclick=()=>{if(matchMedia('(min-width:801px)').matches){document.body.classList.toggle('library-collapsed');renderArrange();}else{document.body.classList.toggle('library-open');renderLibrary();}};
   const libraryBeforeCollapse=showLibrary;showLibrary=function(tab){document.body.classList.remove('library-collapsed');libraryBeforeCollapse(tab);};
   $('#bRec').onclick=toggleRec;$('#bPlay').onclick=()=>{if(countIn.active){cancelCountIn();return;}togglePlay();};$('#bRew').onclick=()=>{cancelCountIn();seek(0);};
@@ -321,7 +324,7 @@ function setupProWorkspace(){
       h('label',{},'Range',mkSelect([['song','Entire song'],['cycle','Cycle range']],'song',updateExportEstimate,{id:'exportRange'})),
       h('label',{},'Sample rate',mkSelect([['44100','44.1 kHz'],['48000','48 kHz']],'44100',updateExportEstimate,{id:'exportRate'})),
       h('label',{},'Bit depth',mkSelect([['24','24-bit PCM'],['16','16-bit PCM']],'24',updateExportEstimate,{id:'exportBits'}))),
-    h('p',{id:'exportEstimate',class:'export-estimate'}),h('div',{class:'foot'},h('button',{class:'primary',onclick:runExport},'Download export'))
+    h('div',{class:'export-fields'},h('label',{},'Channel processing',mkSelect([['wet','Processed · mixer and channel FX'],['dry','Dry · pre-fader, no FX']],'wet',updateExportEstimate,{id:'exportChannels'})),h('label',{},h('input',{id:'exportMaster',type:'checkbox',checked:true,onchange:updateExportEstimate}),'Master compression and limiting')),h('p',{id:'exportEstimate',class:'export-estimate'}),h('div',{class:'foot'},h('button',{class:'primary',onclick:runExport},'Download export'))
   ]);
   const mobile=h('nav',{id:'mobileWorkspace','aria-label':'Workspace focus'});for(const[mode,label]of [['arrange','Arrange'],['edit','Edit'],['play','Play'],['mix','Mix']])mobile.append(h('button',{'data-focus':mode,onclick:()=>{
     document.body.dataset.focus=mode;mobile.querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.focus===mode));setEditorCollapsed(mode==='arrange'||mode==='mix');

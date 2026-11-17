@@ -1,0 +1,1578 @@
+{
+  "source": "Meta Open Sound",
+  "commit": "514c926efecdb3c7812bf00eedf8e5c8d61dd681",
+  "license": "CC0-1.0",
+  "banks": [
+    {
+      "id": "dynamic-upright",
+      "file": "samples/dynamic-upright.json",
+      "bytes": 6260,
+      "sha256": "a33ee17afd3ed13e00f2418b6db33fc5c51f57a968cc0f68f4b05f20ffe3255a",
+      "roots": [
+        21,
+        25,
+        29,
+        33,
+        37,
+        41,
+        45,
+        49,
+        53,
+        57,
+        61,
+        65,
+        69,
+        73,
+        77,
+        81,
+        85,
+        89,
+        93,
+        97,
+        101,
+        105,
+        108
+      ],
+      "layers": [
+        1,
+        2,
+        3,
+        4
+      ],
+      "samples": [
+        {
+          "id": "dynamic-upright",
+          "root": 21,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A0_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A0_01.ogg",
+          "expectedSha256": "83194f023294242361ad1b49287ff971de1fa4f762414b23743170084227d7e0",
+          "bytes": 134148
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 21,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A0_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A0_01.ogg",
+          "expectedSha256": "9e49cd130a88d23f941f60ae3293df59c32df165efa99e0374fab70195b2d657",
+          "bytes": 137493
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 21,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A0_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A0_01.ogg",
+          "expectedSha256": "9586cea5edad450f07ec21a6a67bfb6c223c89a0b43b88414cc8f5f983e66b6e",
+          "bytes": 135083
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 21,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A0_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A0_01.ogg",
+          "expectedSha256": "71dddb336b014ac2984b2a61c16b45cdd76c92a6cda00057f90929e0dea9e5b4",
+          "bytes": 115182
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 25,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs1_01.ogg",
+          "expectedSha256": "cae4b09b1d09664763f2db518ae37881d8facde861b4e17e4a336bda11c0c342",
+          "bytes": 112003
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 25,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs1_01.ogg",
+          "expectedSha256": "7f128dc78334cac8324cb63cfcdcbe8eed64f4af289f37805cb9eb3d7d0a7e01",
+          "bytes": 142708
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 25,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs1_01.ogg",
+          "expectedSha256": "88914d09f848c0e64b3abf58319a535cd84188d2e5bc63ada5c6c9ebc84b04ff",
+          "bytes": 138012
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 25,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs1_01.ogg",
+          "expectedSha256": "18edb851cdab876b3027eae6bf9d0126e1ef65ba8e0bee20297cd4ce99989d2b",
+          "bytes": 170462
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 29,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F1_01.ogg",
+          "expectedSha256": "99fb09a37b16b8bcd88002b2156f030af5147970dccdcb97e05c9b273ad9cc99",
+          "bytes": 157143
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 29,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F1_01.ogg",
+          "expectedSha256": "ec7a3ca61100073048a29a3a4badf4d12c139b698deb5fdfa00eca68396c93f1",
+          "bytes": 174907
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 29,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F1_01.ogg",
+          "expectedSha256": "35559569bc85c180f2f8f9580decba272bb611109df66696de3ba2f382a68064",
+          "bytes": 171011
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 29,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F1_01.ogg",
+          "expectedSha256": "8655b45b4d3335b2e2cf4992522214816fe1f0909c81a071fccf7fa929a7970b",
+          "bytes": 201887
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 33,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A1_01.ogg",
+          "expectedSha256": "9852b558486c6dbb1ca461b49f6f59871e765a63bfee7c18797a5211640c48d4",
+          "bytes": 145612
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 33,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A1_01.ogg",
+          "expectedSha256": "e9ad4d91e035c0b35d818c564ca8b5c697a3937d5be6aa9432625bb3db2a0135",
+          "bytes": 139187
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 33,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A1_01.ogg",
+          "expectedSha256": "9d215b9f1bbe3e630c7f47d83e85be6b9cb166b8d263ad945e44930d16b2adf3",
+          "bytes": 175829
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 33,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A1_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A1_01.ogg",
+          "expectedSha256": "2a27d0944e6a2c5bb8622e094d7f0c6ea7f207e074403f4d8b34a3e28205e1ba",
+          "bytes": 186107
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 37,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs2_01.ogg",
+          "expectedSha256": "08f46aca49bfe8f18570c08827a85c1e082b3bc9b702c314c765e6b4c9c681c6",
+          "bytes": 180075
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 37,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs2_01.ogg",
+          "expectedSha256": "f1d69d76fc427ec5b42555f00cbefa7e34f1dea2ccb0ce4500875a0cc02f93f5",
+          "bytes": 213476
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 37,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs2_01.ogg",
+          "expectedSha256": "7a0f4fc13c18cc78be1cc77b0a480326b194a1a57a23232923dbd67e2f4cc7a0",
+          "bytes": 195053
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 37,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs2_01.ogg",
+          "expectedSha256": "164e3bce95b45173fb5438b21ef1c263d4ff981ec2ad01fe2d05fe8b1fcdcb20",
+          "bytes": 226886
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 41,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F2_01.ogg",
+          "expectedSha256": "febe889a368bca8e6847e77f477d536dc6ab996f03dab03348ac9f3b324666f9",
+          "bytes": 207069
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 41,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F2_01.ogg",
+          "expectedSha256": "3bc7b2a394515e1cb496495aecfd16dc8348bc69b18987045d436ef0c36b117e",
+          "bytes": 197974
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 41,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F2_01.ogg",
+          "expectedSha256": "6e4e63431a9bd621c6bfca526462ee0e94db93eb3fd2ee5f30743f08150e8327",
+          "bytes": 243499
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 41,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F2_01.ogg",
+          "expectedSha256": "60cf26fe7219431acbdf234c2ca029ac3b98089e949a6b6e635c51decd2ac2dd",
+          "bytes": 268071
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 45,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A2_01.ogg",
+          "expectedSha256": "06d267e682d0f012ddd56509c1262f74d29c6883dc4ddd95a1f2b09c36eea0de",
+          "bytes": 163649
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 45,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A2_01.ogg",
+          "expectedSha256": "a5383b5a5e0557a1122b412a92c58b8aaa862e845e12071a48e1ef0f91267358",
+          "bytes": 231141
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 45,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A2_01.ogg",
+          "expectedSha256": "71ef0ebc2849942eed1a73b70c8db1c55459cf740bd3e8018bc07f2fd3c9c1ec",
+          "bytes": 234408
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 45,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A2_01.ogg",
+          "expectedSha256": "959fa37ef5406403e442e4a71f9f27d22200e17845327da053c5868c117f35f7",
+          "bytes": 229810
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 49,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs3_01.ogg",
+          "expectedSha256": "e6ad9c0a6c665dd1985665a719eabd4eff0bfe1aff17b59b29492aefb09a1fc4",
+          "bytes": 165140
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 49,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs3_01.ogg",
+          "expectedSha256": "9403805ee64c6ce13e22c61578dd9be9f560d1b7d6941d334c2f7a2e5b613ce2",
+          "bytes": 181512
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 49,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs3_01.ogg",
+          "expectedSha256": "68258818443ee5832c31ed9165773d37a75c2ff73565698b160c0fffdea65e53",
+          "bytes": 203003
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 49,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs3_01.ogg",
+          "expectedSha256": "b03cd68632fff2d4514ed41aca7ac92e31ed2f95bb59a141df4536afd861b8eb",
+          "bytes": 230381
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 53,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F3_01.ogg",
+          "expectedSha256": "0b21dcb6e9d23269054d1ef2b2419671f93bbacc544e024161f64ced3e97d9b7",
+          "bytes": 179243
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 53,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F3_01.ogg",
+          "expectedSha256": "f46198f0b417ca3ac320cafcdcadb16e25f5a32154528b3d84144b4d048777ce",
+          "bytes": 204479
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 53,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F3_01.ogg",
+          "expectedSha256": "66d0ff745269f8a74ee8da9df2b0a8f3fdf0ab0ae07f97407aa082b6fd08f854",
+          "bytes": 246971
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 53,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F3_01.ogg",
+          "expectedSha256": "37c405b56ec830b622b67a931cfac916fe22419ab9691469aca3a4636c83b8be",
+          "bytes": 257719
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 57,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A3_01.ogg",
+          "expectedSha256": "9d581de732044b3c8894cce5e938aee7bb1ac6384c7aae0e4b64ebda29a381b3",
+          "bytes": 86535
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 57,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A3_01.ogg",
+          "expectedSha256": "ff054d914659168686e8cd1132bfd2e750712ac0ab1735938c18b354592a4f7e",
+          "bytes": 150353
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 57,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A3_01.ogg",
+          "expectedSha256": "850826ac767280c8d131f4992fa448b13122b5efb5d3147ff5c7c6d405e1e7f3",
+          "bytes": 165188
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 57,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A3_01.ogg",
+          "expectedSha256": "bcc2db4fb71d7ea92551a650193b8cc28fd2c09ddf8827db7ff25b8ba8e3c9d6",
+          "bytes": 196216
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 61,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs4_01.ogg",
+          "expectedSha256": "35ad6184b17fe6cb85927568e97d8e645458f9df91ccf8daf38fa3a4420088b9",
+          "bytes": 104004
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 61,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs4_01.ogg",
+          "expectedSha256": "3e47e89bf3e2adb491a9f59b2291c2762b3309eea4f3855a7622a3bd442af0ad",
+          "bytes": 164014
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 61,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs4_01.ogg",
+          "expectedSha256": "d5dd96b175dab36a7d4057f4d5e4484e6516d03b0dd412ff1d2dfb79652a5d2c",
+          "bytes": 199334
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 61,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs4_01.ogg",
+          "expectedSha256": "15fb393c7b026a8160cb3f62343e31aac663fe3b5984a473e49e50b3ce6bccb2",
+          "bytes": 204164
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 65,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F4_01.ogg",
+          "expectedSha256": "9eb9f4f39b6908a0e027749a487b91d6d41e12bd047144ac49d3b8d6f4a0ce60",
+          "bytes": 72037
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 65,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F4_01.ogg",
+          "expectedSha256": "52783ea9aee27482a5ae62243bcc28374e116177d3badd9e3a14653da75e5383",
+          "bytes": 93287
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 65,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F4_01.ogg",
+          "expectedSha256": "13f5b78a1c8d52ea9089fb53155cdfc12e66c581463f5f61746d2059ba9d14fd",
+          "bytes": 129960
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 65,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F4_01.ogg",
+          "expectedSha256": "8dfe9a622f6bf675c311abc1d616c9a656529605c58ae8b6de7e4bfa4a225174",
+          "bytes": 191050
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 69,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A4_01.ogg",
+          "expectedSha256": "d572eca32468a8d668cfbe72a324c765cb85e5d20e843b13e091e6bf4131db61",
+          "bytes": 119558
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 69,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A4_01.ogg",
+          "expectedSha256": "3398d14928df9d0a3708613f116b73d13379ebf28d54503b07c291c07ccf059a",
+          "bytes": 113007
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 69,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A4_01.ogg",
+          "expectedSha256": "304ffb429312f6a8e8dc7daf141eae3f23b4ddca147022442e9457de3f95b1d8",
+          "bytes": 127635
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 69,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A4_01.ogg",
+          "expectedSha256": "8c8ca78495927577395a636e66b1b0ed1a4b255a2ed3317dc381f128724c0008",
+          "bytes": 156306
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 73,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs5_01.ogg",
+          "expectedSha256": "e48bfed582614dd22a4164a48aa08738091f308551a0100f2f7bb4000f0cde09",
+          "bytes": 122283
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 73,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs5_01.ogg",
+          "expectedSha256": "c83f2c66eab10360f2fb001cac7d9934c17fd130ddca72ad37695fae76dbef73",
+          "bytes": 131735
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 73,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs5_01.ogg",
+          "expectedSha256": "54f3ba2b8743885ee331bb1783a2051bf7d0bd1c330010a44057e35b28f3fcf4",
+          "bytes": 152496
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 73,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs5_01.ogg",
+          "expectedSha256": "8d067cb46be1ccf54634e04b6e229d7c76f77f22b0ab3a1e89ca283834d1cb46",
+          "bytes": 170822
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 77,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F5_01.ogg",
+          "expectedSha256": "e601fdd91141af63b71ac05955dee362c478662c5f6a5df5df3317cfdaad943c",
+          "bytes": 120698
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 77,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F5_01.ogg",
+          "expectedSha256": "a25391b0a2f3bc4edfedb25fe1c9dfadfdcb8585ebb3fd8392d77fdbca1257ff",
+          "bytes": 139897
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 77,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F5_01.ogg",
+          "expectedSha256": "96d4216e8e425ce3077fcb4f5805c3adbbcc823161b1eeba6099229c6f594485",
+          "bytes": 160013
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 77,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F5_01.ogg",
+          "expectedSha256": "f1798e8694887166caa9b04b3e9de1ddfd503fe915dade0c8463703c3ca046a5",
+          "bytes": 176953
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 81,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A5_01.ogg",
+          "expectedSha256": "b977e8a52a5824e0bd9b6683d8978622b76e039a9c7fa2912e3d6411f6b14042",
+          "bytes": 107392
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 81,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A5_01.ogg",
+          "expectedSha256": "af47e875c29a74db1c7a449632b93e2f14e1f37c84266ec20946e1718836f9b6",
+          "bytes": 138519
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 81,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A5_01.ogg",
+          "expectedSha256": "ed791182effecaeab0708f5829ec4cc3fc3172b8b319607091a9a2675d33579c",
+          "bytes": 139432
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 81,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A5_01.ogg",
+          "expectedSha256": "c7ea3b5d8c231b84c4f6f460ae1785a3e8c64931a55945ca6a1bbf81c99171ae",
+          "bytes": 118097
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 85,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs6_01.ogg",
+          "expectedSha256": "5508c18133c2284151bf496f5a4e31c890442bb5e4c0364f97d9c80cd67550de",
+          "bytes": 60161
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 85,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs6_01.ogg",
+          "expectedSha256": "44f9c72b1f9f0392156adccdf4a726b0ee77146853dd51e478f727cce5d4ff5b",
+          "bytes": 92447
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 85,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs6_01.ogg",
+          "expectedSha256": "accb0385e805a6d8f853319f8f6220f7f1f4f4ed351915f4cddb16c402a4d8ea",
+          "bytes": 93080
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 85,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs6_01.ogg",
+          "expectedSha256": "0fd2ec8493805ddac9deb109c2fc715b35c4f7269d5a06d7a031bb5a81be33ad",
+          "bytes": 82001
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 89,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F6_01.ogg",
+          "expectedSha256": "f6fcc7f33a4ee27e1984863c09c03c20b4bde71738e6e361222ce7f29a58e6bf",
+          "bytes": 55433
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 89,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F6_01.ogg",
+          "expectedSha256": "fb55e1cc25768a5c5bcebed8ab00335c2897bdbcb991228f486e864fffc99d77",
+          "bytes": 64222
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 89,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F6_01.ogg",
+          "expectedSha256": "d2eaa4a9f029ad8a3bc6c8a876b1124b2441e6dcb3f8b282e64bc1c150535264",
+          "bytes": 63384
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 89,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F6_01.ogg",
+          "expectedSha256": "2598879d0ae83f9e0a8b8c489798b191a45b07d8309318a60872a8623ba33ba9",
+          "bytes": 78718
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 93,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A6_01.ogg",
+          "expectedSha256": "f206e066e7422b662827b8c0aa3c6cbeaaedbc9100036655d743612f962652f8",
+          "bytes": 50467
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 93,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A6_01.ogg",
+          "expectedSha256": "d8926c014ff6e946de4bb1ee0942eb8916af670135ee59c438c5c6c59227080d",
+          "bytes": 72301
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 93,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A6_01.ogg",
+          "expectedSha256": "320ae4de5e8c446a372a83a5cc528a6911afeb5e1f39936a187090a80ea6ef94",
+          "bytes": 69846
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 93,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A6_01.ogg",
+          "expectedSha256": "28886617d5f5a1384ef60ef97d10fc13e88832c5bb6b7a2e31cf6db0f1a85e7b",
+          "bytes": 77282
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 97,
+          "layer": 1,
+          "file": "INSPiano_Vel01_Cs7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_Cs7_01.ogg",
+          "expectedSha256": "b5b4b966f3eff2425c5bb66207ba57d2b6a92a89dc378e9fcd78e3fb8de94cd3",
+          "bytes": 38655
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 97,
+          "layer": 2,
+          "file": "INSPiano_Vel02_Cs7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_Cs7_01.ogg",
+          "expectedSha256": "67a08909e3742ad717f1686eb9a103d508dc960bd6c182e2cac86f66321dc832",
+          "bytes": 47551
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 97,
+          "layer": 3,
+          "file": "INSPiano_Vel03_Cs7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_Cs7_01.ogg",
+          "expectedSha256": "f317c0d5e4c5abcbdb4d2f948f766ab5290939f4577e6bc59bf4f48c3f6106c1",
+          "bytes": 50966
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 97,
+          "layer": 4,
+          "file": "INSPiano_Vel04_Cs7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_Cs7_01.ogg",
+          "expectedSha256": "3f9b3d79dda0fdcf53f5644ddbb492b6a0e8ca87ba5500383b0e2bb6742f1286",
+          "bytes": 62666
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 101,
+          "layer": 1,
+          "file": "INSPiano_Vel01_F7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_F7_01.ogg",
+          "expectedSha256": "77ac16bbbee58aeb4e06cd7960471e1793dede69e8a1b415aa1548b71e417ff2",
+          "bytes": 40447
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 101,
+          "layer": 2,
+          "file": "INSPiano_Vel02_F7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_F7_01.ogg",
+          "expectedSha256": "4b5c17680615ce536741bd619fe39d6045506f0d0c42e2c5d2bbc52777619402",
+          "bytes": 42456
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 101,
+          "layer": 3,
+          "file": "INSPiano_Vel03_F7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_F7_01.ogg",
+          "expectedSha256": "6327f1a3b07bc8b42841b824931ec872994d97d0dfcc26645146eca95e5568bd",
+          "bytes": 46130
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 101,
+          "layer": 4,
+          "file": "INSPiano_Vel04_F7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_F7_01.ogg",
+          "expectedSha256": "f8c0be07922a07fd31cfb06823f018811fdd84df0ab5047101f41d1e0a8efb24",
+          "bytes": 61273
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 105,
+          "layer": 1,
+          "file": "INSPiano_Vel01_A7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_A7_01.ogg",
+          "expectedSha256": "5c780c635e39113341634576bfb9788f01223d2e02e13d887b141148355012cd",
+          "bytes": 32454
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 105,
+          "layer": 2,
+          "file": "INSPiano_Vel02_A7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_A7_01.ogg",
+          "expectedSha256": "3fdebf9c9e65dc27232acbe7b230fde9768bef6fbc8b97bdaad57ac29ae32495",
+          "bytes": 40278
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 105,
+          "layer": 3,
+          "file": "INSPiano_Vel03_A7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_A7_01.ogg",
+          "expectedSha256": "1d44b66ce96656181e8a7c090c2a4f7719ddfe106f2a4a587aab1dcebd2ddc8d",
+          "bytes": 35293
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 105,
+          "layer": 4,
+          "file": "INSPiano_Vel04_A7_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_A7_01.ogg",
+          "expectedSha256": "6c648ad25ee7fd8f2bd04df5c47d25aee103e43bcdb29388cec282d05af82615",
+          "bytes": 35302
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 108,
+          "layer": 1,
+          "file": "INSPiano_Vel01_C8_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel01_C8_01.ogg",
+          "expectedSha256": "a506ccabdac5e0ecaffb952d5309045fa92cc22f050a36790f750049096fdf0f",
+          "bytes": 27175
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 108,
+          "layer": 2,
+          "file": "INSPiano_Vel02_C8_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel02_C8_01.ogg",
+          "expectedSha256": "db3e10ec41cc19173061319a2b5b034db670dea6cc9efbfe245e119bb1e4c814",
+          "bytes": 25636
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 108,
+          "layer": 3,
+          "file": "INSPiano_Vel03_C8_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel03_C8_01.ogg",
+          "expectedSha256": "77805d47d6a90e70d36a0fced5147c2c3893f7a2f3f7cd334a97beb9fb76e754",
+          "bytes": 26906
+        },
+        {
+          "id": "dynamic-upright",
+          "root": 108,
+          "layer": 4,
+          "file": "INSPiano_Vel04_C8_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-piano/ogg/INSPiano_Vel04_C8_01.ogg",
+          "expectedSha256": "7ca5e197a3f0dd64398fc72e9a9dd9e5a6f3a14f41758baf7762148f37b6acf2",
+          "bytes": 35164
+        }
+      ]
+    },
+    {
+      "id": "dynamic-nylon",
+      "file": "samples/dynamic-nylon.json",
+      "bytes": 3382,
+      "sha256": "8ef879b4b9564a92547d8c5b5c5da6a9fdbd491dda49a0a492018c1167682f54",
+      "roots": [
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        64,
+        68,
+        72,
+        76,
+        80,
+        83
+      ],
+      "layers": [
+        1,
+        2,
+        3
+      ],
+      "samples": [
+        {
+          "id": "dynamic-nylon",
+          "root": 40,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringLowE_Vel01Finger_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel01Finger_E2_01.ogg",
+          "expectedSha256": "145ce2503392ccf2d042e3f4cdbcebeec8acf45178850eae8ab1988e6fafb623",
+          "bytes": 77832
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 40,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringLowE_Vel02Pick_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel02Pick_E2_01.ogg",
+          "expectedSha256": "e09f5cc4f8dd171e467fcfdfab52a5439797f933b3187369657da83825471bc5",
+          "bytes": 95801
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 40,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringLowE_Vel03Pick_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel03Pick_E2_01.ogg",
+          "expectedSha256": "38e9e6d8b1a1700c6aefb11610d83319b009fcb1fb2168cebb5a157de4ab7619",
+          "bytes": 73132
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 44,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringLowE_Vel01Finger_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel01Finger_Gs2_01.ogg",
+          "expectedSha256": "06737bc5a2613b343b14418d2454a56615b9d5b06e2538fdafa8c858efee29d5",
+          "bytes": 93733
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 44,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringLowE_Vel02Pick_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel02Pick_Gs2_01.ogg",
+          "expectedSha256": "87bfdc09e602757dcd6c4270d50b904711eafcb064744f1cd5f164da6444dedc",
+          "bytes": 69505
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 44,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringLowE_Vel03Pick_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringLowE_Vel03Pick_Gs2_01.ogg",
+          "expectedSha256": "c0332e28e92ad839aacc4e212227f9ecd6b1cff877b1d92a7dfe7de1abb38d57",
+          "bytes": 89213
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 48,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringA_Vel01Finger_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringA_Vel01Finger_C3_01.ogg",
+          "expectedSha256": "1d2fc1967e765530d1182f11896fef16a52427b81eae3a5e3386aa56828bc2a2",
+          "bytes": 79431
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 48,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringA_Vel02Pick_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringA_Vel02Pick_C3_01.ogg",
+          "expectedSha256": "c1424fe2599a57723468eec00275114217e4e854427405fa1213c68fcbd075a4",
+          "bytes": 87844
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 48,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringA_Vel03Pick_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringA_Vel03Pick_C3_01.ogg",
+          "expectedSha256": "b0976d11d62960c75a93b148e5359791b1c85e26913acf1f3e0f459da218ef29",
+          "bytes": 90862
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 52,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringD_Vel01Finger_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringD_Vel01Finger_E3_01.ogg",
+          "expectedSha256": "bb708d759c86ead11a307da883e07aa81adb99b2f6c63dd9ee9f146529cf5c53",
+          "bytes": 67345
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 52,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringD_Vel02Pick_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringD_Vel02Pick_E3_01.ogg",
+          "expectedSha256": "f4d233e6aacf008afc0db2f501850897c105b26a3a4a562008d357d09b0240aa",
+          "bytes": 70226
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 52,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringD_Vel03Pick_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringD_Vel03Pick_E3_01.ogg",
+          "expectedSha256": "b3429ec16f81292e4f95106217b3763eb60562f9234e4325f1cd86bcec538b1f",
+          "bytes": 74781
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 56,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringG_Vel01Finger_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringG_Vel01Finger_Gs3_01.ogg",
+          "expectedSha256": "627d127c2530d1f5eaeb582936e165d5d8fa9eb5dff16f80a4fe197efa8644db",
+          "bytes": 34436
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 56,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringG_Vel02Pick_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringG_Vel02Pick_Gs3_01.ogg",
+          "expectedSha256": "c09574df87bca835e2b7b4a1f87471307542ccefc4f163b334f57e1784f3a495",
+          "bytes": 34678
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 56,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringG_Vel03Pick_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringG_Vel03Pick_Gs3_01.ogg",
+          "expectedSha256": "04e6f543d5141256f44dc11cbe9aab24612293bb336b359a4ca45cba3036c9d4",
+          "bytes": 40180
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 60,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringB_Vel01Finger_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringB_Vel01Finger_C4_01.ogg",
+          "expectedSha256": "61921298564aa209f0e228dcf48e47fb5cb612e048c88cd66d99a212a33ed55f",
+          "bytes": 39067
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 60,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringB_Vel02Pick_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringB_Vel02Pick_C4_01.ogg",
+          "expectedSha256": "fc3beb04968e9689e5227d578a2f94af41026878c6dea15ffc81bd2992f9b543",
+          "bytes": 37620
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 60,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringB_Vel03Pick_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringB_Vel03Pick_C4_01.ogg",
+          "expectedSha256": "1cb42adbc0475a862ebb90b31eabffac9c6262a3f8c287834f6efdc6aa0f2b8d",
+          "bytes": 35904
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 64,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_E4_01.ogg",
+          "expectedSha256": "7743bd063c273a2e9e01252d74352ab86e0fc6d14a8206e9f53d5d2f98db0e65",
+          "bytes": 44864
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 64,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_E4_01.ogg",
+          "expectedSha256": "e34a00254690b2a3f46dc8e38878b04997d3aec499cc589d0a5053ad8ea6c1cc",
+          "bytes": 47464
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 64,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_E4_01.ogg",
+          "expectedSha256": "611560c02d33f4cb2e8ddb043993ceba62e5426c225829569829c9bd92b19541",
+          "bytes": 51113
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 68,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_Gs4_01.ogg",
+          "expectedSha256": "36a2694582dee670e11257f9a924398ecff2e3c08bb850bbd060bea1d1c1a76a",
+          "bytes": 33017
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 68,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_Gs4_01.ogg",
+          "expectedSha256": "96b47b2624f24d030867fec20812eb4ffe85e97a0ebf02313717d219a4472be1",
+          "bytes": 35091
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 68,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_Gs4_01.ogg",
+          "expectedSha256": "3624a87c7887977487ac5e3926474c3fd0c4c34ec147a895972a4b17c0bcd597",
+          "bytes": 38313
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 72,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_C5_01.ogg",
+          "expectedSha256": "df6ebe090857222e3f7679f696f1c54a69248211f9b3f7e561e617fbf4350d13",
+          "bytes": 20465
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 72,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_C5_01.ogg",
+          "expectedSha256": "821972fb813dad74b53ecfe615c60877f9138fa7a0a6a1b68132bb374a684867",
+          "bytes": 25707
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 72,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_C5_01.ogg",
+          "expectedSha256": "88ccb55b06332bc9dca4a8e032f16ae102532aaad2e072e64ec038cf14eed688",
+          "bytes": 26584
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 76,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_E5_01.ogg",
+          "expectedSha256": "57f9c073cd1ee1365857151fb378c9fa452942eaf8a08de7d2a3a7beb12134a8",
+          "bytes": 16869
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 76,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_E5_01.ogg",
+          "expectedSha256": "997452f7cd2f6b3248801aeb041266bcad75e5455d36b11885aba6a489c6bd6c",
+          "bytes": 24559
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 76,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_E5_01.ogg",
+          "expectedSha256": "2ceaa3bd4bc0043d3635625ba76c025a10a27725b6ec5fffe1d5b25b30f2abe4",
+          "bytes": 23849
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 80,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_Gs5_01.ogg",
+          "expectedSha256": "775cc5a4642c51b8987b78d9fbda884b3e8464fa1d54c578b84d9609c215ff71",
+          "bytes": 14058
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 80,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_Gs5_01.ogg",
+          "expectedSha256": "02331a668dacddb525cd07c0bf6de1159dcbd6ad82d6bbf4b89071067a08e3c0",
+          "bytes": 21359
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 80,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_Gs5_01.ogg",
+          "expectedSha256": "d10372ee0aa203f360081ffe84c3ea689a403f81d106dd8d26ab51cfc7f2d962",
+          "bytes": 24038
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 83,
+          "layer": 1,
+          "file": "INSGuitarNylon_StringHighE_Vel01Finger_B5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel01Finger_B5_01.ogg",
+          "expectedSha256": "3c6a7deb256f9a54fad4e3967ba9d364415ffb6fd02f5717ec713b0ebcb2c558",
+          "bytes": 17627
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 83,
+          "layer": 2,
+          "file": "INSGuitarNylon_StringHighE_Vel02Pick_B5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel02Pick_B5_01.ogg",
+          "expectedSha256": "353a57c288876202c134c297db3760d53be4f47050602086444dfa4d6799d960",
+          "bytes": 18762
+        },
+        {
+          "id": "dynamic-nylon",
+          "root": 83,
+          "layer": 3,
+          "file": "INSGuitarNylon_StringHighE_Vel03Pick_B5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-nylon-guitar/ogg/INSGuitarNylon_StringHighE_Vel03Pick_B5_01.ogg",
+          "expectedSha256": "68b98884e26e99f2bf0cb4e43538b5758a5b786ab5d5e15bca966fbefe05e4ee",
+          "bytes": 20980
+        }
+      ]
+    },
+    {
+      "id": "dynamic-steel",
+      "file": "samples/dynamic-steel.json",
+      "bytes": 3213,
+      "sha256": "d9ab13599d5e0d2960ebd209326b9abd54c30d6e266ce3eb8234f249c83be5d3",
+      "roots": [
+        40,
+        44,
+        48,
+        52,
+        56,
+        60,
+        64,
+        68,
+        72,
+        76,
+        80,
+        84
+      ],
+      "layers": [
+        1,
+        2,
+        3
+      ],
+      "samples": [
+        {
+          "id": "dynamic-steel",
+          "root": 40,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringLowE_Vel01_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel01_E2_01.ogg",
+          "expectedSha256": "a5c46bf56925d738523458065a4d35e5d20f196143faed5123c8634361501009",
+          "bytes": 129893
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 40,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringLowE_Vel02_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel02_E2_01.ogg",
+          "expectedSha256": "07643f0430551e6cbba6c9884c0ca8a1ea2f7f23e3daa12fa141d9476d84fd6d",
+          "bytes": 139615
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 40,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringLowE_Vel03_E2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel03_E2_01.ogg",
+          "expectedSha256": "96fde5b81e2d8e2d4bb69f509ba7f19d6b46f59de351552c21ea49a0c9711962",
+          "bytes": 148932
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 44,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringLowE_Vel01_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel01_Gs2_01.ogg",
+          "expectedSha256": "6c4f906a9df1d02e63e09bf919fc4e9e76f5c810f62cab6e8e62e114119631ef",
+          "bytes": 75576
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 44,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringLowE_Vel02_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel02_Gs2_01.ogg",
+          "expectedSha256": "ec5032c81ba2b2abab6f277ec033da5c30eecc34f74b0db4b62518268357c775",
+          "bytes": 93744
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 44,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringLowE_Vel03_Gs2_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringLowE_Vel03_Gs2_01.ogg",
+          "expectedSha256": "f0bb7afc8aeaae446fe9697ef2cd2d068dd71be05f5901d07c8d3bb70b4bce1e",
+          "bytes": 101078
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 48,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringA_Vel01_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringA_Vel01_C3_01.ogg",
+          "expectedSha256": "5010d4d6e92fda6d564a09af91b39836773c7b84fae674944a5eb35cc5982f51",
+          "bytes": 115168
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 48,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringA_Vel02_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringA_Vel02_C3_01.ogg",
+          "expectedSha256": "ac74e2a3ebfedf276a45881f8b16d6deaa35fe50d9db8fa5e9b496423dfb7b68",
+          "bytes": 112325
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 48,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringA_Vel03_C3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringA_Vel03_C3_01.ogg",
+          "expectedSha256": "eb64d234fcd1b62ec602999a4c78c1159154520bf9e579ef398a24e28e0244b8",
+          "bytes": 103841
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 52,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringD_Vel01_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringD_Vel01_E3_01.ogg",
+          "expectedSha256": "ac5628457797a4d030f753835068317dd0abc3ef7f83c2589659ce7d28c1a62e",
+          "bytes": 54133
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 52,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringD_Vel02_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringD_Vel02_E3_01.ogg",
+          "expectedSha256": "178f93e98874890e57261630a693e15a7d47102d8b8f12f7f484a4d535d71342",
+          "bytes": 86781
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 52,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringD_Vel03_E3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringD_Vel03_E3_01.ogg",
+          "expectedSha256": "e25637f0bc8445818c2826719446ace99db749526977744cb29731cddd2a8b53",
+          "bytes": 91116
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 56,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringG_Vel01_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringG_Vel01_Gs3_01.ogg",
+          "expectedSha256": "093807a24faa8a15558131122e0df266bd217ab108da64129900472c9ce66f83",
+          "bytes": 82435
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 56,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringG_Vel02_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringG_Vel02_Gs3_01.ogg",
+          "expectedSha256": "8ebd058a7d7cd3dc4af2882d277a23228572ca3a361596c4d11086d1dbabf26d",
+          "bytes": 105605
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 56,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringG_Vel03_Gs3_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringG_Vel03_Gs3_01.ogg",
+          "expectedSha256": "8cbf1b41d6d5a1189fa37cd26e9e734111d8a2c9d10e0906de2a58115f84fd2b",
+          "bytes": 120080
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 60,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringB_Vel01_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringB_Vel01_C4_01.ogg",
+          "expectedSha256": "c95327e99cac5193b8aeb2f09dd4564bc935de579de5ff400c05b9e4a99e7e78",
+          "bytes": 86522
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 60,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringB_Vel02_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringB_Vel02_C4_01.ogg",
+          "expectedSha256": "7412c3882dd78b16d01e3a643f52dd6f4caae8bdf2b8b49b22303ab78db662fb",
+          "bytes": 84309
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 60,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringB_Vel03_C4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringB_Vel03_C4_01.ogg",
+          "expectedSha256": "b2d46d764a444159d6bd908ccf8e205f9df7fe516887c927ad729dd54401b690",
+          "bytes": 94345
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 64,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_E4_01.ogg",
+          "expectedSha256": "b2f6a24537c70f22e529b1dba1f41ed1d4a26612a735992bf5b5bbdb304eefed",
+          "bytes": 62067
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 64,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_E4_01.ogg",
+          "expectedSha256": "24fcdefc6b57e131677cc2af9e5055d07a093470e687c9ba03569b4471d0428a",
+          "bytes": 60165
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 64,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_E4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_E4_01.ogg",
+          "expectedSha256": "e78e82ac2b97a6cffeadcffaf0978de9f40754e760e5560952ca1a43645f0d2d",
+          "bytes": 70552
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 68,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_Gs4_01.ogg",
+          "expectedSha256": "72b629310f58c9305363ad82fc0e20bf0760d49276f3e196a247e37279463d82",
+          "bytes": 73576
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 68,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_Gs4_01.ogg",
+          "expectedSha256": "21700ab25d89311bd409d023513db1791775b7fb59ddaeab792c86f73c58945c",
+          "bytes": 83668
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 68,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_Gs4_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_Gs4_01.ogg",
+          "expectedSha256": "16502bc764921067fb7f65d9a80bbfe4cab6f03864fcfa40c21557747f616bb1",
+          "bytes": 72473
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 72,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_C5_01.ogg",
+          "expectedSha256": "ceaccdcc0487bd590f086c9019b5d4f1e6ed4cc303327c11e783cb75c83d8e7f",
+          "bytes": 43855
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 72,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_C5_01.ogg",
+          "expectedSha256": "24975430cc82db5a9b4c92e36bba084078a53a4fa2ae1a4f41d96d007a18a1fc",
+          "bytes": 42051
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 72,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_C5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_C5_01.ogg",
+          "expectedSha256": "4cd60088ebdb4817c10de91fb3d5bdf583256f721ababc04ab23049e7fdb9cdf",
+          "bytes": 54226
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 76,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_E5_01.ogg",
+          "expectedSha256": "ca5263762b926c44726d11e33da38549cd68c1870b3109930abab3cdc568ab6d",
+          "bytes": 36779
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 76,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_E5_01.ogg",
+          "expectedSha256": "2f7cf450e61b854360acf96ffb61523e96e68622a31a62c6a49c13083557b50f",
+          "bytes": 42202
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 76,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_E5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_E5_01.ogg",
+          "expectedSha256": "06ca40adbbc0353dcd98330dde1b71387197fb502a94d314b29f25a50131fb69",
+          "bytes": 48807
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 80,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_Gs5_01.ogg",
+          "expectedSha256": "60144fcdf6d74d72162749e01aa633dce737feeb8ea145593fb72e0db27e91a4",
+          "bytes": 36514
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 80,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_Gs5_01.ogg",
+          "expectedSha256": "0cadcd433069be734a1bf61b95ed3dd2b17bfa36c33d0816afc2e6ae8b967721",
+          "bytes": 44022
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 80,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_Gs5_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_Gs5_01.ogg",
+          "expectedSha256": "ad2d8e27b270e282c56493d720378b146426dcf1d1a09d8c2ccd5155516e3ba7",
+          "bytes": 44715
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 84,
+          "layer": 1,
+          "file": "INSGuitarSteel_StringHighE_Vel01_C6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel01_C6_01.ogg",
+          "expectedSha256": "4a0294ee5c62013f9e6c3819a461952d16095b291b3c403c8b86d805cadab2e1",
+          "bytes": 21867
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 84,
+          "layer": 2,
+          "file": "INSGuitarSteel_StringHighE_Vel02_C6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel02_C6_01.ogg",
+          "expectedSha256": "5a65e232fee42000b4d81a68ab5e2b871f597d6a3750c852e9c69caaefdaef9d",
+          "bytes": 25406
+        },
+        {
+          "id": "dynamic-steel",
+          "root": 84,
+          "layer": 3,
+          "file": "INSGuitarSteel_StringHighE_Vel03_C6_01.ogg",
+          "url": "https://raw.githubusercontent.com/facebookincubator/Meta-open-sound/514c926efecdb3c7812bf00eedf8e5c8d61dd681/systems/instruments/meta-steel-guitar/ogg/INSGuitarSteel_StringHighE_Vel03_C6_01.ogg",
+          "expectedSha256": "3161f340e532c1a531dd2d8b0fbb16be1c82ec81ee7b6ca83677d69c6c6396af",
+          "bytes": 31402
+        }
+      ]
+    }
+  ],
+  "bankBytes": 12855,
+  "sourceBytes": 16571166
+}

@@ -1,0 +1,96 @@
+{
+  "bugs": {
+    "url": "https://github.com/cutterbl/SoundTouchJS/issues"
+  },
+  "dist": {
+    "shasum": "93b6edf25608dbed63fae99b5ce71dd60198bf7d",
+    "tarball": "https://registry.npmjs.org/@soundtouchjs/audio-worklet/-/audio-worklet-2.1.1.tgz",
+    "fileCount": 26,
+    "integrity": "sha512-itxSW62gbtDKoFo6eEr4PXzVz3oF+wCVREupFi5JiUR31tWWwCizr+2XezYD1SnkrSDfdmZvvviTtoyejYeD0Q==",
+    "signatures": [
+      {
+        "sig": "MEQCIFqLqG3R88kXvI64ZnEtl0k2sg07kTUW4dmFpNiKZtKIAiBmRde4F05KS/8OZV57DOEBUfftGUpef+O8U228ENYvWw==",
+        "keyid": "SHA256:DhQ8wR5APBvFHLF/+Tc+AYvPOdTpcIDqOhxsBHRwC7U"
+      }
+    ],
+    "attestations": {
+      "url": "https://registry.npmjs.org/-/npm/v1/attestations/@soundtouchjs%2faudio-worklet@2.1.1",
+      "provenance": {
+        "predicateType": "https://slsa.dev/provenance/v1"
+      }
+    },
+    "unpackedSize": 296114
+  },
+  "main": "./.dist/index.js",
+  "name": "@soundtouchjs/audio-worklet",
+  "type": "module",
+  "_from": "file:soundtouchjs-audio-worklet-2.1.1.tgz",
+  "types": "./.dist/index.d.ts",
+  "author": {
+    "name": "Steve 'Cutter' Blades"
+  },
+  "exports": {
+    ".": {
+      "types": "./.dist/index.d.ts",
+      "default": "./.dist/index.js"
+    },
+    "./processor": "./.dist/soundtouch-processor.js",
+    "./package.json": "./package.json"
+  },
+  "license": "MPL-2.0",
+  "_npmUser": {
+    "name": "cutterbl",
+    "email": "no.junk@cutterscrossing.com"
+  },
+  "homepage": "https://github.com/cutterbl/SoundTouchJS",
+  "keywords": [
+    "audio",
+    "WebAudio",
+    "AudioWorklet",
+    "TypeScript",
+    "pitch",
+    "tempo",
+    "soundtouch"
+  ],
+  "_resolved": "/tmp/dbf828c1c245559ee393ac4479ac92e0/soundtouchjs-audio-worklet-2.1.1.tgz",
+  "_integrity": "sha512-itxSW62gbtDKoFo6eEr4PXzVz3oF+wCVREupFi5JiUR31tWWwCizr+2XezYD1SnkrSDfdmZvvviTtoyejYeD0Q==",
+  "repository": {
+    "url": "git+https://github.com/cutterbl/SoundTouchJS.git",
+    "type": "git",
+    "directory": "packages/audio-worklet"
+  },
+  "_npmVersion": "11.16.0",
+  "description": "AudioWorklet implementation of the SoundTouchJS library",
+  "directories": {},
+  "licenseFile": "LICENSE",
+  "maintainers": [
+    {
+      "name": "cutterbl",
+      "email": "no.junk@cutterscrossing.com"
+    }
+  ],
+  "sideEffects": false,
+  "_nodeVersion": "24.18.0",
+  "contributors": [
+    {
+      "url": "https://cutterscrossing.com/",
+      "name": "Steve 'Cutter' Blades",
+      "email": "web.admin@cutterscrossing.com"
+    }
+  ],
+  "dependencies": {
+    "@soundtouchjs/core": "2.1.1",
+    "@soundtouchjs/worklet-base": "2.1.1",
+    "@soundtouchjs/interpolation-strategy-lanczos": "2.1.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "_hasShrinkwrap": false,
+  "_npmOperationalInternal": {
+    "tmp": "tmp/audio-worklet_2.1.1_1785778773864_0.6010700638994604",
+    "host": "s3://npm-registry-packages-npm-production"
+  },
+  "_id": "@soundtouchjs/audio-worklet@2.1.1",
+  "version": "2.1.1"
+}
