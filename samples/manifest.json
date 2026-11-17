@@ -1,0 +1,169 @@
+{
+  "version": 1,
+  "sources": {
+    "fluid": {
+      "repository": "https://github.com/gleitz/midi-js-soundfonts",
+      "commit": "044fab8e1456bfafc5776e86dfd6bb8697149aef",
+      "license": "CC-BY-3.0"
+    },
+    "vcsl": {
+      "repository": "https://github.com/sgossner/VCSL",
+      "commit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "license": "CC0-1.0"
+    }
+  },
+  "banks": [
+    {
+      "id": "bright-grand",
+      "file": "bright-grand.json",
+      "bytes": 648631,
+      "sha256": "514a0489fed9162edf1f2a4abe2b3d4bda60ca61f3f58e98240ee98fd9bcb0ba",
+      "samples": 21,
+      "source": "fluid"
+    },
+    {
+      "id": "clean-guitar",
+      "file": "clean-guitar.json",
+      "bytes": 336319,
+      "sha256": "c885cf44aa94c081965e1c50d416ea2919e33609268c00324cf99a8688dd442c",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "concert-flute",
+      "file": "concert-flute.json",
+      "bytes": 444116,
+      "sha256": "597f1f66badd06baab6557d7c725390d92bb2f08b59f610119b49dbdf10d28a4",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "concert-grand",
+      "file": "concert-grand.json",
+      "bytes": 648386,
+      "sha256": "40a46fa74846f128d6f0247c3cc55a252db4dffb3ebcde25e0e6ffcb3eef5d71",
+      "samples": 21,
+      "source": "fluid"
+    },
+    {
+      "id": "electric-piano",
+      "file": "electric-piano.json",
+      "bytes": 368577,
+      "sha256": "20d5fa0b6cbb0e1efcce3cae057be71db6b29f91936694873ad4e0f6bb6f919b",
+      "samples": 14,
+      "source": "fluid"
+    },
+    {
+      "id": "finger-bass",
+      "file": "finger-bass.json",
+      "bytes": 288448,
+      "sha256": "ad22a0659b53dad9dc90aba0b318cae51e2d5504acf1fab67abc502ed2ddc610",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "fm-electric-piano",
+      "file": "fm-electric-piano.json",
+      "bytes": 425888,
+      "sha256": "3f0093fbd3a3f707228803af3ef4fe3dcec4daaa6f43aa0512ee1cc254964bc6",
+      "samples": 14,
+      "source": "fluid"
+    },
+    {
+      "id": "jazz-guitar",
+      "file": "jazz-guitar.json",
+      "bytes": 386964,
+      "sha256": "0f59b3a97ec3053ca99fa774ee9873d1d3ac15b479d87c87b213fa379ed53bb0",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "nylon-guitar",
+      "file": "nylon-guitar.json",
+      "bytes": 282163,
+      "sha256": "64c61253be1807b262f4b68ec512f901d4b1128cfad033255e4718bfcde85d6f",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "picked-bass",
+      "file": "picked-bass.json",
+      "bytes": 313428,
+      "sha256": "55b44fdd767f48d7bca5a65ca461da0dc8ba5e7e0e7599ace04ed0d6e23209dc",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "session-acoustic",
+      "file": "session-acoustic.json",
+      "bytes": 1550980,
+      "sha256": "3d21446903b0b64afd69f5906c259892f5191adde9cd387b91770a089b486b69",
+      "samples": 8,
+      "source": "vcsl"
+    },
+    {
+      "id": "solo-cello",
+      "file": "solo-cello.json",
+      "bytes": 375821,
+      "sha256": "a862af7ace4ec658defaf4b2cb55c25cca4ecd29b4c792762d71401653a66448",
+      "samples": 11,
+      "source": "fluid"
+    },
+    {
+      "id": "solo-violin",
+      "file": "solo-violin.json",
+      "bytes": 444116,
+      "sha256": "c72b7d0869b017dc4f1fe938ab7053021517a73f7ffad45581b575779ffef3f8",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "steel-guitar",
+      "file": "steel-guitar.json",
+      "bytes": 305703,
+      "sha256": "a9f081871343a1baede5a6fe4cf47cd98335dd758f902ed363da5fc4dd930504",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "string-ensemble",
+      "file": "string-ensemble.json",
+      "bytes": 478288,
+      "sha256": "e339933604a4e9ae9f4bd6deb00f7b5ece78a2a996ab49cb2dee76ed25fb0582",
+      "samples": 14,
+      "source": "fluid"
+    },
+    {
+      "id": "studio-trumpet",
+      "file": "studio-trumpet.json",
+      "bytes": 438569,
+      "sha256": "0d441ec26964c9710f8de71f819ef225594ee35313b8e70cd5d1f7905966d0ba",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "tenor-sax",
+      "file": "tenor-sax.json",
+      "bytes": 444120,
+      "sha256": "9fb5ab9ef678dc23612506cda4c79faa4c29f85a644ba8f5467a39de855f30b2",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "upright-bass",
+      "file": "upright-bass.json",
+      "bytes": 269743,
+      "sha256": "5399acd27066a92bca616bb8351ce5c765d760bae00d131452304019ddbd963e",
+      "samples": 13,
+      "source": "fluid"
+    },
+    {
+      "id": "vibraphone",
+      "file": "vibraphone.json",
+      "bytes": 272235,
+      "sha256": "282372609e380a5deb8d770bdc7bf1d14bba046b2d541725d5cb6caed1d32110",
+      "samples": 11,
+      "source": "fluid"
+    }
+  ]
+}

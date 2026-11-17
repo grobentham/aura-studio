@@ -36,7 +36,8 @@
     const chunk=(name,a)=>[...enc.encode(name),...be(a.length,4),...a];
     const text=(type,value)=>{const a=[...enc.encode(value)];return [255,type,...vlq(a.length),...a];};
     const tempo=Math.round(60000000/project.bpm);
-    const tracks=[chunk('MTrk',[0,...text(3,project.title||'Aura Studio'),0,255,81,3,...be(tempo,3),0,255,88,4,4,2,24,8,0,255,47,0])];
+    const conductor=[0,...text(3,project.title||'Aura Studio'),0,255,81,3,...be(tempo,3),0,255,88,4,4,2,24,8];if(project.credits)conductor.push(0,...text(1,project.credits));conductor.push(0,255,47,0);
+    const tracks=[chunk('MTrk',conductor)];
     let instrument=0;
     for(const t of project.tracks.filter(t=>t.type!=='audio')){
       const channel=t.type==='drums'?9:(instrument++%15<9?(instrument-1)%15:(instrument-1)%15+1),events=[];
@@ -46,7 +47,7 @@
         events.push({at:start,off:false,data:[144|channel,pitch,clamp(Math.round(n.v*127),1,127)]},{at:end,off:true,data:[128|channel,pitch,0]});
       }
       events.sort((a,b)=>a.at-b.at||Number(b.off)-Number(a.off));
-      const data=[0,...text(3,t.name||'Track')];let last=0;
+      const data=[0,...text(3,t.name||'Track')];if(t.type!=='drums'&&Number.isInteger(t.program)&&t.program>=0&&t.program<=127)data.push(0,192|channel,t.program);let last=0;
       for(const event of events){data.push(...vlq(event.at-last),...event.data);last=event.at;}data.push(0,255,47,0);tracks.push(chunk('MTrk',data));
     }
     const out=new Uint8Array(14+tracks.reduce((n,t)=>n+t.length,0));out.set([...enc.encode('MThd'),0,0,0,6,0,1,...be(tracks.length,2),1,224]);let offset=14;for(const t of tracks){out.set(t,offset);offset+=t.length;}return out;
