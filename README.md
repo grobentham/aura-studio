@@ -50,7 +50,7 @@ This remains a static GitHub Pages site. In Settings > Pages, use Deploy from a 
 
 ## Current scope
 
-This release adds production editing and a separate private cloud workspace; it does not claim full BandLab parity. Current limits include no real-time co-editing, community publishing, automatic vocal pitch correction, VST/AU hosting, simultaneous multichannel recording, punch/loop takes, or automatic round-trip latency calibration. Imported MIDI stores controller data but playback currently uses notes, velocities and the initial instrument assignment; tempo maps and non-4/4 arrangements are not fully supported.
+This release adds production editing and a separate private cloud workspace; it does not claim full BandLab parity. Current limits include no real-time co-editing, community publishing, automatic vocal pitch correction, VST/AU hosting, simultaneous recording from multiple devices or more than two channels, linked multitrack comping, or automatic round-trip latency calibration. Imported MIDI stores controller data but playback currently uses notes, velocities and the initial instrument assignment; tempo maps and non-4/4 arrangements are not fully supported.
 
 
 ## Production upgrade
@@ -89,3 +89,24 @@ All 84 new OGG assets total about 8 MB. Source pins, transformations, output has
 Run node --test tests/core.test.cjs tests/instruments.test.cjs tests/production.test.cjs tests/feedback.test.cjs. Browser tests/feedback.html verifies audible landed pitches, grouped duplication, lights/release, exact loop positions, real sample decoding, beat tempo-fit/export/recovery and held/released key behavior during loading. It uses an isolated project and restores the original session.
 
 The current factory collection has 40 sounds: 23 recorded melodic instruments, two recorded acoustic kits, 11 original synth sounds and four synthesized kits. The extra audio library provides 12 ready beats and 16 individual drum recordings.
+
+
+## Recording workspace release
+
+The workspace adds a collapsible selection inspector on wide screens, exact clip/track fields, a keyboard-resizable sound browser, Compose/Record/Focus/Mix layouts, and searchable actions (Ctrl/Cmd+K). The recording browser keeps a Record/Finish control visible while setup scrolls.
+
+Sounds → Record offers an input device, Mono input 1, Mono input 2 or Stereo 1–2, raw-music/voice-processing requests, Off/Auto/In monitoring and monitor level. Playback output selection uses AudioContext.setSinkId where supported; otherwise use system audio settings. Browser-exposed channels and permissions determine what is available. Monitoring starts off on each page load. Wired headphones and an interface's direct monitoring remain useful.
+
+AudioWorklet capture replaces MediaRecorder on this recording path. The transport, count-in, punch endpoint and capture share an audio-frame anchor. The existing manual recording offset now also applies to recorded audio; it does not measure hardware round-trip latency. Sample preparation completes before recording is armed.
+
+Single take starts at the playhead. Loop takes starts at the cycle range and retains every pass; Punch records one cycle-range pass and stops automatically. Finish stops transport. Ranged recordings return to the range start. Captures stop at ten minutes, 64 MB raw PCM or 64 passes, whichever comes first. Stereo capture at 48 kHz therefore reaches its PCM limit before ten minutes.
+
+The separate recording-core.js, pcm-recorder-worklet.js, recording-store.js and studio-recording.js files separate timing/comp math, real-time capture, persistence and application integration. Blocks are journaled incrementally as float PCM in IndexedDB; missing blocks and storage backpressure stop capture. Completed blocks can be recovered into a new project after interruption. Finished source assets, portable audio backups and cloud uploads now use 24-bit PCM WAV; existing lower-precision sources cannot gain detail by re-encoding.
+
+Select a recorded clip and choose Take lanes, or use the inspector. Audition originals, use a whole take, or choose a start/end beat section for the comp. Originals live in track.takes; only track.regions plays/exports. Boundary fades are short fades, not overlapping crossfades. Comping, Undo, local history, portable backups and cloud asset discovery retain originals. Recovery blocks are removed only after the installed project save succeeds.
+
+Run node --test tests/core.test.cjs tests/instruments.test.cjs tests/production.test.cjs tests/feedback.test.cjs tests/recording.test.cjs. Browser tests/recording.html exercises generated stereo/mono PCM through the real input graph, punch timing, comp audition/export, recovery, interrupted writes and count-in cancellation. It does not request a microphone or measure physical latency. Other existing browser suites remain regression checks.
+
+Release the same studio artifact to both hosts with node scripts/sync-cloud-studio.mjs ../aura-cloud. The command checks the existing Site identity and writes studio-artifact.json hashes into the cloud checkout. Publish the cloud repository through its Sites workflow.
+
+This is the first recording/workspace milestone toward the Ableton roadmap. Editable warp markers, general buses/insert chains, comprehensive expression, a clip launcher, native plug-ins and realtime shared editing remain future milestones. The main application has not yet been fully migrated to typed modules. Hardware interfaces, mobile interruptions, long-session capacity and independent-user hosted cloud flows require further qualification.
