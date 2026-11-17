@@ -1,6 +1,9 @@
 (function(root){
   'use strict';
   const instruments=[
+    {name:'Dynamic Upright',bank:'dynamic-upright',category:'Keys',program:0,description:'Four recorded piano dynamics · full 88-key range',gain:.72,release:.5,dynamic:true,preview:[48,60,64,67]},
+    {name:'Expressive Nylon',bank:'dynamic-nylon',category:'Guitars',program:24,description:'Three recorded nylon-guitar dynamic layers',gain:.7,release:.3,dynamic:true,preview:[48,55,60,64]},
+    {name:'Expressive Steel',bank:'dynamic-steel',category:'Guitars',program:25,description:'Three recorded steel-guitar dynamic layers',gain:.65,release:.35,dynamic:true,preview:[48,55,60,64]},
     {name:'Concert Grand',bank:'concert-grand',category:'Keys',program:0,description:'Full, rounded acoustic piano',gain:.58,release:.32,preview:[60,64,67]},
     {name:'Bright Grand',bank:'bright-grand',category:'Keys',program:1,description:'Crisp piano for pop and rhythm',gain:.52,release:.26,preview:[60,64,67]},
     {name:'Stage EP',bank:'electric-piano',category:'Keys',program:4,description:'Mellow sampled electric piano',gain:.62,release:.3,preview:[60,63,67]},
@@ -23,6 +26,7 @@
   const kits=[{name:'Session Acoustic',bank:'session-acoustic',category:'Drums',description:'Recorded drums and cymbals · alternating hits',gain:.65,preview:[0,3,1,3]}];
   function nearestRoot(pitch,roots){if(!roots.length)throw Error('No samples in this bank.');return roots.reduce((best,n)=>Math.abs(n-pitch)<Math.abs(best-pitch)?n:best,roots[0]);}
   function sampleRateFor(pitch,root){return Math.pow(2,(pitch-root)/12);}
-  const api={instruments,kits,nearestRoot,sampleRateFor,categories:['All','Favorites','Keys','Guitars','Bass','Strings','Winds','Drums','Synths']};
+  function velocityLayers(count,velocity,splits,width=16){if(velocity<=0)return [];const q=Math.max(1,Math.min(127,Math.round(velocity*127)));for(let i=0;i<splits.length;i++){const lo=splits[i]-width/2,hi=splits[i]+width/2;if(q<lo)return [{index:i,gain:1}];if(q<=hi){const phase=(q-lo)/width*Math.PI/2;return [{index:i,gain:Math.cos(phase)},{index:i+1,gain:Math.sin(phase)}];}}return [{index:count-1,gain:1}];}
+  const api={instruments,kits,nearestRoot,sampleRateFor,velocityLayers,categories:['All','Favorites','Keys','Guitars','Bass','Strings','Winds','Drums','Synths']};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AuraInstruments=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
