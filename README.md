@@ -1,32 +1,49 @@
 # Aura Studio
 
-A standalone browser music studio built with Web Audio. No installation, build step, or JavaScript dependencies.
+A browser music studio for composing, recording, arranging, mixing, and exporting. No installation, build step, runtime dependencies, account, or upload server.
 
-## Create music
+## Creation workspace
 
-- Play and record virtual keyboards, guitar chord pads, synths, and drum pads.
-- Record microphones or connected audio interfaces onto new tracks.
-- Browse and preview loops that follow the project tempo and key.
-- Arrange MIDI and audio clips; trim, split, normalize, duplicate, and undo edits.
-- Mix volume, pan, tone, reverb, and echo, with master compression and limiting.
-- Download projects with embedded audio and export the mixed output as WebM/Opus or MP4.
+- Play keyboards, guitar chord pads, synths, and drums with touch, mouse, computer keyboard, or an opt-in MIDI controller.
+- Record notes or microphone/audio-interface takes with an optional one- or two-bar count-in.
+- Generate chords, beats, basslines, arpeggios, and melodies. Quantize, humanize, transpose, and use scale lock.
+- Arrange MIDI/audio clips with precise start and length, split at playhead, duplicate, resize, and undo. Right-click opens clip actions.
+- Trim, split, normalize, and fade audio. Audio stays at its original playback speed when project tempo changes; it is not time-stretched.
+- Mix volume, pan, tone, reverb, and echo. Select a mixer channel for three-band EQ and compression. The master includes compression and limiting.
+- Collapse or resize the editor. On narrow screens use Arrange, Edit, Play, and Mix.
 
-## Use
+## Projects and recovery
 
-Open the published GitHub Pages site or open `index.html` locally in a current browser. Microphone recording requires permission and a secure browser context such as HTTPS or localhost.
+Projects opens the local session library. Create, reopen, duplicate, remove, and restore sessions. Removal is reversible through Recently removed. Save as copy preserves current edits as a separate project.
 
-Choose **Instruments** to play. Press **R** to record notes, **Space** to play/stop, and **Z/X** to change octave. For live audio, choose **Record → Connect input → Record audio**. Finish the take to create an audio clip. Use headphones for input monitoring and disconnect input when finished.
+Edits autosave to IndexedDB after a short debounce. The status beside the title reports success or storage failure. Save (Ctrl/Cmd+S) creates a checkpoint. Recovery history retains the 12 most recent saved versions. Restoring creates another version. Conflicting edits from another tab are rejected; use Save as copy to keep both sessions.
 
-Click an audio clip for trimming, splitting, and normalization. Click the timeline ruler to place the playhead. **Save** downloads a portable JSON project; **Open** restores it. Local sessions use browser storage; keep a downloaded backup.
+Projects > Download project creates portable JSON with embedded audio. Import project restores it. The previous single-session localStorage format is retained as a recovery fallback and migrated into the project library on first use. The audio asset store remains compatible with existing projects.
+
+Storage belongs to this browser, profile, device, and site origin. Clearing site data removes local projects. Changing origins does not transfer projects. Keep downloaded backups. There is no cloud synchronization.
+
+## Exports
+
+- Stereo WAV: offline rendering at 44.1/48 kHz, 16/24-bit PCM, with instruments, channel effects, and master processing.
+- Stems ZIP: one aligned WAV per audible track, with matching start and duration. Each stem includes channel effects and master processing. Summing stems differs from the compressed full mix.
+- MIDI: Standard MIDI format 1, 480 ticks/quarter note, tempo, track names, notes, velocities, and General MIDI drum mapping. Audio clips, instruments, and effects are not embedded.
+
+WAV and stems use the entire song or cycle range, with a three-second effect tail. Muted tracks and tracks excluded by solo are omitted. MIDI includes every instrument/drum track and the full arrangement so musical material remains editable. Audio exports are limited to ten minutes per range and an estimated 350 MB per download to bound browser memory use. Cancellation discards the output after the current offline render completes.
+
+## Run and validate
+
+Run `node serve.mjs`, then open http://127.0.0.1:4173. The development server binds only to loopback. Production needs index.html, studio-core.js, studio-pro.js, studio-pro.css, and .nojekyll.
+
+Run `node --test tests/core.test.cjs` for syntax, PCM sample/header values, MIDI events/channels, clip splitting, and ZIP integrity. Open http://127.0.0.1:4173/tests/browser.html and choose Run diagnostics for actual audio renders/decoding, channel processing, fades, persistence/recovery, split/undo, transport, export actions, and note recording with count-in. Diagnostics use a dedicated session and move it to Recently removed afterwards.
+
+Microphones and Web MIDI require HTTPS or localhost. MIDI permission is requested only after Connect MIDI is clicked; no system-exclusive permission is requested. Web MIDI support varies; use a supported browser such as Chrome or Edge. Physical microphones/interfaces, driver latency, MIDI controllers, mobile multi-touch, and cross-browser performance require hardware/browser testing. Diagnostics do not assess acoustic or mastering quality.
 
 ## GitHub Pages
 
-This repository is a static site. In **Settings → Pages**, use **Deploy from a branch**, the `main` branch, and the `/(root)` folder. `.nojekyll` lets GitHub serve the files directly.
+This remains a static GitHub Pages site. In Settings > Pages, use Deploy from a branch, main, /(root). No paid services or backend configuration are required.
 
-## Limits
+## Current scope
 
-Instrument sounds are synthesized. There are no VST/AU plugins, external MIDI devices, time stretching, pitch correction, latency calibration, or full mastering tools. Export runs in real time. Embedded PCM audio can make project files large.
+This release strengthens music creation; it does not claim full BandLab parity. There are no accounts, cloud projects, collaboration, community publishing, vocal pitch correction, time stretching, VST/AU hosting, track automation, simultaneous multichannel recording, or MIDI-file import. Instruments are synthesized. Audio-interface latency is not automatically calibrated.
 
-Browser workflows for note recording, loop insertion, audio import/editing, project save/reopen, undo/redo, and audio export were checked. Physical microphone/audio-interface capture and multi-finger mobile touch still need hardware testing.
-
-Audio stays on your device or in project files you download. The application has no upload server. Fonts may load from Google Fonts; system-font fallbacks work offline.
+Audio stays on the device or in downloaded files. Fonts may load from Google Fonts; system fallbacks work offline after the application files are loaded.
