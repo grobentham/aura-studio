@@ -70,3 +70,22 @@ Dynamic Upright uses 23 recorded roots / four layers across the 88-key range. Ex
 Run node --test tests/core.test.cjs tests/instruments.test.cjs tests/production.test.cjs. Browser suites: tests/browser.html, tests/instruments.html, tests/interface.html, tests/production.html. The production suite tests Record focus, mixer Undo, starter isolation, automation/dry exports, sampler persistence, actual AudioWorklet transforms and genuine velocity-layer dynamics.
 
 To reproduce new sample preparation, run node scripts/prepare-assets.mjs. It writes scripts/prepared; copy its samples output into samples and retain the sources/notices. The existing sample-generation script reproduces the legacy banks.
+
+
+## Playing and sample-library feedback
+
+The note editor now has Draw/Select modes, Select all, Duplicate notes (Ctrl/Cmd+D), and a selected-note count. In Select mode drag a box; Shift-click adds/removes notes. Duplicate keeps their rhythm and intervals. Arrow Up/Down audition the new pitch, with a Hear moves toggle. Group moves preserve spacing at pitch and timeline boundaries. Piano keys, drum rows and playing buttons light for computer-keyboard, MIDI, touch and audition input; the playing view names sounding notes.
+
+The cycle dropdown and Tools → Loop range accept bar.beat positions such as 4.2 → 5.1, plus hundredth-beat ticks such as 4.2.50. Ruler snapping offers bars, beats, subdivisions or free placement. Loop dragging supports Undo and re-anchors playback. Recording must finish before changing a loop.
+
+AudioContext requests interactive latency. Ready voices start immediately; holding a key while a recording loads starts it as soon as ready, without a second press. Releasing before loading completes cancels it. The original press time is retained for recording. Browser/output/hardware delay still varies and has not been measured by a physical loopback test.
+
+Recorded is the default instrument-browser view. Natural Violin and Bowed Cellos add two genuine recorded dynamics per selected root from VSCO 2 CE; Live Room Kit adds real acoustic performances from Virtuosity Drums with VCSL claps. Bowed Cellos is a cello section. Compact string samples preserve natural attacks and sustain for up to eight seconds, without a guessed looping section. Existing saved synth/legacy assignments retain their sound.
+
+Sounds → Loops now separates Recorded beats, Drum hits and editable Patterns. Twelve two-bar ready audio beats are Aura arrangements of real acoustic drum recordings, not source-supplied full drummer performances. Sixteen one-shots cover kick, snare, clap, hats, tom, rim and crash. Preview/add as audio, optionally fit to project tempo with pitch-preserving time stretching (50–200%). Native BPM, actual waveform peaks and credits are shown. Added audio is included in recovery, portable projects, cloud sync and exports.
+
+All 84 new OGG assets total about 8 MB. Source pins, transformations, output hashes and original CC0 notices are in samples/natural-manifest.json and samples/natural-sources/. Reproduction scripts and a checked asset selection are archived in scripts/recorded-audio/.
+
+Run node --test tests/core.test.cjs tests/instruments.test.cjs tests/production.test.cjs tests/feedback.test.cjs. Browser tests/feedback.html verifies audible landed pitches, grouped duplication, lights/release, exact loop positions, real sample decoding, beat tempo-fit/export/recovery and held/released key behavior during loading. It uses an isolated project and restores the original session.
+
+The current factory collection has 40 sounds: 23 recorded melodic instruments, two recorded acoustic kits, 11 original synth sounds and four synthesized kits. The extra audio library provides 12 ready beats and 16 individual drum recordings.

@@ -1,0 +1,3630 @@
+{
+  "version": 1,
+  "loops": [
+    {
+      "id": "pocket-acoustic",
+      "name": "Pocket Acoustic",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Hip-hop",
+      "bpm": 78,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/pocket-acoustic-78.ogg",
+      "duration": 6.15384375,
+      "sha256": "3dc6edda4feafa65047e7a90a6412e56a16ee75ad376ea16b7420aecb76fa733",
+      "bytes": 88148,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.8172,
+        0.2442,
+        0.0873,
+        0.2096,
+        0.0381,
+        0.0234,
+        0.6859,
+        0.0314,
+        0.0123,
+        0.8859,
+        0.2454,
+        0.0937,
+        0.2902,
+        0.0407,
+        0.0256,
+        0.2164,
+        0.0214,
+        0.0105,
+        0.7485,
+        0.0344,
+        0.008,
+        0.2137,
+        0.0109,
+        0.0047,
+        0.843,
+        0.2384,
+        0.0866,
+        0.2178,
+        0.0365,
+        0.023,
+        0.6715,
+        0.0321,
+        0.0124,
+        0.2288,
+        0.0112,
+        0.0021,
+        0.3086,
+        0.0179,
+        0.0032,
+        0.8664,
+        0.2491,
+        0.0951,
+        0.7849,
+        0.0562,
+        0.028,
+        0.2156,
+        0.0207,
+        0.0114
+      ]
+    },
+    {
+      "id": "easy-rock",
+      "name": "Easy Rock",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Rock",
+      "bpm": 96,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/easy-rock-96.ogg",
+      "duration": 5,
+      "sha256": "03d94109233e941bd8bfbe8bf92acab14f1e6831ca689e21a9a8b552effd0184",
+      "bytes": 73447,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.8097,
+        0.258,
+        0.1373,
+        0.1952,
+        0.0544,
+        0.0294,
+        0.7118,
+        0.0427,
+        0.0196,
+        0.2123,
+        0.0262,
+        0.0068,
+        0.8823,
+        0.2825,
+        0.1483,
+        0.2096,
+        0.0539,
+        0.0309,
+        0.7401,
+        0.06,
+        0.0217,
+        0.1893,
+        0.0258,
+        0.0083,
+        0.8097,
+        0.258,
+        0.1373,
+        0.1952,
+        0.0544,
+        0.0294,
+        0.7118,
+        0.0427,
+        0.0196,
+        0.2123,
+        0.0262,
+        0.0068,
+        0.8823,
+        0.2825,
+        0.1483,
+        0.2096,
+        0.0539,
+        0.0309,
+        0.7401,
+        0.06,
+        0.0217,
+        0.1893,
+        0.0258,
+        0.0083
+      ]
+    },
+    {
+      "id": "indie-drive",
+      "name": "Indie Drive",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Indie",
+      "bpm": 118,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/indie-drive-118.ogg",
+      "duration": 4.06778125,
+      "sha256": "bffe4966be7e4ddd1d9978488fdc94895732f66d60f60deb690e1f4774f498a3",
+      "bytes": 62147,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.788,
+        0.3263,
+        0.1577,
+        0.2354,
+        0.0745,
+        0.0394,
+        0.6711,
+        0.0928,
+        0.0265,
+        0.8294,
+        0.3458,
+        0.1621,
+        0.8296,
+        0.383,
+        0.1864,
+        0.2445,
+        0.0897,
+        0.0543,
+        0.7137,
+        0.0829,
+        0.041,
+        0.2432,
+        0.0467,
+        0.0167,
+        0.8537,
+        0.347,
+        0.1657,
+        0.226,
+        0.0775,
+        0.0409,
+        0.6423,
+        0.0993,
+        0.028,
+        0.7868,
+        0.3251,
+        0.1582,
+        0.8506,
+        0.385,
+        0.1885,
+        0.2284,
+        0.0928,
+        0.0527,
+        0.718,
+        0.0826,
+        0.0418,
+        0.2182,
+        0.0449,
+        0.0166
+      ]
+    },
+    {
+      "id": "jazz-ride",
+      "name": "Jazz Room",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Jazz",
+      "bpm": 110,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/jazz-ride-110.ogg",
+      "duration": 4.363625,
+      "sha256": "37440f843b3dcc997eec0bafe5b3be49be9b69732ffc8854ed29ce31cb22d217",
+      "bytes": 80312,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 1,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 4,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        }
+      ],
+      "waveform": [
+        0.827,
+        0.341,
+        0.1806,
+        0.0951,
+        0.0662,
+        0.052,
+        0.1488,
+        0.0467,
+        0.041,
+        0.031,
+        0.0312,
+        0.0237,
+        0.2231,
+        0.036,
+        0.0263,
+        0.0233,
+        0.0213,
+        0.0159,
+        0.7381,
+        0.0599,
+        0.0373,
+        0.0254,
+        0.0239,
+        0.019,
+        0.8733,
+        0.3711,
+        0.1889,
+        0.0988,
+        0.069,
+        0.0537,
+        0.1309,
+        0.0457,
+        0.0421,
+        0.0309,
+        0.0319,
+        0.026,
+        0.1998,
+        0.0359,
+        0.0278,
+        0.0227,
+        0.0197,
+        0.0159,
+        0.8022,
+        0.0623,
+        0.0346,
+        0.029,
+        0.0233,
+        0.017
+      ]
+    },
+    {
+      "id": "half-time-room",
+      "name": "Half-time Room",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Hip-hop",
+      "bpm": 82,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/half-time-room-82.ogg",
+      "duration": 5.85365625,
+      "sha256": "76dec21787ab0d93789adb292efef05a1e77471eb25643197b852682bb0e60fe",
+      "bytes": 84055,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5.75,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.824,
+        0.2433,
+        0.1016,
+        0.2789,
+        0.0383,
+        0.0223,
+        0.2708,
+        0.0265,
+        0.0121,
+        0.8809,
+        0.2391,
+        0.1057,
+        0.6783,
+        0.055,
+        0.0268,
+        0.2152,
+        0.0221,
+        0.0119,
+        0.2804,
+        0.0167,
+        0.0034,
+        0.2287,
+        0.0157,
+        0.0025,
+        0.8246,
+        0.2381,
+        0.0939,
+        0.2499,
+        0.0399,
+        0.023,
+        0.27,
+        0.0259,
+        0.0119,
+        0.2036,
+        0.8263,
+        0.4548,
+        0.759,
+        0.0861,
+        0.0463,
+        0.2246,
+        0.0281,
+        0.0169,
+        0.2773,
+        0.0233,
+        0.0061,
+        0.2205,
+        0.0129,
+        0.0026
+      ]
+    },
+    {
+      "id": "four-floor-live",
+      "name": "Four on the Floor",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "House",
+      "bpm": 124,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/four-floor-live-124.ogg",
+      "duration": 3.87096875,
+      "sha256": "e5e354e35d05295971df4f19788fdb3643e8b0edf15a96f6b3b6962ee2d47c8a",
+      "bytes": 65989,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-open",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.4731,
+        0.2325,
+        0.1006,
+        0.137,
+        0.0381,
+        0.0268,
+        0.8223,
+        0.2315,
+        0.106,
+        0.114,
+        0.0426,
+        0.0302,
+        0.477,
+        0.2275,
+        0.1006,
+        0.1386,
+        0.0394,
+        0.0293,
+        0.8508,
+        0.2371,
+        0.1053,
+        0.1183,
+        0.046,
+        0.0301,
+        0.4468,
+        0.2265,
+        0.1006,
+        0.1414,
+        0.0404,
+        0.03,
+        0.826,
+        0.227,
+        0.1076,
+        0.1294,
+        0.0425,
+        0.0299,
+        0.4731,
+        0.213,
+        0.1007,
+        0.1417,
+        0.0396,
+        0.0286,
+        0.8616,
+        0.2313,
+        0.1064,
+        0.1257,
+        0.0457,
+        0.0306
+      ]
+    },
+    {
+      "id": "offbeat-room",
+      "name": "Offbeat Room",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Reggae",
+      "bpm": 90,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/offbeat-room-90.ogg",
+      "duration": 5.33334375,
+      "sha256": "3a65421eac6e0289c2d0ad8f43a710b22a539a803231b96fcf3bd15ec246c479",
+      "bytes": 79255,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.7994,
+        0.2594,
+        0.1347,
+        0.224,
+        0.0475,
+        0.0294,
+        0.3133,
+        0.0311,
+        0.0135,
+        0.2055,
+        0.0182,
+        0.0133,
+        0.67,
+        0.0252,
+        0.0051,
+        0.2285,
+        0.0181,
+        0.0027,
+        0.3181,
+        0.0252,
+        0.0052,
+        0.2087,
+        0.0165,
+        0.0034,
+        0.8606,
+        0.2829,
+        0.1345,
+        0.2069,
+        0.0468,
+        0.0313,
+        0.2948,
+        0.0347,
+        0.0148,
+        0.2238,
+        0.0226,
+        0.003,
+        0.6939,
+        0.0259,
+        0.0072,
+        0.2063,
+        0.0163,
+        0.0034,
+        0.3002,
+        0.025,
+        0.0048,
+        0.2134,
+        0.0178,
+        0.0025
+      ]
+    },
+    {
+      "id": "funk-pockets",
+      "name": "Funk Pockets",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Funk",
+      "bpm": 106,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/funk-pockets-106.ogg",
+      "duration": 4.5283125,
+      "sha256": "9ed67e9d232497b958576df1135cd006a1da6933747b67992d469fa7d49db1c0",
+      "bytes": 72401,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 0.75,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2.75,
+          "voice": "snare",
+          "gain": 0.2
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4.75,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6.75,
+          "voice": "snare",
+          "gain": 0.23
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.25,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7.75,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.7855,
+        0.3222,
+        0.168,
+        0.3197,
+        0.8232,
+        0.5387,
+        0.7085,
+        0.2286,
+        0.0942,
+        0.2357,
+        0.216,
+        0.0651,
+        0.2823,
+        0.1799,
+        0.0562,
+        0.7583,
+        0.3281,
+        0.171,
+        0.6079,
+        0.2045,
+        0.0647,
+        0.3007,
+        0.2191,
+        0.061,
+        0.8087,
+        0.3129,
+        0.177,
+        0.3149,
+        0.7834,
+        0.5037,
+        0.8819,
+        0.2457,
+        0.0975,
+        0.2523,
+        0.2076,
+        0.0658,
+        0.2739,
+        0.2109,
+        0.0525,
+        0.8194,
+        0.3385,
+        0.187,
+        0.6951,
+        0.1864,
+        0.0734,
+        0.2712,
+        0.1969,
+        0.0628
+      ]
+    },
+    {
+      "id": "shuffle-room",
+      "name": "Shuffle Room",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Blues",
+      "bpm": 102,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/shuffle-room-102.ogg",
+      "duration": 4.705875,
+      "sha256": "21b79ae379074148b96e63f395647e8fa121ea30516146bf62f65c901f2a5b3b",
+      "bytes": 70464,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.66,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.807,
+        0.307,
+        0.1557,
+        0.0659,
+        0.2466,
+        0.0398,
+        0.6817,
+        0.0598,
+        0.0203,
+        0.0355,
+        0.2351,
+        0.0244,
+        0.8887,
+        0.3206,
+        0.1623,
+        0.0701,
+        0.2304,
+        0.0407,
+        0.759,
+        0.0589,
+        0.0279,
+        0.0259,
+        0.2321,
+        0.0334,
+        0.8102,
+        0.3107,
+        0.1542,
+        0.0655,
+        0.2192,
+        0.0394,
+        0.6992,
+        0.0627,
+        0.0209,
+        0.0183,
+        0.2404,
+        0.0256,
+        0.8747,
+        0.3216,
+        0.1684,
+        0.0681,
+        0.2329,
+        0.0425,
+        0.7365,
+        0.0633,
+        0.0268,
+        0.0291,
+        0.2152,
+        0.0246
+      ]
+    },
+    {
+      "id": "cross-stick-chill",
+      "name": "Cross-stick Chill",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Chill",
+      "bpm": 86,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/cross-stick-chill-86.ogg",
+      "duration": 5.58140625,
+      "sha256": "03d048031979a9d256cc2a88d2c6d79bc78c6dc70474d03f4b397af4cee2abb8",
+      "bytes": 81899,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "rim",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.8117,
+        0.2602,
+        0.1093,
+        0.2536,
+        0.0443,
+        0.0227,
+        0.6952,
+        0.03,
+        0.0127,
+        0.2161,
+        0.0163,
+        0.0029,
+        0.2876,
+        0.0198,
+        0.0038,
+        0.8682,
+        0.2712,
+        0.1126,
+        0.6706,
+        0.064,
+        0.027,
+        0.2063,
+        0.0278,
+        0.013,
+        0.841,
+        0.2754,
+        0.1084,
+        0.2434,
+        0.0463,
+        0.0231,
+        0.7209,
+        0.0291,
+        0.0133,
+        0.2144,
+        0.0184,
+        0.0033,
+        0.2728,
+        0.0204,
+        0.0037,
+        0.8608,
+        0.2737,
+        0.1147,
+        0.6859,
+        0.0552,
+        0.0274,
+        0.2297,
+        0.0266,
+        0.0133
+      ]
+    },
+    {
+      "id": "acoustic-break",
+      "name": "Acoustic Break",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Breakbeat",
+      "bpm": 132,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/acoustic-break-132.ogg",
+      "duration": 3.636375,
+      "sha256": "c30043c5a61a1cc6d07844ca99f3871ecf5fe14088704aabfaa40636fcfa776c",
+      "bytes": 57241,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3.5,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        }
+      ],
+      "waveform": [
+        0.7725,
+        0.3832,
+        0.162,
+        0.2065,
+        0.0841,
+        0.057,
+        0.6589,
+        0.0932,
+        0.0319,
+        0.7931,
+        0.3772,
+        0.1599,
+        0.2367,
+        0.0946,
+        0.0531,
+        0.1972,
+        0.0511,
+        0.0256,
+        0.7116,
+        0.1002,
+        0.0291,
+        0.7696,
+        0.3556,
+        0.1636,
+        0.8698,
+        0.4556,
+        0.2064,
+        0.2201,
+        0.1077,
+        0.0759,
+        0.6611,
+        0.102,
+        0.0405,
+        0.2148,
+        0.0448,
+        0.0256,
+        0.7696,
+        0.3737,
+        0.1607,
+        0.2394,
+        0.0829,
+        0.0573,
+        0.7169,
+        0.0843,
+        0.033,
+        0.1964,
+        0.0392,
+        0.0192
+      ]
+    },
+    {
+      "id": "tom-turnaround",
+      "name": "Tom Turnaround",
+      "kind": "recorded-loop",
+      "category": "Drums",
+      "genre": "Rock",
+      "bpm": 112,
+      "bars": 2,
+      "beats": 8,
+      "meter": [
+        4,
+        4
+      ],
+      "key": null,
+      "oneShot": false,
+      "file": "recorded-beats/tom-turnaround-112.ogg",
+      "duration": 4.28571875,
+      "sha256": "157dcf4d14a5e398e94683fad925dd4cc461f11dfdd83a533a2fc7824be089c9",
+      "bytes": 63966,
+      "source": "Virtuosity Drums acoustic recordings; arranged by Aura",
+      "sourceProvidedLoop": false,
+      "arranger": "Aura",
+      "license": "CC0-1.0",
+      "arrangement": [
+        {
+          "beat": 0,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 0,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 0.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 1,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 1,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 1.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 2,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 2,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 2.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 3,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 3,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 3.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 4,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 4,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 4.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 5,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 5,
+          "voice": "snare",
+          "gain": 0.86
+        },
+        {
+          "beat": 5.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 6,
+          "voice": "kick",
+          "gain": 0.92
+        },
+        {
+          "beat": 6.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 6.5,
+          "voice": "tom",
+          "gain": 0.65
+        },
+        {
+          "beat": 7,
+          "voice": "hat-closed",
+          "gain": 0.35
+        },
+        {
+          "beat": 7,
+          "voice": "tom",
+          "gain": 0.72
+        },
+        {
+          "beat": 7.5,
+          "voice": "hat-closed",
+          "gain": 0.28
+        },
+        {
+          "beat": 7.5,
+          "voice": "snare",
+          "gain": 0.8
+        }
+      ],
+      "waveform": [
+        0.8058,
+        0.3171,
+        0.1635,
+        0.2607,
+        0.0802,
+        0.0431,
+        0.6845,
+        0.0619,
+        0.0262,
+        0.2167,
+        0.031,
+        0.0127,
+        0.8863,
+        0.3342,
+        0.1692,
+        0.2568,
+        0.0796,
+        0.0415,
+        0.7351,
+        0.0962,
+        0.0287,
+        0.2473,
+        0.0324,
+        0.0149,
+        0.8051,
+        0.3124,
+        0.1616,
+        0.2477,
+        0.0817,
+        0.0413,
+        0.6496,
+        0.0646,
+        0.0258,
+        0.23,
+        0.0324,
+        0.0139,
+        0.8742,
+        0.3423,
+        0.1676,
+        0.5203,
+        0.223,
+        0.1034,
+        0.683,
+        0.2265,
+        0.1073,
+        0.7436,
+        0.0781,
+        0.0252
+      ]
+    }
+  ],
+  "oneShots": [
+    {
+      "file": "natural-kit/kick-1.ogg",
+      "sha256": "769381330d40c5172cb92b86afd4dba5a9ba1b2a4c56f36412a56fbd7f6dbbe7",
+      "bytes": 9299,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1.2,
+      "peak": 0.7421994805335999,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/kickmic/kick/kickmic_kick_snon_vl3_rr1.flac",
+      "sourceGitBlob": "83f5a89d0b25f0feef1e64c68a80c7b8565351ef",
+      "sourceSHA256": "a317688b4a81cb833c579f0004beb4fef46b3c80c858448fe3413b2f9b9410be",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "kick",
+      "variant": 1,
+      "name": "Kick 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7422,
+        0.6046,
+        0.4841,
+        0.3673,
+        0.2861,
+        0.2305,
+        0.1706,
+        0.156,
+        0.1322,
+        0.1313,
+        0.084,
+        0.08,
+        0.0648,
+        0.0528,
+        0.058,
+        0.0533,
+        0.0469,
+        0.0343,
+        0.0369,
+        0.0351,
+        0.0275,
+        0.0273,
+        0.0276,
+        0.0224,
+        0.0197,
+        0.0212,
+        0.0193,
+        0.017,
+        0.0176,
+        0.0154,
+        0.0151,
+        0.014,
+        0.0138,
+        0.013,
+        0.0117,
+        0.0114,
+        0.011,
+        0.0102,
+        0.0096,
+        0.0094,
+        0.0087,
+        0.008,
+        0.0077,
+        0.0077,
+        0.0072,
+        0.0059,
+        0.0036,
+        0.0015
+      ]
+    },
+    {
+      "file": "natural-kit/kick-2.ogg",
+      "sha256": "dd5d00aa31026d4022bdf781a026e6b43167b16eee2457d6f550489e35f6a1fd",
+      "bytes": 9173,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1.2,
+      "peak": 0.7608802318572998,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/kickmic/kick/kickmic_kick_snon_vl3_rr2.flac",
+      "sourceGitBlob": "27fa04f7fe2f6c7bd47cb8d4c1c3bf481ce328b9",
+      "sourceSHA256": "387835266e8c7b12310ff41956503d0d9af93722bdcb77f683a1a0d4bdaa67eb",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "kick",
+      "variant": 2,
+      "name": "Kick 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7609,
+        0.6304,
+        0.5234,
+        0.3839,
+        0.3072,
+        0.2342,
+        0.1751,
+        0.1638,
+        0.1373,
+        0.1313,
+        0.0877,
+        0.0836,
+        0.0686,
+        0.0571,
+        0.0597,
+        0.0557,
+        0.0494,
+        0.0342,
+        0.039,
+        0.0367,
+        0.0286,
+        0.0288,
+        0.0295,
+        0.024,
+        0.021,
+        0.0232,
+        0.0215,
+        0.0179,
+        0.0188,
+        0.0165,
+        0.0162,
+        0.0152,
+        0.015,
+        0.0135,
+        0.0129,
+        0.0122,
+        0.0122,
+        0.0114,
+        0.0104,
+        0.0102,
+        0.0096,
+        0.009,
+        0.0089,
+        0.0088,
+        0.0083,
+        0.0066,
+        0.0038,
+        0.0018
+      ]
+    },
+    {
+      "file": "natural-kit/snare-1.ogg",
+      "sha256": "f70ffa4f0dbcbdc65525f4a51814c3d4ee62a5f38658c9b63b639a72c24ca532",
+      "bytes": 17019,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1.93290625,
+      "peak": 0.6998588442802429,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/snaremic/snare/snaremic_snare_center_vl14.flac",
+      "sourceGitBlob": "f3dcb02cde0590a47735446e876fd871a02f5b70",
+      "sourceSHA256": "a9918e1387646ce3669af61d64ad47b8d62c033ed2ed7718c14838fd0ac8ca79",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "snare",
+      "variant": 1,
+      "name": "Snare 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6999,
+        0.2259,
+        0.0774,
+        0.0248,
+        0.0172,
+        0.0103,
+        0.0064,
+        0.0048,
+        0.0038,
+        0.004,
+        0.0024,
+        0.0025,
+        0.0017,
+        0.0016,
+        0.0012,
+        0.0011,
+        0.001,
+        0.001,
+        0.0007,
+        0.0007,
+        0.0006,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0005,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0001,
+        0.0001,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/snare-2.ogg",
+      "sha256": "b9156565782138b98738e832a31549f5723343a31c4c563d677d1bea91e50683",
+      "bytes": 15242,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1.6826875,
+      "peak": 0.8032073974609375,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/snaremic/snare/snaremic_snare_center_vl15.flac",
+      "sourceGitBlob": "61e643c0011b6d8592c0037970aae8a3679788e3",
+      "sourceSHA256": "e9cb0a3088373993c6cfa8dc75e198714ed849ffa41a152cef92e52269dd781d",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "snare",
+      "variant": 2,
+      "name": "Snare 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.8032,
+        0.2997,
+        0.1077,
+        0.0362,
+        0.0203,
+        0.0132,
+        0.0105,
+        0.0079,
+        0.006,
+        0.0051,
+        0.0056,
+        0.0035,
+        0.0038,
+        0.0028,
+        0.0025,
+        0.0024,
+        0.0016,
+        0.0017,
+        0.0015,
+        0.0012,
+        0.0014,
+        0.001,
+        0.001,
+        0.0008,
+        0.0007,
+        0.0006,
+        0.0007,
+        0.0005,
+        0.0005,
+        0.0006,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0005,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0001,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/clap-1.ogg",
+      "sha256": "01b1a042c8cfad2a95f4bb60b709f540f11c7576fd3c93a25da6a1160522587f",
+      "bytes": 13539,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 0.73921875,
+      "peak": 0.7428170442581177,
+      "sourceRepo": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Claps/Clap_rr1.wav",
+      "sourceGitBlob": null,
+      "sourceSHA256": "4c9f3fe4a34733b9be6ed9ce5e5aad48b19c1029ae9c6dd1b96294a847539e3f",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "clap",
+      "variant": 1,
+      "name": "Clap 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "VCSL recorded hand clap",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6567,
+        0.5702,
+        0.5064,
+        0.7428,
+        0.1015,
+        0.0912,
+        0.0849,
+        0.0407,
+        0.0326,
+        0.0229,
+        0.0161,
+        0.0115,
+        0.0136,
+        0.008,
+        0.0067,
+        0.0048,
+        0.0039,
+        0.0034,
+        0.003,
+        0.0022,
+        0.0018,
+        0.0015,
+        0.0009,
+        0.0008,
+        0.0008,
+        0.0007,
+        0.0006,
+        0.0006,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0005,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0005,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0001,
+        0.0001
+      ]
+    },
+    {
+      "file": "natural-kit/clap-2.ogg",
+      "sha256": "1e02286a14763d3e6f8671aae2b1e706952316d2fa734db43f6afcd320ca2592",
+      "bytes": 12962,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 0.7130625,
+      "peak": 0.7733878493309021,
+      "sourceRepo": "sgossner/VCSL",
+      "sourceCommit": "c1ea7bcc3c7309650ab0da9d15c9cd1fbc4a4c7e",
+      "sourcePath": "Idiophones/Struck Idiophones/Claps/Clap_rr2.wav",
+      "sourceGitBlob": null,
+      "sourceSHA256": "5ae64e838b76d0658cc541f07c3c7dcfd4b08815a915f32843a8279bf2c33b9a",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "clap",
+      "variant": 2,
+      "name": "Clap 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "VCSL recorded hand clap",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6983,
+        0.7734,
+        0.5477,
+        0.3121,
+        0.109,
+        0.0906,
+        0.0553,
+        0.0349,
+        0.0334,
+        0.0197,
+        0.0175,
+        0.0164,
+        0.0111,
+        0.0085,
+        0.0067,
+        0.0057,
+        0.0043,
+        0.0033,
+        0.0028,
+        0.0023,
+        0.0021,
+        0.0012,
+        0.0013,
+        0.0009,
+        0.001,
+        0.0008,
+        0.0006,
+        0.0005,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0003,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001
+      ]
+    },
+    {
+      "file": "natural-kit/hat-closed-1.ogg",
+      "sha256": "1178b0690227fede9945a5c0d7ee09783534acadb1ed91bee0575ea9aea4becf",
+      "bytes": 12498,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 0.6,
+      "peak": 0.7896511554718018,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/hh/oh_hh_closed_vl4_rr1.flac",
+      "sourceGitBlob": "bc44dee816193be60e66dc631e7db126d29bd748",
+      "sourceSHA256": "163b306f52ebe55017e46a7b664b8438458bd7becc01553309a2f441c0bd452b",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "hat-closed",
+      "variant": 1,
+      "name": "Hat Closed 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7897,
+        0.2538,
+        0.271,
+        0.2698,
+        0.2171,
+        0.2033,
+        0.1307,
+        0.104,
+        0.077,
+        0.0612,
+        0.0483,
+        0.0375,
+        0.0267,
+        0.0274,
+        0.0207,
+        0.0141,
+        0.0135,
+        0.0118,
+        0.0114,
+        0.0084,
+        0.0063,
+        0.0078,
+        0.005,
+        0.0044,
+        0.0039,
+        0.004,
+        0.0037,
+        0.0028,
+        0.0027,
+        0.002,
+        0.0015,
+        0.0018,
+        0.0013,
+        0.0012,
+        0.0014,
+        0.0009,
+        0.0012,
+        0.0011,
+        0.001,
+        0.001,
+        0.0008,
+        0.0007,
+        0.0005,
+        0.0003,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0001
+      ]
+    },
+    {
+      "file": "natural-kit/hat-closed-2.ogg",
+      "sha256": "6c268f8d4c1e352b2d86800728b9dda66759ffe7a6cd813883eb5b902b2f5b82",
+      "bytes": 12422,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 0.6,
+      "peak": 0.6813624501228333,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/hh/oh_hh_closed_vl4_rr2.flac",
+      "sourceGitBlob": "51f22f67572841dc5b15034a6e6e975598b9e18d",
+      "sourceSHA256": "32aa1fdbf7be06eb31a1665d5b6390fe3c6209d0abe4230351f07c1af9d4d0c2",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "hat-closed",
+      "variant": 2,
+      "name": "Hat Closed 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6814,
+        0.2865,
+        0.2388,
+        0.1686,
+        0.1486,
+        0.1362,
+        0.1142,
+        0.1123,
+        0.0752,
+        0.0539,
+        0.0379,
+        0.0308,
+        0.0302,
+        0.0224,
+        0.0198,
+        0.0169,
+        0.0131,
+        0.01,
+        0.0082,
+        0.0079,
+        0.0065,
+        0.0054,
+        0.0058,
+        0.0035,
+        0.0039,
+        0.003,
+        0.0026,
+        0.0026,
+        0.0022,
+        0.0017,
+        0.0017,
+        0.0018,
+        0.0012,
+        0.001,
+        0.001,
+        0.0007,
+        0.0007,
+        0.0006,
+        0.0008,
+        0.0007,
+        0.0006,
+        0.0006,
+        0.0005,
+        0.0003,
+        0.0003,
+        0.0002,
+        0.0001,
+        0.0001
+      ]
+    },
+    {
+      "file": "natural-kit/hat-open-1.ogg",
+      "sha256": "c54ccd99d473093285997ef9e180fb8e5ff7414377c664de622a0adf1249830e",
+      "bytes": 50111,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 3,
+      "peak": 0.5915439128875732,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/hh/oh_hh_open_vl2_rr1.flac",
+      "sourceGitBlob": "5bf1aa91c0a148c6f41d492c7c70dfafae77631a",
+      "sourceSHA256": "70974258a4b6b702b4d9ce3ef0f6668d0b0d211e0481253d4408d9acf848d012",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "hat-open",
+      "variant": 1,
+      "name": "Hat Open 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.5915,
+        0.1265,
+        0.0929,
+        0.0803,
+        0.0712,
+        0.05,
+        0.0608,
+        0.0436,
+        0.0417,
+        0.0374,
+        0.0315,
+        0.0384,
+        0.0337,
+        0.0233,
+        0.0279,
+        0.0257,
+        0.026,
+        0.0255,
+        0.0211,
+        0.0184,
+        0.0178,
+        0.015,
+        0.0141,
+        0.012,
+        0.0113,
+        0.0154,
+        0.0116,
+        0.0111,
+        0.0112,
+        0.009,
+        0.0105,
+        0.0084,
+        0.009,
+        0.008,
+        0.0086,
+        0.0066,
+        0.0071,
+        0.0066,
+        0.0066,
+        0.0053,
+        0.0058,
+        0.0065,
+        0.0051,
+        0.0053,
+        0.0046,
+        0.0043,
+        0.0041,
+        0.0025
+      ]
+    },
+    {
+      "file": "natural-kit/hat-open-2.ogg",
+      "sha256": "da2ba60a89ff6ba6b8e3d08b04d6f28c4012e300473f8ec5587faa513fcd201e",
+      "bytes": 49441,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 3,
+      "peak": 0.5102157592773438,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/hh/oh_hh_open_vl2_rr2.flac",
+      "sourceGitBlob": "362b3662725f89c1bfed1bd58b79897cc5a75f83",
+      "sourceSHA256": "73cb8823ceb31e7ddbab0a8830b58a02af9e11ad78087712f8ac3b7578cfac45",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "hat-open",
+      "variant": 2,
+      "name": "Hat Open 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.5102,
+        0.1197,
+        0.0916,
+        0.0782,
+        0.069,
+        0.0671,
+        0.0565,
+        0.046,
+        0.0423,
+        0.0437,
+        0.0341,
+        0.0365,
+        0.0333,
+        0.0276,
+        0.0295,
+        0.0249,
+        0.0274,
+        0.0202,
+        0.0232,
+        0.0224,
+        0.0182,
+        0.0157,
+        0.0159,
+        0.0156,
+        0.0155,
+        0.0166,
+        0.0139,
+        0.0124,
+        0.0144,
+        0.0139,
+        0.0107,
+        0.0108,
+        0.0089,
+        0.0081,
+        0.009,
+        0.007,
+        0.0063,
+        0.0064,
+        0.0063,
+        0.0061,
+        0.0059,
+        0.0055,
+        0.0052,
+        0.0057,
+        0.0047,
+        0.0051,
+        0.0051,
+        0.0031
+      ]
+    },
+    {
+      "file": "natural-kit/tom-1.ogg",
+      "sha256": "eee75586e217895bb6ceb1563e59680edc68131e4067f2ff247cf2fb85670d48",
+      "bytes": 26376,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 1.926,
+      "peak": 0.7521212100982666,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/htom/oh_htom_center_vl13.flac",
+      "sourceGitBlob": "d162346fbebd0e901b8445af258445b9728e7e5b",
+      "sourceSHA256": "0a54429e26cfedcadad58d580af98978c53e4971f59af9f1f0158a79dcc37381",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "tom",
+      "variant": 1,
+      "name": "Tom 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7521,
+        0.4686,
+        0.293,
+        0.1714,
+        0.1086,
+        0.0766,
+        0.0564,
+        0.0461,
+        0.0293,
+        0.0171,
+        0.0164,
+        0.0134,
+        0.0101,
+        0.0075,
+        0.0077,
+        0.0084,
+        0.0054,
+        0.0047,
+        0.0031,
+        0.0035,
+        0.0032,
+        0.003,
+        0.0018,
+        0.0018,
+        0.0021,
+        0.0015,
+        0.0011,
+        0.001,
+        0.0011,
+        0.0012,
+        0.001,
+        0.0008,
+        0.0005,
+        0.0007,
+        0.0008,
+        0.0006,
+        0.0004,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/tom-2.ogg",
+      "sha256": "6f44830ed3eb8ae608de0f98a399034ed40b1b77dacf8f328e25d1a1c0b54be5",
+      "bytes": 28110,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 2.08225,
+      "peak": 0.7505468130111694,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/htom/oh_htom_center_vl14.flac",
+      "sourceGitBlob": "73d624cdc1eb7c731dd0d232450730ec4c6f4ee7",
+      "sourceSHA256": "767b825f16c4ecef0d6892307fec691fd946edc52b3f9e30293dcb11ceabe755",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "tom",
+      "variant": 2,
+      "name": "Tom 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7505,
+        0.4534,
+        0.2638,
+        0.1545,
+        0.1135,
+        0.0724,
+        0.0524,
+        0.0331,
+        0.0261,
+        0.0188,
+        0.0187,
+        0.0106,
+        0.01,
+        0.0073,
+        0.0071,
+        0.006,
+        0.0045,
+        0.0031,
+        0.004,
+        0.0036,
+        0.0024,
+        0.0019,
+        0.0019,
+        0.0018,
+        0.0016,
+        0.0008,
+        0.0009,
+        0.001,
+        0.0009,
+        0.0006,
+        0.0005,
+        0.0006,
+        0.0005,
+        0.0006,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0004,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0001,
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/rim-1.ogg",
+      "sha256": "de538a176c0db5ca0da720596c331e9e93aa7e5ecb99fefc39bbc1bb3b7106dd",
+      "bytes": 10629,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1,
+      "peak": 0.6476427316665649,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/snaremic/snare/snaremic_snare_crossstick_vl12.flac",
+      "sourceGitBlob": "e222bd9e67f50f188f50fd3363801d37c9735129",
+      "sourceSHA256": "dbc095af2eb7b58d2fd93cbbdc1e5e7cffc3eadd95bacde213e9f1d2035bfdb3",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "rim",
+      "variant": 1,
+      "name": "Rim 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6476,
+        0.1834,
+        0.0559,
+        0.0345,
+        0.0179,
+        0.0087,
+        0.0087,
+        0.0052,
+        0.0051,
+        0.0039,
+        0.0029,
+        0.0031,
+        0.0026,
+        0.0017,
+        0.0018,
+        0.0013,
+        0.0011,
+        0.0009,
+        0.0009,
+        0.0007,
+        0.0009,
+        0.0006,
+        0.0007,
+        0.0006,
+        0.0005,
+        0.0004,
+        0.0005,
+        0.0004,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0003,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/rim-2.ogg",
+      "sha256": "268f125a5050cc22b3929b034342dceb87d11bc6d550b56bb8e42cd5f8bb8374",
+      "bytes": 10641,
+      "sampleRate": 32000,
+      "channels": 1,
+      "duration": 1,
+      "peak": 0.7401907444000244,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/snaremic/snare/snaremic_snare_crossstick_vl13.flac",
+      "sourceGitBlob": "00245b67a2f8645b0d1419abf4d777e36f9e8187",
+      "sourceSHA256": "563a3478501c1c601f4b85a8fd4429b70d8d9cb3c74e5bb85bfe7a3bbe60252f",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "rim",
+      "variant": 2,
+      "name": "Rim 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7402,
+        0.1879,
+        0.0791,
+        0.0414,
+        0.0234,
+        0.0133,
+        0.0112,
+        0.0077,
+        0.0067,
+        0.006,
+        0.0043,
+        0.004,
+        0.0029,
+        0.0023,
+        0.002,
+        0.0015,
+        0.0012,
+        0.0011,
+        0.001,
+        0.0009,
+        0.001,
+        0.0008,
+        0.0007,
+        0.0008,
+        0.0005,
+        0.0005,
+        0.0005,
+        0.0004,
+        0.0004,
+        0.0005,
+        0.0005,
+        0.0003,
+        0.0004,
+        0.0004,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0003,
+        0.0002,
+        0.0002,
+        0.0002,
+        0.0001,
+        0.0001,
+        0.0001,
+        0.0
+      ]
+    },
+    {
+      "file": "natural-kit/crash-1.ogg",
+      "sha256": "701d5433d09a90115303e56715b5b53d53f5018d987de80483c8028c1ed94052",
+      "bytes": 78701,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 5.5,
+      "peak": 0.7524917721748352,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/crash/oh_crash_crash_vl2_rr1.flac",
+      "sourceGitBlob": "b6af432414327be04e97d23bc6c5dd3cc1c3e439",
+      "sourceSHA256": "2eb8c5bddc510bb56a48f325d9cdcc54ea52d926645df9180b206a820638fce1",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "crash",
+      "variant": 1,
+      "name": "Crash 1",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.7525,
+        0.6589,
+        0.5903,
+        0.565,
+        0.5023,
+        0.4731,
+        0.5254,
+        0.359,
+        0.3585,
+        0.303,
+        0.237,
+        0.2367,
+        0.1837,
+        0.1314,
+        0.1294,
+        0.1269,
+        0.1182,
+        0.0908,
+        0.0852,
+        0.0813,
+        0.0702,
+        0.0605,
+        0.0558,
+        0.047,
+        0.0441,
+        0.0423,
+        0.0302,
+        0.0316,
+        0.0289,
+        0.0278,
+        0.0235,
+        0.022,
+        0.019,
+        0.0207,
+        0.0151,
+        0.014,
+        0.0167,
+        0.013,
+        0.0121,
+        0.0113,
+        0.0107,
+        0.0095,
+        0.0094,
+        0.0079,
+        0.0078,
+        0.0068,
+        0.0067,
+        0.0064
+      ]
+    },
+    {
+      "file": "natural-kit/crash-2.ogg",
+      "sha256": "5dc753cefef8e7145cd8eb420142ac3fb4f2dca565e771dc3d84b299ff8ede7b",
+      "bytes": 78956,
+      "sampleRate": 32000,
+      "channels": 2,
+      "duration": 5.5,
+      "peak": 0.6912647485733032,
+      "sourceRepo": "sfzinstruments/virtuosity_drums",
+      "sourceCommit": "9f04cf9a734527edfbb0a4eee1f674e45bbf71bc",
+      "sourcePath": "Samples/oh/crash/oh_crash_crash_vl2_rr2.flac",
+      "sourceGitBlob": "c9cb2131b03410a6ecc38f495d96c20a6e41b61d",
+      "sourceSHA256": "501b67c566727274f6a9567816dbe94dd66624ee924e82c5fc84df2aa5743980",
+      "trimStartSeconds": 0,
+      "oneShot": true,
+      "bpm": null,
+      "bars": null,
+      "key": null,
+      "voice": "crash",
+      "variant": 2,
+      "name": "Crash 2",
+      "kind": "recorded-one-shot",
+      "category": "Drums",
+      "source": "Virtuosity Drums acoustic kit",
+      "license": "CC0-1.0",
+      "waveform": [
+        0.6913,
+        0.5871,
+        0.541,
+        0.4762,
+        0.3922,
+        0.3991,
+        0.41,
+        0.283,
+        0.2473,
+        0.2168,
+        0.1978,
+        0.1735,
+        0.1649,
+        0.1397,
+        0.1274,
+        0.1009,
+        0.086,
+        0.0816,
+        0.0694,
+        0.0666,
+        0.0589,
+        0.0572,
+        0.0623,
+        0.0588,
+        0.0392,
+        0.0359,
+        0.0319,
+        0.0346,
+        0.0273,
+        0.0225,
+        0.0209,
+        0.0205,
+        0.021,
+        0.0206,
+        0.0159,
+        0.0133,
+        0.0141,
+        0.0123,
+        0.0116,
+        0.0104,
+        0.0094,
+        0.0109,
+        0.0092,
+        0.0088,
+        0.0078,
+        0.0075,
+        0.0068,
+        0.0062
+      ]
+    }
+  ]
+}

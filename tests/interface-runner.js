@@ -11,7 +11,7 @@ document.querySelector('#run').onclick=async()=>{
       loadStarter('Lo-fi Sunday');await flushProject();
       check($('#transportBar #bPlay')&&$('#transportBar #bpm')&&$('#top #songTitle'),'Transport and project controls have separate permanent homes');
       $('#rail-loops').click();check(libraryTab==='loops'&&$('#rail-loops').getAttribute('aria-pressed')==='true','Rail navigation opens loops and indicates its active section');
-      $('#rail-instruments').click();check(libraryTab==='instruments'&&document.querySelectorAll('.sound-art svg').length===SOUND_CATALOG.length,'Instrument browser decorates every sound');
+      $('#rail-instruments').click();check(libraryTab==='instruments'&&document.querySelectorAll('.sound-art svg').length===(instrumentCategory==='Recorded'?SOUND_CATALOG.filter(i=>i.bank).length:SOUND_CATALOG.length),'Instrument browser decorates every sound');
       $('#closeLibrary').click();check(document.body.classList.contains('library-collapsed'),'Desktop sound browser closes');$('#bLibrary').click();check(!document.body.classList.contains('library-collapsed'),'Sound browser reopens from workspace toolbar');
       click('edit');check(!document.body.classList.contains('editor-collapsed')&&$('#editorName input')?.getAttribute('aria-label')==='Region name','Edit exposes the piano roll and clip rename field');
       const {r}=getSel(),oldName=r.name;const name=$('#editorName input');name.value='Renamed in new header';name.dispatchEvent(new Event('change',{bubbles:true}));check(r.name==='Renamed in new header','Clip rename still updates the arrangement');r.name=oldName;renderEditor();

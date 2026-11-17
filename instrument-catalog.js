@@ -15,6 +15,8 @@
     {name:'Finger Bass',bank:'finger-bass',category:'Bass',program:33,description:'Rounded fingerstyle electric bass',gain:.7,release:.1,preview:[36,43,46]},
     {name:'Picked Bass',bank:'picked-bass',category:'Bass',program:34,description:'Defined pick attack and electric weight',gain:.64,release:.1,preview:[36,43,48]},
     {name:'Upright Bass',bank:'upright-bass',category:'Bass',program:32,description:'Woody acoustic bass plucks',gain:.75,release:.16,preview:[36,43,46]},
+    {name:'Natural Violin',bank:'natural-violin',category:'Strings',program:40,description:'Real bowed violin · two recorded dynamics',gain:.52,attack:.005,release:.45,dynamic:true,natural:true,preview:[60,67,72]},
+    {name:'Bowed Cellos',bank:'natural-cello',category:'Strings',program:42,description:'Real cello section · two recorded dynamics',gain:.5,attack:.005,release:.5,dynamic:true,natural:true,preview:[48,55,60]},
     {name:'String Ensemble',bank:'string-ensemble',category:'Strings',program:48,description:'Layered orchestral strings',gain:.48,attack:.11,release:.55,loop:true,preview:[55,62,67]},
     {name:'Solo Violin',bank:'solo-violin',category:'Strings',program:40,description:'Expressive bowed violin',gain:.48,attack:.035,release:.25,loop:true,preview:[67,69,72]},
     {name:'Solo Cello',bank:'solo-cello',category:'Strings',program:42,description:'Rich cello in the lower register',gain:.52,attack:.055,release:.32,loop:true,preview:[48,55,60]},
@@ -23,10 +25,10 @@
     {name:'Studio Trumpet',bank:'studio-trumpet',category:'Winds',program:56,description:'Focused brass for hooks and accents',gain:.42,attack:.018,release:.15,loop:true,preview:[60,64,67]},
     {name:'Vibraphone',bank:'vibraphone',category:'Keys',program:11,description:'Soft metallic mallets and ringing tails',gain:.62,release:.5,preview:[60,64,71]}
   ];
-  const kits=[{name:'Session Acoustic',bank:'session-acoustic',category:'Drums',description:'Recorded drums and cymbals · alternating hits',gain:.65,preview:[0,3,1,3]}];
+  const kits=[{name:'Live Room Kit',bank:'natural-kit',category:'Drums',description:'Real acoustic drum performances · alternate hits',gain:.75,natural:true,preview:[0,3,1,3]},{name:'Session Acoustic',bank:'session-acoustic',category:'Drums',description:'Recorded drums and cymbals · alternating hits',gain:.65,preview:[0,3,1,3]}];
   function nearestRoot(pitch,roots){if(!roots.length)throw Error('No samples in this bank.');return roots.reduce((best,n)=>Math.abs(n-pitch)<Math.abs(best-pitch)?n:best,roots[0]);}
   function sampleRateFor(pitch,root){return Math.pow(2,(pitch-root)/12);}
   function velocityLayers(count,velocity,splits,width=16){if(velocity<=0)return [];const q=Math.max(1,Math.min(127,Math.round(velocity*127)));for(let i=0;i<splits.length;i++){const lo=splits[i]-width/2,hi=splits[i]+width/2;if(q<lo)return [{index:i,gain:1}];if(q<=hi){const phase=(q-lo)/width*Math.PI/2;return [{index:i,gain:Math.cos(phase)},{index:i+1,gain:Math.sin(phase)}];}}return [{index:count-1,gain:1}];}
-  const api={instruments,kits,nearestRoot,sampleRateFor,velocityLayers,categories:['All','Favorites','Keys','Guitars','Bass','Strings','Winds','Drums','Synths']};
+  const api={instruments,kits,nearestRoot,sampleRateFor,velocityLayers,categories:['Recorded','All','Favorites','Keys','Guitars','Bass','Strings','Winds','Drums','Synths']};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AuraInstruments=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
