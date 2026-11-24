@@ -40,7 +40,7 @@ function chromaFrame(data,at,rate){
 function tempo(onsets,seconds){
  if(onsets.length<5||seconds<2)return {best:null,candidates:[],reason:'Too few repeated transients'};
  const candidates=[];for(let bpm=45;bpm<=220;bpm+=.5){const period=60/bpm;let x=0,y=0,w=0;for(const t of onsets){const phase=2*Math.PI*t/period;x+=Math.cos(phase);y+=Math.sin(phase);w++;}
-  const phase=(Math.atan2(y,x)/(2*Math.PI)+1)%1*period,coherence=Math.hypot(x,y)/w;
+  let phase=(Math.atan2(y,x)/(2*Math.PI)+1)%1*period;if(period-phase<1e-9)phase=0;const coherence=Math.hypot(x,y)/w;
   let adjacent=0;for(let i=1;i<onsets.length;i++){const d=(onsets[i]-onsets[i-1])/period;if(Math.abs(d-1)<.14)adjacent++;else if(d>1&&Math.abs(d-Math.round(d))<.14)adjacent+=.35;}
   const score=.65*coherence+.35*adjacent/(onsets.length-1);candidates.push({bpm,period,phase,score,coherence});
  }
@@ -56,8 +56,8 @@ function audio(ch,rate){
  const level=P.levels(ch),seconds=ch[0].length/rate;let best=ch[0],bestEnergy=-1;for(const a of ch){let e=0;for(let i=0;i<a.length;i+=8)e+=a[i]*a[i];if(e>bestEnergy){bestEnergy=e;best=a;}}
  const factor=Math.max(1,Math.floor(rate/11025)),sr=rate/factor,data=new Float32Array(Math.floor(best.length/factor));for(let i=0;i<data.length;i++){let s=0;for(let j=0;j<factor;j++)s+=best[i*factor+j];data[i]=s/factor;}
  const hop=Math.max(1,Math.round(sr*.01)),energies=[];for(let at=0;at<data.length;at+=hop){let e=0;for(let i=at;i<Math.min(data.length,at+hop);i++)e+=data[i]*data[i];energies.push(e/hop);}
- const floor=Math.max(1e-10,Math.max(...energies)*.003),novelty=energies.map((e,i)=>Math.max(0,Math.log((e+floor)/((energies[i-2]||0)+floor)))),onsets=[];
- for(let i=0;i<novelty.length;i++){if(novelty[i]<.75||energies[i]<floor*2||novelty[i]<(novelty[i-1]||0)||novelty[i]<(novelty[i+1]||0))continue;const t=i*hop/sr;if(!onsets.length||t-onsets.at(-1)>=.09)onsets.push(t);}
+ const maximum=Math.max(...energies),floor=Math.max(1e-10,maximum*.003),novelty=energies.map((e,i)=>{const recent=(e+(energies[i+1]||0))/2;let prior=0;for(let j=1;j<=6;j++)prior+=(energies[i-j]||0)/6;return recent-prior>maximum*.055&&recent>floor*2?Math.max(0,Math.log((recent+floor)/(prior+floor))):0;}),onsets=[];
+ for(let i=0;i<novelty.length;i++){if(novelty[i]<1.05||novelty[i]<(novelty[i-1]||0)||novelty[i]<(novelty[i+1]||0))continue;const t=i*hop/sr;if(!onsets.length||t-onsets.at(-1)>=.09)onsets.push(t);}
  const tonal=Array(12).fill(0),windows=[],span=2;for(let start=0;start<seconds;start+=span){const end=Math.min(seconds,start+span),c=Array(12).fill(0);let frames=0,e=0;
   for(let time=start;time<end;time+=.25){const at=Math.max(0,Math.round(time*sr)-2048),v=chromaFrame(data,at,sr);if(sum(v)){v.forEach((x,j)=>c[j]+=x);frames++;}}
   for(let i=Math.floor(start*sr/hop);i<Math.min(energies.length,Math.ceil(end*sr/hop));i++)e+=energies[i];e/=Math.max(1,(end-start)*sr/hop);
