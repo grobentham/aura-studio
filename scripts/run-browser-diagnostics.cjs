@@ -3,7 +3,7 @@ const {spawn}=require('node:child_process');
 const {once}=require('node:events');
 const {chromium}=require('playwright');
 const path=require('node:path');
-const suites={browser:'ALL CHECKS PASSED',interface:'ALL INTERFACE CHECKS PASSED',instruments:'ALL INSTRUMENT CHECKS PASSED',production:'ALL PRODUCTION CHECKS PASSED',feedback:'ALL FEEDBACK CHECKS PASSED',recording:'ALL RECORDING CHECKS PASSED',producer:'ALL PRODUCER CHECKS PASSED',suite:'ALL SUITE CHECKS PASSED',mix:'ALL MIX CHECKS PASSED',routing:'ALL ROUTING CHECKS PASSED',stream:'ALL STREAM CHECKS PASSED',continuous:'ALL CONTINUOUS CHECKS PASSED',master:'ALL MASTER CHECKS PASSED',vocal:'ALL VOCAL CHECKS PASSED',analyse:'ALL ANALYSE CHECKS PASSED',compose:'ALL COMPOSE CHECKS PASSED',midi:'ALL MIDI PRO CHECKS PASSED',synthpro:'ALL SYNTH PRO CHECKS PASSED',effectspro:'ALL EFFECTS PRO CHECKS PASSED',libraryoffline:'ALL LIBRARY OFFLINE CHECKS PASSED',plugins:'ALL PLUGIN CHECKS PASSED',stems:'ALL STEM CHECKS PASSED',coordinator:'ALL COORDINATOR CHECKS PASSED',hardening:'ALL HARDENING CHECKS PASSED'};
+const suites={browser:'ALL CHECKS PASSED',interface:'ALL INTERFACE CHECKS PASSED',instruments:'ALL INSTRUMENT CHECKS PASSED',production:'ALL PRODUCTION CHECKS PASSED',feedback:'ALL FEEDBACK CHECKS PASSED',recording:'ALL RECORDING CHECKS PASSED',producer:'ALL PRODUCER CHECKS PASSED',suite:'ALL SUITE CHECKS PASSED',mix:'ALL MIX CHECKS PASSED',routing:'ALL ROUTING CHECKS PASSED',stream:'ALL STREAM CHECKS PASSED',continuous:'ALL CONTINUOUS CHECKS PASSED',master:'ALL MASTER CHECKS PASSED',vocal:'ALL VOCAL CHECKS PASSED',analyse:'ALL ANALYSE CHECKS PASSED',compose:'ALL COMPOSE CHECKS PASSED',midi:'ALL MIDI PRO CHECKS PASSED',synthpro:'ALL SYNTH PRO CHECKS PASSED',effectspro:'ALL EFFECTS PRO CHECKS PASSED',libraryoffline:'ALL LIBRARY OFFLINE CHECKS PASSED',plugins:'ALL PLUGIN CHECKS PASSED',stems:'ALL STEM CHECKS PASSED',coordinator:'ALL COORDINATOR CHECKS PASSED',hardening:'ALL HARDENING CHECKS PASSED',integrity:'ALL INTEGRITY CHECKS PASSED'};
 const origin='http://127.0.0.1:4173';
 const timeout=Number(process.env.AURA_DIAGNOSTIC_TIMEOUT_MS||180000);
 const selected=process.argv.slice(2);
@@ -29,7 +29,7 @@ async function main(){
       const context=await browser.newContext({viewport:{width:1600,height:1000}});
       const page=await context.newPage();
       const errors=[];
-      page.on('pageerror',e=>errors.push(e.message));
+      page.on('pageerror',e=>errors.push(e.stack||e.message));
       try{
         await page.goto(origin+'/tests/'+name+'.html',{waitUntil:'load',timeout:60000});
         await page.locator('#run').click({timeout:30000});

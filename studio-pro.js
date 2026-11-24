@@ -3,6 +3,9 @@
 let projectDBPromise,projectReady=false,projectTimer,projectQueue=Promise.resolve(),saveGeneration=0;
 let activeProjectId=crypto.randomUUID();try{activeProjectId=localStorage.getItem('aura-active-project')||activeProjectId;}catch(e){}
 const projectFingerprints=new Map(),projectVersions=new Map();
+const draftPrefix='aura-pending-draft-v1:',draftKey=draftPrefix+crypto.randomUUID();
+function readPendingDrafts(){const out=[];try{for(let i=0;i<localStorage.length;i++){const key=localStorage.key(i);if(!key?.startsWith(draftPrefix))continue;try{const value=JSON.parse(localStorage.getItem(key));if(value&&typeof value.id==='string'&&Array.isArray(value.data?.tracks))out.push({key,...value});}catch(e){}}}catch(e){}return out.sort((a,b)=>b.updated-a.updated);}
+function clearCommittedDraft(id,fingerprint){try{const d=JSON.parse(localStorage.getItem(draftKey)||'null');if(d?.id===id&&JSON.stringify(d.data)===fingerprint)localStorage.removeItem(draftKey);}catch(e){}}
 function projectDB(){
   if(!projectDBPromise)projectDBPromise=new Promise((resolve,reject)=>{
     const r=indexedDB.open('aura-projects-v3',1);
@@ -11,40 +14,41 @@ function projectDB(){
   });return projectDBPromise;
 }
 async function projectRead(store,key){const db=await projectDB();return new Promise((resolve,reject)=>{const r=db.transaction(store).objectStore(store);const q=key===undefined?r.getAll():r.get(key);q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);});}
-async function projectWrite(record){const db=await projectDB();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(record);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error);tx.onerror=()=>reject(tx.error);});}
+async function projectWrite(record){const db=await projectDB();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(record);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Storage transaction interrupted.'));tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));});}
 function saveStatus(label,kind='saved'){
   const el=$('#saveStatus');if(!el)return;el.textContent=label;el.dataset.status=kind;
   el.title=kind==='error'?'Use Download project to keep a portable backup.':'Projects are saved in this browser on this device. Download a backup before clearing site data.';
 }
 async function persistProject(id,data,generation,force=false){
-  const fingerprint=JSON.stringify(data);if(!force&&projectFingerprints.get(id)===fingerprint){if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');return;}
+  const fingerprint=JSON.stringify(data);
   // Persist samples before acknowledging a saved project that references them.
   const streamed=streamedAssets(data);
   for(const asset of projectAudioIds(data)){
-    if(streamed.has(asset)){if(!await readStoredAudio(asset))throw Error('A streamed audio source is missing.');continue;}
-    const ab=buffers.get(asset);if(!ab)throw Error('An audio sample is missing. Import the project backup.');
-    if(!await readStoredAudio(asset)){
-      const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
+    const stored=await readStoredAudio(asset);if(streamed.has(asset)){if(!stored)throw Error('A streamed audio source is missing.');await AuraStream.verify(stored,streamed.get(asset));continue;}
+    if(!stored){const ab=buffers.get(asset);if(!ab)throw Error('An audio sample is missing. Import the project backup.');
+      const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').add(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));tx.onabort=()=>reject(tx.error||Error('Storage transaction interrupted.'));});
     }
   }
-  const db=await projectDB(),now=Date.now();
+  if(!force&&projectFingerprints.get(id)===fingerprint){const stored=await projectRead('projects',id);if(stored&&!stored.trashed&&JSON.stringify(stored.data)===fingerprint){clearCommittedDraft(id,fingerprint);if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');return;}}
+  const db=await projectDB();let now=Date.now();
   await new Promise((resolve,reject)=>{
     const tx=db.transaction(['projects','revisions'],'readwrite'),projects=tx.objectStore('projects'),revisions=tx.objectStore('revisions');let conflict=null;
     const old=projects.get(id);old.onsuccess=()=>{
-      if(old.result&&projectVersions.has(id)&&old.result.updated!==projectVersions.get(id)&&JSON.stringify(old.result.data)!==fingerprint){conflict=Error('This project changed in another tab. Use Save as copy to preserve these edits.');tx.abort();return;}
-      projects.put({id,created:old.result?.created||now,updated:now,trashed:false,data});
+      if(old.result&&(old.result.trashed||(!projectVersions.has(id)||old.result.updated!==projectVersions.get(id))&&JSON.stringify(old.result.data)!==fingerprint)){conflict=Error('This project changed or was removed in another tab. Use Save as copy to preserve these edits.');tx.abort();return;}
+      if(!old.result&&projectVersions.has(id)){conflict=Error('Project record is missing. Use Save as copy.');tx.abort();return;}
+      now=Math.max(now,(old.result?.updated||0)+1);projects.put({id,created:old.result?.created||now,updated:now,trashed:false,data});
     };
     revisions.put({id:crypto.randomUUID(),projectId:id,created:now,data});
     const list=revisions.index('projectId').getAll(id);list.onsuccess=()=>{const sorted=list.result.sort((a,b)=>b.created-a.created);for(const entry of sorted.slice(12))revisions.delete(entry.id);};
-    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(conflict||tx.error||Error('Project save was interrupted.'));
-  });projectFingerprints.set(id,fingerprint);projectVersions.set(id,now);
+    tx.oncomplete=resolve;tx.onabort=()=>reject(conflict||tx.error||Error('Project save was interrupted.'));
+  });projectFingerprints.set(id,fingerprint);projectVersions.set(id,now);clearCommittedDraft(id,fingerprint);
   if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');
 }
 function queueProjectSave(force=false){
   if(!projectReady)return Promise.resolve();
   const id=activeProjectId,data={...JSON.parse(snapshot()),pos:0},generation=saveGeneration;
   projectQueue=projectQueue.catch(()=>{}).then(()=>persistProject(id,data,generation,force));
-  projectQueue.catch(e=>{if(id===activeProjectId){saveStatus('Save needs attention','error');$('#saveStatus').title=e.message;}console.warn('Project save:',e.message);});
+  projectQueue.catch(e=>{const message=e?.message||'Project storage transaction failed.';if(id===activeProjectId){saveStatus('Save needs attention','error');const status=$('#saveStatus');if(status)status.title=message;}console.warn('Project save:',message);});
   return projectQueue;
 }
 function flushProject(force=false){clearTimeout(projectTimer);return queueProjectSave(force);}
@@ -52,7 +56,7 @@ clearTimeout(saveT);
 save=function(){
   if(!projectReady)return;saveGeneration++;saveStatus('Saving…','pending');clearTimeout(projectTimer);
   // Keep the existing last-session recovery path as a fallback to the project library.
-  try{localStorage.setItem('aura-studio-v1',JSON.stringify({...state,pos:0}));localStorage.setItem('aura-active-project',activeProjectId);}catch(e){}
+  try{const data={...JSON.parse(snapshot()),pos:0};localStorage.setItem(draftKey,JSON.stringify({id:activeProjectId,updated:Date.now(),data}));localStorage.setItem('aura-studio-v1',JSON.stringify(data));localStorage.setItem('aura-active-project',activeProjectId);}catch(e){saveStatus('Saving… recovery cache unavailable','pending');}
   projectTimer=setTimeout(()=>queueProjectSave(),650);
 };
 function canLeaveProject(){if(inputCapture.recording||inputCapture.pending||sched.bouncing||countIn.active||typeof productionBusy!=='undefined'&&productionBusy){toast('Finish recording or exporting before changing projects.');return false;}return true;}
@@ -61,15 +65,17 @@ function applyProject(data){
   view.selTrack=state.tracks[0]?.id||null;const first=state.tracks.find(t=>t.regions.length);view.selRegion=first?.regions[0]?.id||null;if(first)view.selTrack=first.id;
   ed.sel.clear();undoStack.length=0;redoStack.length=0;performanceOpen=false;syncNodes();updateDelayTime();renderAll(true);
 }
+async function prepareProjectAudio(data){const missing=[],streamed=streamedAssets(data);if(projectAudioIds(data).length)ensureAudio();for(const id of projectAudioIds(data)){try{const blob=await readStoredAudio(id);if(!blob)throw Error('Missing stored audio');if(streamed.has(id))await AuraStream.verify(blob,streamed.get(id));else if(!buffers.has(id))buffers.set(id,await ctx.decodeAudioData(await blob.arrayBuffer()));}catch(e){missing.push(id);}}if(missing.length)throw Error(missing.length+' source asset(s) missing or invalid. Restore a portable backup before switching.');}
 async function activateProject(record){
-  if(!canLeaveProject())return;await flushProject();applyProject(record.data);activeProjectId=record.id;localStorage.setItem('aura-active-project',activeProjectId);
-  projectVersions.set(record.id,record.updated);$('#projectsModal').hidden=true;await restoreAudioAssets();save();toast(`Opened ${state.title}.`);
+  if(!canLeaveProject())return;productionBusy=true;const origin=state,id=activeProjectId;
+  try{await flushProject();const current=await projectRead('projects',record.id);if(!current||current.trashed)throw Error('Project was removed. Refresh the library.');const before=snapshot();await prepareProjectAudio(current.data);if(state!==origin||activeProjectId!==id||snapshot()!==before)throw Error('Current project changed. Retry opening.');activeProjectId=current.id;applyProject(current.data);try{localStorage.setItem('aura-active-project',activeProjectId);}catch(e){}projectVersions.set(current.id,current.updated);projectFingerprints.set(current.id,JSON.stringify(current.data));$('#projectsModal').hidden=true;saveStatus('Saved on this device');toast('Opened '+state.title+'.');}finally{productionBusy=false;}
 }
 async function newProject(starter){
-  if(!canLeaveProject())return;try{await flushProject();activeProjectId=crypto.randomUUID();undoStack.length=0;redoStack.length=0;
+  if(!canLeaveProject())return;productionBusy=true;try{await flushProject();activeProjectId=crypto.randomUUID();undoStack.length=0;redoStack.length=0;
     loadStarter(starter);undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();toast('New project ready.');
-  }catch(e){saveStatus('Save needs attention','error');toast('Could not create a project. Download a backup and check browser storage.');}
+  }catch(e){saveStatus('Save needs attention','error');toast('Could not create a project. Download a backup and check browser storage.');}finally{productionBusy=false;}
 }
+async function setProjectTrashed(id,trashed){const db=await projectDB();await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite'),store=tx.objectStore('projects'),q=store.get(id);q.onsuccess=()=>{if(!q.result){tx.abort();return;}store.put({...q.result,trashed,updated:Math.max(Date.now(),q.result.updated+1)});};tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Project no longer exists.'));tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));});}
 let showTrash=false;
 async function renderProjects(){
   const list=$('#projectList');list.replaceChildren(h('p',{class:'muted'},'Opening your projects…'));
@@ -84,7 +90,7 @@ async function renderProjects(){
       const actions=h('div',{class:'project-actions'});
       if(!showTrash){actions.append(h('span',{class:'project-current'},record.id===activeProjectId?'Current project':''),h('button',{onclick:async()=>{try{const copy=structuredClone(record);copy.id=crypto.randomUUID();copy.data.title+=' (copy)';copy.created=copy.updated=Date.now();await projectWrite(copy);await renderProjects();}catch(e){toast('Could not duplicate this project.');}}},'Duplicate'));
       }
-      actions.append(h('button',{onclick:async()=>{try{if(record.id===activeProjectId&&!showTrash)return toast('Open another project before removing this one.');record.trashed=!record.trashed;await projectWrite(record);await renderProjects();}catch(e){toast('Could not update this project.');}}},showTrash?'Restore':'Remove'));
+      actions.append(h('button',{onclick:async()=>{try{if(record.id===activeProjectId&&!showTrash)return toast('Open another project before removing this one.');await setProjectTrashed(record.id,!record.trashed);await renderProjects();}catch(e){toast('Could not update this project.');}}},showTrash?'Restore':'Remove'));
       list.append(h('article',{class:'project-card'},open,actions));
     }
   }catch(e){list.replaceChildren(h('p',{class:'storage-error'},'Project storage is unavailable. Your current session is still open. Download a project backup before leaving.'));}
@@ -92,9 +98,10 @@ async function renderProjects(){
 async function openProjects(){if(!canLeaveProject())return;showTrash=false;$('#projectsModal').hidden=false;try{await flushProject();}catch(e){}await renderProjects();}
 async function openHistory(){
   $('#historyModal').hidden=false;const list=$('#revisionList');list.replaceChildren(h('p',{},'Loading recovery history…'));
-  try{await flushProject();const entries=(await projectRead('revisions')).filter(r=>r.projectId===activeProjectId).sort((a,b)=>b.created-a.created);list.replaceChildren();
-    for(const revision of entries)list.append(h('div',{class:'revision-row'},h('div',{},h('b',{},new Date(revision.created).toLocaleString()),h('small',{},`${revision.data.title} · ${revision.data.tracks.length} tracks`)),h('button',{onclick:async()=>{try{await flushProject(true);applyProject(revision.data);$('#historyModal').hidden=true;save();await flushProject(true);toast('Recovered this version. Your previous version remains in history.');}catch(e){toast('Recovery failed. Check browser storage.');}}},'Restore version')));
-    if(!entries.length)list.append(h('p',{class:'muted'},'Recovery versions appear as you edit.'));
+  try{const id=activeProjectId;await flushProject().catch(()=>{});const entries=(await projectRead('revisions')).filter(r=>r.projectId===id).sort((a,b)=>b.created-a.created);if(id!==activeProjectId)return;list.replaceChildren();
+    for(const d of readPendingDrafts())list.append(h('div',{class:'revision-row'},h('div',{},h('b',{},'Unsaved session · '+(d.data.title||'Untitled')),h('small',{},new Date(d.updated).toLocaleString())),h('button',{onclick:async()=>{if(!canLeaveProject())return;productionBusy=true;try{const before=snapshot(),origin=activeProjectId;await prepareProjectAudio(d.data);const copy={...d.data,title:(d.data.title||'Untitled')+' · recovered',pos:0},next=crypto.randomUUID();await persistProject(next,copy,saveGeneration,true);if(origin!==activeProjectId||snapshot()!==before)throw Error('Recovered copy saved in Projects. Current edits retained.');activeProjectId=next;applyProject(copy);if(localStorage.getItem(d.key)===JSON.stringify({id:d.id,updated:d.updated,data:d.data}))localStorage.removeItem(d.key);try{localStorage.setItem('aura-active-project',next);localStorage.setItem('aura-studio-v1',JSON.stringify(copy));}catch(e){}saveStatus('Saved on this device');$('#historyModal').hidden=true;toast('Recovered unsaved session as a separate project.');}catch(e){toast(e.message||'Recovery failed. Draft retained.');}finally{productionBusy=false;}}},'Recover as copy')));
+    for(const revision of entries)list.append(h('div',{class:'revision-row'},h('div',{},h('b',{},new Date(revision.created).toLocaleString()),h('small',{},`${revision.data.title} · ${revision.data.tracks.length} tracks`)),h('button',{onclick:async()=>{if(!canLeaveProject()||revision.projectId!==activeProjectId)return;productionBusy=true;try{await flushProject(true);const prior=snapshot(),id=activeProjectId;await prepareProjectAudio(revision.data);if(id!==activeProjectId||prior!==snapshot())throw Error('Project changed. Retry recovery.');applyProject(revision.data);$('#historyModal').hidden=true;save();await flushProject(true);toast('Recovered this version. Your previous version remains in history.');}catch(e){toast(e.message||'Recovery failed. Check browser storage.');}finally{productionBusy=false;}}},'Restore version')));
+    if(!list.children.length)list.append(h('p',{class:'muted'},'Recovery versions appear as you edit.'));
   }catch(e){list.replaceChildren(h('p',{class:'storage-error'},'Recovery history is unavailable. Download your current project as a backup.'));}
 }
 
@@ -331,7 +338,7 @@ function setupProWorkspace(){
   overlay('projectsModal','Your projects',[
     h('p',{class:'muted'},'Every idea deserves a session. Saved in this browser, on this device.'),starterButtons,
     h('div',{class:'projects-heading'},h('h3',{},'Recent sessions'),h('button',{id:'trashToggle',onclick:()=>{showTrash=!showTrash;renderProjects();}},'Recently removed')),
-    h('div',{id:'projectList',class:'project-grid'}),h('div',{class:'project-footer'},h('span',{},'Clearing browser data removes local projects. Keep a downloaded backup.'),h('button',{onclick:()=>$('#fProj').click()},'Import project'),h('button',{onclick:saveProject},'Download project'),h('button',{onclick:async()=>{if(!canLeaveProject())return;await projectQueue.catch(()=>{});activeProjectId=crypto.randomUUID();state.title+=' (copy)';save();try{await flushProject(true);await renderProjects();toast('Saved your current edits as a new project.');}catch(e){toast('Could not save a copy. Download a project backup.');}}},'Save as copy'),h('button',{onclick:openHistory},'Recovery history'))
+    h('div',{id:'projectList',class:'project-grid'}),h('div',{class:'project-footer'},h('span',{},'Clearing browser data removes local projects. Keep a downloaded backup.'),h('button',{onclick:()=>$('#fProj').click()},'Import project'),h('button',{onclick:saveProject},'Download project'),h('button',{onclick:async()=>{if(!canLeaveProject())return;productionBusy=true;const origin=state,pid=activeProjectId,before=snapshot();try{await projectQueue.catch(()=>{});const copy={...JSON.parse(before),pos:0,title:state.title+' (copy)'},next=crypto.randomUUID();await persistProject(next,copy,saveGeneration,true);if(state!==origin||activeProjectId!==pid||snapshot()!==before)throw Error('Copy saved in Projects. Current edits retained.');activeProjectId=next;state.title=copy.title;save();await flushProject();await renderProjects();toast('Saved your current edits as a new project.');}catch(e){toast(e?.message||'Could not save a copy. Download a project backup.');}finally{productionBusy=false;}}},'Save as copy'),h('button',{onclick:openHistory},'Recovery history'))
   ]);
   overlay('historyModal','Recovery history',[h('p',{class:'muted'},'The 12 most recent saved versions of this project. Restore creates a new version; it keeps the previous one.'),h('div',{id:'revisionList'})]);
   overlay('exportModal','Export your music',[
@@ -350,7 +357,7 @@ function setupProWorkspace(){
   const narrowScreen=matchMedia('(max-width:800px)'),focusResponsiveWorkspace=e=>{if(e.matches&&!document.body.dataset.focus)mobile.querySelector('[data-focus="arrange"]').click();else if(!e.matches&&document.body.dataset.focus){delete document.body.dataset.focus;setEditorCollapsed(false);performanceOpen=false;renderEditor();}};
   narrowScreen.addEventListener('change',focusResponsiveWorkspace);focusResponsiveWorkspace(narrowScreen);
   const proStarter=loadStarter;loadStarter=function(name){releaseMidi();proStarter(name);renderClipTools();renderTrackFX();};
-  const proOpenProject=openProjectFile;openProjectFile=async function(file,assetProvider){if(!canLeaveProject())return;try{await flushProject();const previous=state,previousId=activeProjectId;activeProjectId=crypto.randomUUID();await proOpenProject(file,assetProvider);if(state===previous){activeProjectId=previousId;return;}undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();}catch(e){toast('Could not import the project. Check browser storage.');}};
+  const proOpenProject=openProjectFile;openProjectFile=async function(file,assetProvider){if(!canLeaveProject())return false;productionBusy=true;try{await flushProject();const nextId=crypto.randomUUID();const opened=await proOpenProject(file,assetProvider,async(data,guard)=>{guard();await persistProject(nextId,{...data,pos:0},saveGeneration,true);guard();activeProjectId=nextId;},async ids=>{if(await projectRead('projects',nextId))return;const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite'),store=tx.objectStore('audio');for(const id of ids)store.delete(id);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Import cleanup interrupted.'));});});if(!opened)return false;undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();return true;}catch(e){toast('Could not save imported project. Check browser storage and download a backup.');return false;}finally{productionBusy=false;}};
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){for(const id of ['projectsModal','historyModal','exportModal'])$('#'+id).hidden=true;}
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&!e.target.closest('.overlay')){e.preventDefault();e.stopImmediatePropagation();flushProject(true).then(()=>toast('Saved on this device.')).catch(()=>toast('Save failed. Download a project backup.'));}
@@ -372,6 +379,6 @@ function setEditorCollapsed(collapsed){document.body.classList.toggle('editor-co
 setupProWorkspace();
 (async()=>{
   try{const stored=await projectRead('projects',activeProjectId);if(stored&&!stored.trashed){applyProject(stored.data);projectVersions.set(stored.id,stored.updated);projectFingerprints.set(stored.id,JSON.stringify({...JSON.parse(snapshot()),pos:0}));await restoreAudioAssets();}else activeProjectId=crypto.randomUUID();
-    projectReady=true;save();await flushProject();
+    projectReady=true;if(!stored||stored.trashed){if(stored?.trashed)applyProject(newState());save();await flushProject();}else{try{await prepareProjectAudio(state);saveStatus('Saved on this device');}catch(e){saveStatus('Source audio needs recovery','error');$('#saveStatus').title=e.message;}if(readPendingDrafts().length)toast('Unsaved session found. Open Projects → Recovery history to recover a copy.');}
   }catch(e){projectReady=true;saveStatus('Local storage unavailable','error');toast('Project storage is unavailable. Use Projects → Download project to keep your work.');}
 })();
