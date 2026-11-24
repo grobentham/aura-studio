@@ -39,7 +39,7 @@
    const {project,assets}=await AuraPack.read(file),needed=projectAudioIds(project);
    if(needed.length!==assets.size||needed.some(id=>!assets.has(id)))throw Error('Package assets do not match the project.');
    // Existing editor still requires decoded assets. Bound total import memory.
-   const total=[...assets.values()].reduce((s,b)=>s+b.size,0);if(total>192*1048576)throw Error('Package exceeds this editor’s decoded import budget. Large archive playback is separate.');
+   const streamed=streamedAssets(project),total=[...assets].reduce((s,[id,b])=>s+(streamed.has(id)?0:b.size),0);if(total>192*1048576)throw Error('Package exceeds this editor’s decoded import budget. Large archive playback is separate.');
    const remap=new Map(needed.map(id=>[id,uid()])),blobs=new Map(needed.map(id=>[remap.get(id),assets.get(id)]));
    for(const t of project.tracks){for(const r of t.regions||[])if(remap.has(r.buf))r.buf=remap.get(r.buf);for(const p of t.takes||[])if(remap.has(p.buf))p.buf=remap.get(p.buf);for(const z of t.sampler?.zones||[])if(remap.has(z.buf))z.buf=remap.get(z.buf);}
    const old=activeProjectId;await openProjectFile(new File([JSON.stringify({...project,app:'aura-studio',version:2})],'package-metadata.json'),id=>blobs.get(id));
@@ -48,7 +48,7 @@
   }catch(e){packStatus.textContent=e.message||'Import failed.';}finally{busy=false;}
  }
  const input=h('input',{id:'packInput',type:'file',accept:'.aurapack',onchange:e=>{const file=e.target.files[0];e.target.value='';importPack(file);}});
- const packPanel=productionDialog('packModal','Portable project packages',[h('p',{class:'muted'},'Binary backups avoid base64 expansion. Export up to 1 GiB through direct file writing where available; the current editor can restore up to 192 MiB of source audio per package. Long recording archives must be exported separately.'),h('section',{class:'producer-section'},h('button',{id:'packDownload',onclick:()=>exportPack(false)},'Download package'),typeof showSaveFilePicker==='function'?h('button',{onclick:()=>exportPack(true)},'Write package directly to disk'):null),h('label',{},'Restore package ',input),packStatus]);
+ const packPanel=productionDialog('packModal','Portable project packages',[h('p',{class:'muted'},'Binary backups avoid base64 expansion. Export up to 1 GiB through direct file writing where available; streamed PCM assets are restored without full decoding; ordinary decoded assets retain a 192 MiB restore budget.'),h('section',{class:'producer-section'},h('button',{id:'packDownload',onclick:()=>exportPack(false)},'Download package'),typeof showSaveFilePicker==='function'?h('button',{onclick:()=>exportPack(true)},'Write package directly to disk'):null),h('label',{},'Restore package ',input),packStatus]);
  function openPack(){if(canLeaveProject())packPanel.hidden=false;}
  productionToolbar.append(h('button',{id:'openPack',onclick:openPack},'Portable packages'));
  studioActions.push(['Portable packages','Binary project backup and restore',openPack]);

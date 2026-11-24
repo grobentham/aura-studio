@@ -19,7 +19,9 @@ function saveStatus(label,kind='saved'){
 async function persistProject(id,data,generation,force=false){
   const fingerprint=JSON.stringify(data);if(!force&&projectFingerprints.get(id)===fingerprint){if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');return;}
   // Persist samples before acknowledging a saved project that references them.
+  const streamed=streamedAssets(data);
   for(const asset of projectAudioIds(data)){
+    if(streamed.has(asset)){if(!await readStoredAudio(asset))throw Error('A streamed audio source is missing.');continue;}
     const ab=buffers.get(asset);if(!ab)throw Error('An audio sample is missing. Import the project backup.');
     if(!await readStoredAudio(asset)){
       const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
@@ -179,14 +181,16 @@ scheduleRange=function(from,to,first){
 };
 async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
   if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[]}));masterVolume=1;masterProcessing=false;}
-  const seconds=(end-start)*spb()+tail;if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
+  const streamCount=tracks.flatMap(t=>t.regions).filter(r=>r.stream&&r.start<end&&r.start+r.len>start).length;
+  const seconds=(end-start)*spb()+tail;if(streamCount&&(seconds>30||streamCount*seconds*192000*8>128*1048576))throw Error('Streamed audio mix export is limited to a short range (up to 30 seconds and bounded memory). Export the full source WAV separately.');if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
   const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing,groupMix:channelEffects?state.groupMix:{}});
   const noise=audio.createBuffer(1,sampleRate*2,sampleRate),nd=noise.getChannelData(0),random=rng(382);for(let i=0;i<nd.length;i++)nd[i]=random()*2-1;
   for(const t of tracks){const dest=destinations.get(t.id);for(const r of t.regions){
     if(r.start>=end||r.start+r.len<=start)continue;
     if(t.type==='audio'){
-      const ab=buffers.get(r.buf);if(!ab)throw Error(`Missing audio on ${t.name}. Restore your project backup.`);
       const begin=Math.max(start,r.start),finish=Math.min(end,r.start+r.len),elapsed=(begin-r.start)*spb();
+      if(r.stream){const blob=await readStoredAudio(r.buf),meta=await AuraStream.verify(blob,r.stream),offset=(r.offset||0)+elapsed,frames=AuraStream.range(meta,offset,(finish-begin)*spb());if(frames.count){const ab=await AuraStream.decode(blob,meta,frames.start,frames.count,audio);scheduleAudioClip(audio,ab,(begin-start)*spb(),0,ab.duration,dest,r,elapsed);}continue;}
+      const ab=buffers.get(r.buf);if(!ab)throw Error(`Missing audio on ${t.name}. Restore your project backup.`);
       scheduleAudioClip(audio,ab,(begin-start)*spb(),(r.offset||0)+elapsed,(finish-begin)*spb(),dest,r,elapsed);continue;
     }
     for(const n of r.notes){const absolute=r.start+n.t,finish=Math.min(r.start+r.len,absolute+n.d,end);if(n.t>=r.len||absolute>=end||finish<=start)continue;
