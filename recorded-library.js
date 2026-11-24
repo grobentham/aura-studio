@@ -4,7 +4,37 @@ let recordedLibraryMode='loops',recordedSearch='',recordedCatalog=null,recordedC
 const recordedAdding=new Set();
 const recordedBuffers=new Map(),recordedLoads=new Map();
 async function loadRecordedCatalog(){if(recordedCatalog)return recordedCatalog;if(!recordedCatalogJob)recordedCatalogJob=(async()=>{const response=await fetch(new URL('samples/recorded-beats.json',document.baseURI));if(!response.ok)throw Error('The recorded library could not load. Retry when online.');const data=await response.json();if(data.version!==1||!Array.isArray(data.loops)||!Array.isArray(data.oneShots))throw Error('Invalid recorded library.');recordedCatalog=data;return data;})().catch(e=>{recordedCatalogJob=null;throw e;});return recordedCatalogJob;}
-async function recordedAudio(item,fit=fitRecordedTempo,bpm=state.bpm){ensureAudio();if(!/^(recorded-beats|natural-kit)\/[A-Za-z0-9_.-]+\.ogg$/.test(item.file))throw Error('Invalid recorded audio path.');const rate=fit&&!item.oneShot?bpm/item.bpm:1,key=item.file+'@'+rate.toFixed(6);if(recordedBuffers.has(key))return recordedBuffers.get(key);if(recordedLoads.has(key))return recordedLoads.get(key);if(rate<.5||rate>2)throw Error('Tempo fitting supports half to double the original tempo. Turn off Fit tempo or choose a closer tempo.');const job=(async()=>{let original=recordedBuffers.get(item.file);if(!original){const response=await getBankResponse(new URL('samples/'+item.file,document.baseURI).href);original=await ctx.decodeAudioData(await response.arrayBuffer());recordedBuffers.set(item.file,original);}const result=Math.abs(rate-1)<.000001?original:await transformAudioBuffer(original,{rate,pitch:0});recordedBuffers.set(key,result);while(recordedBuffers.size>28)recordedBuffers.delete(recordedBuffers.keys().next().value);return result;})();recordedLoads.set(key,job);try{return await job;}finally{recordedLoads.delete(key);}}
+async function recordedAudio(item,fit=fitRecordedTempo,bpm=state.bpm){
+  ensureAudio();
+  if(!/^(recorded-beats|natural-kit)\/[A-Za-z0-9_.-]+\.ogg$/.test(item.file))throw Error('Invalid recorded audio path.');
+  const fitting=fit&&!item.oneShot,rate=fitting?bpm/item.bpm:1,key=item.file+(fitting?'@fit:'+bpm:'@raw');
+  if(!Number.isFinite(rate)||rate<.5||rate>2)throw Error('Tempo fitting supports half to double the original tempo. Turn off Fit tempo or choose a closer tempo.');
+  if(recordedBuffers.has(key))return recordedBuffers.get(key);if(recordedLoads.has(key))return recordedLoads.get(key);
+  const job=(async()=>{
+    let original=recordedBuffers.get(item.file);
+    if(!original){const response=await getBankResponse(new URL('samples/'+item.file,document.baseURI).href);original=await ctx.decodeAudioData(await response.arrayBuffer());recordedBuffers.set(item.file,original);}
+    let result=original;
+    if(fitting){
+      // Decoder delay/padding and sample-rate rounding must not move the loop off its beat grid.
+      if(!Number.isFinite(item.beats)||item.beats<=0||!Number.isFinite(bpm)||bpm<=0)throw Error('Invalid loop tempo metadata.');
+      const target=Math.round(item.beats*60/bpm*original.sampleRate);
+      if(target<1)throw Error('Invalid loop duration.');
+      const actualRate=original.length/target;
+      if(Math.abs(actualRate-rate)>.03)throw Error('Decoded loop duration differs unexpectedly from the catalog.');
+      if(Math.abs(actualRate-1)>.000001)result=await transformAudioBuffer(original,{rate:clamp(actualRate,.5,2),pitch:0});
+      if(result.length!==target){
+        const out=ctx.createBuffer(result.numberOfChannels,target,result.sampleRate),copy=Math.min(result.length,target);
+        for(let c=0;c<result.numberOfChannels;c++){
+          const channel=out.getChannelData(c);channel.set(result.getChannelData(c).subarray(0,copy));
+          if(result.length!==target){const fade=Math.min(copy,Math.round(result.sampleRate*.005));for(let i=0;i<fade;i++)channel[copy-fade+i]*=1-i/Math.max(1,fade-1);}
+        }
+        result=out;
+      }
+      if(!result.getChannelData(0).some(v=>Number.isFinite(v)&&Math.abs(v)>.001))throw Error('Tempo fitting rendered silent audio; retry with Fit tempo off.');
+    }
+    recordedBuffers.set(key,result);while(recordedBuffers.size>28)recordedBuffers.delete(recordedBuffers.keys().next().value);return result;
+  })();recordedLoads.set(key,job);try{return await job;}finally{recordedLoads.delete(key);}
+}
 function stopRecordedPreview(){recordedPreviewToken++;recordedPreviewLoading=null;if(recordedPreview){try{recordedPreview.source.stop();recordedPreview.gain.disconnect();}catch(e){}recordedPreview=null;}renderRecordedCards();}
 const stopBeforeRecordedLibrary=stopLoopPreview;stopLoopPreview=function(){stopRecordedPreview();stopBeforeRecordedLibrary();};
 async function previewRecordedAudio(item){if(sched.playing||rec.armed||inputCapture.recording||countIn.active)return toast('Stop playback or recording to preview a sample.');if(recordedPreview?.file===item.file)return stopRecordedPreview();stopLoopPreview();stopInstrumentPreview();const token=recordedPreviewToken;recordedPreviewLoading=item.file;renderRecordedCards();try{const buffer=await recordedAudio(item);if(token!==recordedPreviewToken||libraryTab!=='loops')return;const source=ctx.createBufferSource(),gain=ctx.createGain();source.buffer=buffer;gain.gain.value=.65;source.connect(gain);gain.connect(masterAnalyser);recordedPreview={source,gain,file:item.file};source.addEventListener('ended',()=>{source.disconnect();gain.disconnect();if(recordedPreview?.source===source){recordedPreview=null;renderRecordedCards();}});source.start();renderRecordedCards();}catch(e){toast(e.message);}finally{if(token===recordedPreviewToken){recordedPreviewLoading=null;renderRecordedCards();}}}
