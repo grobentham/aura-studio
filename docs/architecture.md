@@ -77,3 +77,5 @@ Declarative plugin SDK 1 adds validated data-only native effect macros, embedded
 Stem Splitter adds bounded offline harmonic/percussive spectral estimates and an experimental fixed-shape local HTDemucs ONNX adapter. Real model validation remains open. See docs/stems.md.
 
 Unified Producer guide adds worker-backed project inspection, conservative reviewable fader/EQ changes, rendered candidate validation, RMS-matched audition and one-undo application, plus explicit specialised stage navigation. Shared destination ownership is preserved on track deletion. See docs/coordinator.md.
+
+Release hardening increment: bounded canvas backing stores, independent portable recovery export, and grouped searchable production menu. See docs/release-hardening.md.

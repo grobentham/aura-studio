@@ -24,3 +24,6 @@ Repository tree contains 248 audio files matching WAV/MP3/OGG/FLAC extensions, p
 ## Validation status
 
 Existing tests were inspected but not executed during the static audit. CI introduced in this PR is the next executable validation; a configured workflow is not evidence of a passing run. Physical microphones, interfaces, MIDI, cross-browser/device performance, and subjective audio quality remain unverified.
+
+## Release hardening follow-up
+See docs/release-hardening.md for the current scoped findings, fixes, and remaining release gates. Earlier architecture baseline findings remain historical.

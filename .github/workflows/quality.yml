@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [browser, interface, instruments, production, feedback, recording, producer, suite, mix, routing, stream, continuous, master, vocal, analyse, compose, midi, synthpro, effectspro, libraryoffline, plugins, stems, coordinator]
+        suite: [browser, interface, instruments, production, feedback, recording, producer, suite, mix, routing, stream, continuous, master, vocal, analyse, compose, midi, synthpro, effectspro, libraryoffline, plugins, stems, coordinator, hardening]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
