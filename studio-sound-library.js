@@ -13,14 +13,14 @@ async function libraryWav(file){
 }
 async function addLibraryClip(row){
  if(!canLeaveProject()||state.tracks.length>=128)throw Error('Finish current activity or free a track slot.');
- const project=state,pid=activeProjectId,position=state.pos,bpm=state.bpm;ensureAudio();const meta=await AuraStream.inspect(row.blob),b=await AuraStream.decode(row.blob,meta,0,meta.frames,ctx),id=uid();await persistRecordedAsset(id,b);
+ if(sched.playing)stop();const project=state,pid=activeProjectId,position=state.pos,bpm=state.bpm;ensureAudio();const meta=await AuraStream.inspect(row.blob),b=await AuraStream.decode(row.blob,meta,0,meta.frames,ctx),id=uid();await persistRecordedAsset(id,b);
  if(state!==project||activeProjectId!==pid||state.bpm!==bpm||state.pos!==position||!canLeaveProject()||state.tracks.length>=128)throw Error('Project changed; sample retained in library.');
  if(sched.playing)stop();pushUndo();buffers.set(id,b);const t=addT('audio',{name:row.name,rev:0,dly:0});t.regions=[mkRegion(position,b.duration/spb(),[],{name:row.name,buf:id,offset:0,gain:1,sampleCredit:row.credit||''})];view.selTrack=t.id;view.selRegion=t.regions[0].id;syncNodes();renderAll();save();return t;
 }
 (()=>{
  let busy=false,rows=[],generation=0,source=null,output=null,selected=new Set();
  const status=h('p',{id:'personalLibraryStatus',role:'status',class:'producer-status'},'Import canonical 24-bit PCM WAV samples from Aura exports. Other audio formats can be imported into a project and saved from the selected clip.'),list=h('div',{id:'personalLibraryList'}),query=h('input',{id:'librarySearch',type:'search',placeholder:'Search name, tags, credits','aria-label':'Search personal samples',oninput:draw}),kind=mkSelect(['all','loop','one-shot','vocal','other'],'all',draw,{'aria-label':'Sample type'}),favorites=h('input',{type:'checkbox',onchange:draw});
- function stopPreview(){if(source)try{source.stop();}catch(e){}source=null;output?.disconnect();output=null;}
+ function stopPreview(){generation++;if(source)try{source.stop();}catch(e){}source=null;output?.disconnect();output=null;}
  async function refresh(){rows=await libraryRows();selected=new Set([...selected].filter(id=>rows.some(r=>r.id===id)));draw();}
  function run(fn){return async()=>{if(busy||!canLeaveProject())return;busy=true;try{await fn();}catch(e){status.textContent=e.message||'Library operation failed.';}finally{busy=false;}};}
  async function audition(row){stopPreview();if(sched.playing)stop();ensureAudio();await ctx.resume();const token=++generation,m=await AuraStream.inspect(row.blob),b=await AuraStream.decode(row.blob,m,0,m.frames,ctx);if(token!==generation||panel.hidden)return;const n=ctx.createBufferSource(),g=ctx.createGain();g.gain.value=.35;n.buffer=b;n.connect(g);g.connect(ctx.destination);source=n;output=g;n.onended=()=>{n.disconnect();g.disconnect();if(source===n){source=null;output=null;}};n.start();}

@@ -36,7 +36,7 @@
  async function importPack(file){
   if(!file||busy||!canLeaveProject())return;busy=true;
   try{
-   const {project,assets}=await AuraPack.read(file),needed=projectAudioIds(project);
+   const {project,assets}=await AuraPack.read(file);if(project.kind==='aura-sample-pack')throw Error('Open sound packs in Sound Library Pro, not project restore.');const needed=projectAudioIds(project);
    if(needed.length!==assets.size||needed.some(id=>!assets.has(id)))throw Error('Package assets do not match the project.');
    // Existing editor still requires decoded assets. Bound total import memory.
    const streamed=streamedAssets(project),total=[...assets].reduce((s,[id,b])=>s+(streamed.has(id)?0:b.size),0);if(total>192*1048576)throw Error('Package exceeds this editor’s decoded import budget. Large archive playback is separate.');
