@@ -3,7 +3,7 @@ document.querySelector('#run').onclick=async()=>{
   const output=document.querySelector('#results'),frame=document.querySelector('#studio'),w=frame.contentWindow,button=document.querySelector('#run');button.disabled=true;output.textContent='Running…';
   try{output.textContent=await w.eval(`(async()=>{
     const results=[],check=(value,message)=>{if(!value)throw Error(message);results.push('PASS '+message);parent.document.querySelector('#results').textContent=results.join('\\n');};
-    const initial=structuredClone(state),initialId=activeProjectId;await flushProject();activeProjectId=crypto.randomUUID();const testId=activeProjectId;
+    const initial=structuredClone(state),initialId=activeProjectId;await flushProject();activeProjectId=crypto.randomUUID();const testIds=new Set([activeProjectId]);
     const tick=()=>new Promise(resolve=>setTimeout(resolve,120));
     const click=mode=>$('#mobileWorkspace [data-focus="'+mode+'"]').click();
     const shown=el=>!!el&&el.getBoundingClientRect().height>0&&getComputedStyle(el).visibility!=='hidden'&&getComputedStyle(el).display!=='none';
@@ -29,10 +29,25 @@ document.querySelector('#run').onclick=async()=>{
         click('mix');await tick();check(shown($('#mixer'))&&shown($('#trackFx')),width+'px: mixer and effects remain reachable');
         if(width<=800){$('#bLibrary').click();await tick();check(shown($('#library'))&&shown($('#libraryBackdrop'))&&$('#library').getBoundingClientRect().right<=innerWidth,width+'px: mobile sound browser fits with a dismissible backdrop');$('#libraryBackdrop').click();check(!document.body.classList.contains('library-open'),width+'px: backdrop closes the mobile sound browser');}
       }
+      check($('#welcomeSongGuide')&&$('#projectSongGuide')&&$('#quickSongGuide'),'Song guide appears in onboarding, Projects and Quick guide');
+      $('#railHelp').click();$('#quickSongGuide').click();await tick();
+      const guide=$('#songGuideModal'),guideCard=guide.querySelector('.card');
+      check(shown(guideCard)&&guideCard.scrollWidth<=guideCard.clientWidth+1&&guideCard.getBoundingClientRect().right<=innerWidth,'Song guide fits the 360px workspace');
+      guide.querySelector('button').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
+      check(guide.hidden,'Escape closes the song guide');
       parent.document.querySelector('#studio').style.width='1024px';parent.document.querySelector('#studio').style.height='600px';await tick();click('edit');await tick();check($('#studioFooter').getBoundingClientRect().bottom<=innerHeight+1&&$('#editor .edbody').clientHeight>=55,'Short laptop screen keeps the editor and footer within the viewport');
+      await openProjects();
+      const previousId=activeProjectId,previous=await projectRead('projects',previousId);
+      $('#projectSongGuide').click();check(!guide.hidden&&$('#projectsModal').hidden,'Projects opens the song lesson without creating a session');
+      $('#openSongPractice').click();
+      for(let i=0;i<50&&!guide.hidden;i++)await tick();
+      testIds.add(activeProjectId);
+      check(guide.hidden&&activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.tracks.length===4,'The song lesson opens a separate editable project in Arrange');
+      const saved=await projectRead('projects',activeProjectId),unchanged=await projectRead('projects',previousId);
+      check(saved.data.title==='My Moon My Man · Instrumental study'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening the song study preserves the previous session and saves the new one');
       return results.join('\\n')+'\\nALL INTERFACE CHECKS PASSED';
     }finally{
-      stop();await flushProject().catch(()=>{});const record=await projectRead('projects',testId);if(record){record.trashed=true;await projectWrite(record);}activeProjectId=initialId;applyProject(initial);clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));
+      stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}activeProjectId=initialId;applyProject(initial);clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));
     }
   })()`);}catch(e){output.textContent+='\nFAIL '+e.stack;}finally{button.disabled=false;}
 };
