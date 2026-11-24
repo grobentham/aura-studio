@@ -27,7 +27,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        suite: [browser, interface, instruments, production, feedback, recording, producer]
+        suite: [browser, interface, instruments, production, feedback, recording, producer, suite]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

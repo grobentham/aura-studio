@@ -28,3 +28,5 @@ The GitHub workflow runs unit tests and browser diagnostics independently. Brows
 ## Performance baseline protocol (not yet measured)
 
 Use a fresh browser profile, report browser/OS/CPU/RAM, sample rate, buffer settings and exact revision. Test 16/32/64 mixed tracks for 10 minutes, then 5/15/60-minute mono and stereo recording as limits are removed. Record startup time, peak memory, underruns, render duration, output size and recovered frames after simulated interruption. Mark unsupported cases explicitly. Do not advertise target numbers as measured results. Use fixed project fixtures and compare against the same hardware between changes.
+
+Production Suite adds an eighth Chromium diagnostic page (`node scripts/run-browser-diagnostics.cjs suite`) covering transcription, pitch editing, arrangement and adaptive export. Synthetic sources only; listening and hardware evaluation remain required.
