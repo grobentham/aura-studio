@@ -26,7 +26,7 @@
     }
     const notes = [];
     for (let i = 0; i < 8; i++) {
-      const v = [.84, .55, .68, .58, .79, .54, .65, .6][i];
+      const v = [.88, .48, .71, .53, .81, .47, .67, .58][i] * (bar >= 12 ? 1.06 : 1);
       notes.push({ p: chord.piano[0], t: i / 2, d: .25, v });
       if (i % 2 === 0 || i === 7) {
         for (const p of chord.piano.slice(1)) notes.push({ p, t: i / 2 + .02, d: .27, v: v * .79 });
@@ -48,15 +48,21 @@
   }
 
   function drumBar(_chord, bar) {
-    if (bar < 4 || bar === 19) return [];
+    if (bar < 2 || bar === 19) return [];
     const hit = (p, t, v) => ({ p, t, d: .17, v });
     if (bar === 18) return [hit(0, 0, .88), hit(7, 0, .55)];
+    if (bar < 4) return [hit(0, 0, .86), hit(1, 1, .78), hit(0, 2.5, .82), hit(1, 3, .84),
+      ...Array.from({ length: 8 }, (_, i) => hit(3, i / 2 + i % 2 * .014, [.62,.38,.54,.43,.66,.39,.55,.45][i])),
+      ...(bar === 3 ? [hit(5, 3.5, .68), hit(1, 3.75, .58)] : [])];
+    const full = bar >= 12;
     const notes = [
-      hit(0, 0, .9), hit(0, 2, .82), hit(1, 1, .82), hit(1, 3, .88),
-      ...Array.from({ length: 8 }, (_, i) => hit(3, i / 2 + i % 2 * .015, i % 2 ? .37 : .54)),
+      hit(0, 0, .98), hit(0, 2, .94), hit(1, 1.018, .94), hit(1, 3.012, .98),
+      ...Array.from({ length: 8 }, (_, i) => hit(i === 7 && full && bar % 2 === 0 ? 4 : 3, i / 2 + i % 2 * .014, [.76,.43,.64,.49,.8,.45,.67,.52][i])),
     ];
-    if (bar % 2 === 1) notes.push(hit(0, 2.75, .64));
-    if (bar % 4 === 3) notes.push(hit(5, 3.5, .62), hit(1, 3.75, .54));
+    if (bar % 2 === 1) notes.push(hit(0, 2.75, .8), hit(1, 2.5, .31));
+    else notes.push(hit(0, 1.5, .74));
+    if (bar === 4 || bar === 12) notes.push(hit(7, 0, .76));
+    if (bar % 4 === 3) notes.push(hit(5, 3.5, .74), hit(1, 3.75, .65));
     return notes;
   }
 
@@ -84,10 +90,10 @@
 
   STARTERS[title] = () => {
     Object.assign(state, { title, bpm: 125, root: 4, scale: 'Minor', bars: 20, loop: { on: false, start: 16, end: 32 } });
-    const piano = addT('synth', { name: 'Piano pulse', preset: 'Dynamic Upright', vol: .72, rev: .13 });
-    const bass = addT('synth', { name: 'Bass roots', preset: 'Finger Bass', vol: .76, rev: 0 });
-    const drums = addT('drums', { name: 'Live drums', kit: 'Live Room Kit', vol: .69, rev: .08 });
-    const guitar = addT('synth', { name: 'Guitar answers', preset: 'Clean Electric', vol: .51, pan: .22, rev: .23 });
+    const piano = addT('synth', { name: 'Piano pulse', preset: 'Dynamic Upright', vol: .64, rev: .09 });
+    const bass = addT('synth', { name: 'Bass roots', preset: 'Finger Bass', vol: .70, rev: 0 });
+    const drums = addT('drums', { name: 'Live drums', kit: 'Live Room Kit', vol: .93, rev: .035 });
+    const guitar = addT('synth', { name: 'Guitar answers', preset: 'Clean Electric', vol: .56, pan: .32, rev: .15 });
     addSections(piano, pianoBar, true);
     addSections(bass, bassBar);
     addSections(drums, drumBar);
@@ -95,9 +101,9 @@
   };
 
   const steps = [
-    ['Listen to the layers', 'Press Play from bar 1. Piano opens the arrangement, bass enters at bar 3, drums at bar 5 and guitar at bar 9.'],
+    ['Listen to the layers', 'Press Play from bar 1. Piano opens the arrangement, bass and a drum pickup enter at bar 3, the full drum groove starts at bar 5 and guitar at bar 9. Listen for the stronger kick, snare accents and section changes.'],
     ['Look inside the piano clip', 'Double-click the first piano clip or select it and choose Edit. Each bar uses one chord, in order Am, C, Em and G. Try changing the length of one of the short notes.'],
-    ['Loop and mix the groove', 'In Arrange, start playback at bar 5 with Cycle on. Open Mix and use S to solo the bass or drums. Clear the solos and lower the guitar fader. Turn Cycle off, return to Arrange and listen from bar 9.'],
+    ['Loop and mix the groove', 'In Arrange, start playback at bar 5 with Cycle on. The Live drums track is the recorded acoustic kit; solo it to hear the kick, snare, hats and fills. Open Mix and use S to solo the bass or drums. Clear the solos and lower the guitar fader. Turn Cycle off, return to Arrange and listen from bar 9.'],
     ['Keep your version', 'Use Save to make a checkpoint. In Export song, choose Entire song to include the C–D–Em ending. Projects > Download project keeps your edited clips.'],
   ];
   const start = h('button', { id: 'openSongPractice', class: 'primary', onclick: openPractice }, 'Open practice project');
