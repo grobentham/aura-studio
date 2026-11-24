@@ -1,0 +1,6 @@
+#auraMixNextModal .pro-dialog{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto}
+.mixnext-track{padding:9px 0;border-bottom:1px solid #36404c;display:grid;gap:5px}
+.mixnext-track small{font-size:11px;font-variant-numeric:tabular-nums}
+.mixnext-bar{display:flex;height:8px;overflow:hidden;border-radius:4px;background:#242c36}
+.mixnext-bar .band0{background:#79a4d8}.mixnext-bar .band1{background:#d5a25a}.mixnext-bar .band2{background:#75b8a7}
+.mixnext-choice{display:flex;align-items:center;gap:8px;padding:8px 0}

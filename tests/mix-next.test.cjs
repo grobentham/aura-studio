@@ -1,0 +1,7 @@
+const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm'),M=require('../mix-next-core.js');
+const rate=48000,tone=(hz,amp=.3)=>Float32Array.from({length:rate},(_,i)=>amp*Math.sin(2*Math.PI*hz*i/rate));
+test('FFT profiles localize low, mid and high tones',()=>{for(const [hz,band] of [[100,0],[1000,1],[8000,2]]){const p=M.analyse([tone(hz)],rate);assert.ok(p.shares[band]>.97);assert.ok(Math.abs(p.rmsDb-20*Math.log10(.3/Math.sqrt(2)))<.01);assert.equal(p.correlation,1);}});
+test('simultaneous frequency overlap suggests bounded cuts only',()=>{const a=M.analyse([tone(1000)],rate),b=M.analyse([tone(1100,.4)],rate),cuts=M.recommend(a,b,{mid:0});assert.ok(cuts.some(c=>c.key==='mid'&&c.to>=-3&&c.to<0));assert.equal(M.recommend(a,M.analyse([tone(100)],rate)).length,0);assert.equal(M.recommend(a,b,{mid:-18}).length,0);});
+test('no suggestion for temporally disjoint tones or silence',()=>{const a=tone(1000),b=tone(1000);a.fill(0,rate/2);b.fill(0,0,rate/2);assert.deepEqual(M.recommend(M.analyse([a],rate),M.analyse([b],rate)),[]);assert.deepEqual(M.recommend(M.analyse([a],rate),M.analyse([new Float32Array(rate)],rate)),[]);});
+test('stereo phase warning evidence and invalid values',()=>{const a=tone(1000);assert.ok(M.analyse([a,Float32Array.from(a,x=>-x)],rate).correlation<-.999);assert.throws(()=>M.analyse([Float32Array.from([NaN])],rate));});
+test('new UI and worker parse',()=>{for(const f of ['studio-mix-next.js','mix-next-worker.js'])new vm.Script(fs.readFileSync(require.resolve('../'+f),'utf8'));});
