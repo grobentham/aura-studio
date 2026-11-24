@@ -16,10 +16,15 @@ jobs:
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
       - run: node --test tests/*.test.cjs
+      - run: node scripts/check-offline-release.cjs "$AURA_BASE_SHA"
+        env:
+          AURA_BASE_SHA: ${{ github.event.pull_request.base.sha || github.event.before }}
   browser:
     name: Chromium / ${{ matrix.suite }}
     runs-on: ubuntu-24.04
