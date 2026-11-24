@@ -21,13 +21,14 @@
   for(const [id,blob] of blobs){const reader=blob.stream().getReader();try{for(;;){const {done,value}=await reader.read();if(done)break;await writer.write(value);}}finally{reader.releaseLock();}}
  }
  async function exportPack(direct){
-  if(busy||!canLeaveProject())return;busy=true;let writer;
+  if(busy||!canLeaveProject())return;busy=true;let writer;const origin=state,originId=activeProjectId,before=snapshot();
   try{
    // Picker must run in the initiating user gesture.
    let handle;if(direct){handle=await showSaveFilePicker({suggestedName:fileSafe(state.title)+'.aurapack',types:[{description:'Aura project package',accept:{'application/octet-stream':['.aurapack']}}]});}
-   await flushProject(true);const project=JSON.parse(snapshot()),blobs=new Map();let total=0;
-   for(const id of projectAudioIds(project)){const blob=await readStoredAudio(id);if(!blob)throw Error('Missing source asset. Restore the project before exporting.');blobs.set(id,blob);total+=blob.size;}
-   const m=AuraPack.manifest(project,[...blobs].map(([id,b])=>({id,size:b.size})));
+   if(origin!==state||originId!==activeProjectId||before!==snapshot())throw Error('Project changed. Start backup again.');const project=JSON.parse(before),blobs=new Map();let total=0;
+   const streamed=streamedAssets(project);
+   for(const id of projectAudioIds(project)){let blob;try{blob=await readStoredAudio(id);}catch(e){/* backup may recover an in-memory asset despite failed IndexedDB */}if(streamed.has(id)){if(!blob)throw Error('Missing streamed source. Restore it before exporting.');await AuraStream.verify(blob,streamed.get(id));}else if(!blob){const ab=buffers.get(id);if(!ab)throw Error('Missing source asset. Restore the project before exporting.');if(ab.length*ab.numberOfChannels*3>128*1048576)throw Error('Unsaved audio exceeds backup memory budget. Recover source first.');blob=new Blob([AuraCore.wavBytes(ab,24)],{type:'audio/wav'});}blobs.set(id,blob);total+=blob.size;if(total>1024*1048576)throw Error('Package exceeds 1 GiB.');}
+   if(origin!==state||originId!==activeProjectId||before!==snapshot())throw Error('Project changed during backup. Retry.');const m=AuraPack.manifest(project,[...blobs].map(([id,b])=>({id,size:b.size})));
    if(direct){writer=await handle.createWritable();await writePackage(writer,project,blobs);await writer.close();writer=null;}
    else{if(total>256*1048576)throw Error('Large package: use direct file writing on a supported browser.');if(!await offerFile(fileSafe(project.title)+'.aurapack',new Blob([...AuraPack.header(m),...blobs.values()],{type:'application/octet-stream'})))throw Error('Download did not start.');}
    packStatus.textContent='Package exported with '+blobs.size+' source assets. Keep the external file safe.';
