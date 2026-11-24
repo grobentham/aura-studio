@@ -71,3 +71,5 @@ Instruments Pro adds bounded project-embedded native synth patches, local preset
 Effects Pro extends the shared native insert rack to 19 effect types, explicit modulation-node lifecycle, bounded echo feedback and portable/local effect-chain presets. See docs/effects-pro.md.
 
 Sound Library Pro and opt-in offline app: bounded separate sample storage and portable packs, independent project copies, explicit shell cache with versioned dependencies and factory cache management. See docs/offline-library.md.
+
+Declarative plugin SDK 1 adds validated data-only native effect macros, embedded per-track plugin manifests/state, a shared eight-processor budget and dry export exclusion. No executable third-party plugin hosting. See docs/plugin-sdk.md.
