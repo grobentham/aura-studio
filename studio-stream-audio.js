@@ -25,12 +25,12 @@ function scheduleStreamChunk(t,r,startBeat,endBeat,when,epoch,beatSeconds){
   try{const file=await streamFile(r.buf,meta),buffer=await AuraStream.decode(file,meta,part.start,part.count,ctx);streamReads++;
    if(epoch!==streamEpoch||!sched.playing||state!==project)return;
    if(ctx.currentTime>when+.005){streamMisses++;stop();toast('Stream data arrived late. Playback stopped instead of skipping audio.');return;}
-   const source=ctx.createBufferSource(),g=ctx.createGain(),at=Math.max(when,ctx.currentTime),length=buffer.duration,level=Number.isFinite(r.gain)?Math.max(0,r.gain):1,total=r.len*beatSeconds,fi=Math.min(r.fadeIn||0,total/2),fo=Math.min(r.fadeOut||0,total/2);
+   const source=ctx.createBufferSource(),g=ctx.createGain(),at=Math.max(when,ctx.currentTime),late=Math.max(0,at-when),length=buffer.duration-late,level=Number.isFinite(r.gain)?Math.max(0,r.gain):1,total=r.len*beatSeconds,fi=Math.min(r.fadeIn||0,total/2),fo=Math.min(r.fadeOut||0,total/2);
    const gainAt=s=>level*Math.max(0,Math.min(1,fi?s/fi:1,fo?(total-s)/fo:1));
    source.buffer=buffer;source.connect(g);g.connect(dest);g.gain.setValueAtTime(gainAt(elapsed),at);
    for(const edge of [fi,total-fo].sort((a,b)=>a-b))if(edge>elapsed&&edge<elapsed+length)g.gain.linearRampToValueAtTime(gainAt(edge),at+edge-elapsed);
    g.gain.linearRampToValueAtTime(gainAt(elapsed+length),at+length);
-   source.addEventListener('ended',()=>{try{source.disconnect();g.disconnect();}catch(e){}});source.start(at);track(source);
+   source.addEventListener('ended',()=>{try{source.disconnect();g.disconnect();}catch(e){}});if(length<=0){source.disconnect();g.disconnect();return;}source.start(at,late,length);track(source);
   }catch(e){if(epoch===streamEpoch&&sched.playing&&state===project){streamMisses++;stop();toast(e.message||'Stream read failed.');}}
   finally{streamPending--;}
  })();
@@ -48,11 +48,11 @@ scheduleRange=function(from,to,first){
 };
 const stopBeforeStream=stop;stop=function(){streamEpoch++;streamFiles.clear();return stopBeforeStream();};
 const playBeforeStream=play;play=function(){if(sched.playing)return playBeforeStream();streamEpoch++;streamMisses=0;streamReads=0;return playBeforeStream();};
-const editBeforeStream=editAudio;editAudio=function(action){const {r}=getSel();if(r?.stream){if(sched.playing)return toast('Stop playback before editing streamed clips.');if(action==='split'){const at=curBeat()-r.start;if(at<=.02||at>=r.len-.02)return toast('Place the playhead inside the clip.');const {t}=getSel();pushUndo();const tail={...structuredClone(r),id:uid(),start:r.start+at,len:r.len-at,offset:(r.offset||0)+at*spb()};r.len=at;t.regions.push(tail);view.selRegion=tail.id;renderAll();save();return;}return toast('Streamed clips support timeline positioning and splitting. Recover a bounded section for detailed waveform edits.');}return editBeforeStream(action);};
+const editBeforeStream=editAudio;editAudio=function(action){const {r}=getSel();if(r?.stream){if(sched.playing)return toast('Stop playback before editing streamed clips.');if(action==='split'){const at=curBeat()-r.start;if(at<=.02||at>=r.len-.02)return toast('Place the playhead inside the clip.');const {t}=getSel();pushUndo();const tail={...structuredClone(r),id:uid(),start:r.start+at,len:r.len-at,offset:(r.offset||0)+at*spb()};r.len=at;t.regions.push(tail);view.selRegion=tail.id;renderAll();save();return;}return toast('Use Tools → Stream clip editor for waveform, trim and editable section extraction.');}return editBeforeStream(action);};
 (()=>{
  const status=h('p',{id:'streamStatus',role:'status'},'Choose a canonical Aura 24-bit WAV archive. Source is stored locally and read in small ranges.');
  const input=h('input',{id:'streamImport',type:'file',accept:'.wav,audio/wav',onchange:async e=>{const file=e.target.files[0];e.target.value='';if(!file)return;try{await addStreamedWav(file,file.name.replace(/\.wav$/i,''));status.textContent='Streamed WAV added. Use Portable packages for backups.';}catch(error){status.textContent=error.message;}}});
- const panel=productionDialog('streamModal','Streamed audio',[h('p',{class:'muted'},'Local PCM WAV timeline playback. Import a canonical Aura 24-bit archive (up to one hour and 1 GiB). Each playback read is limited to a half-second chunk; late reads stop playback. Full-length mixed export is not yet supported.'),input,h('button',{onclick:()=>{status.textContent='Playback reads '+streamReads+' · late or failed reads '+streamMisses+' · pending '+streamPending; }},'Refresh stream diagnostics'),status]);
+ const panel=productionDialog('streamModal','Streamed audio',[h('p',{class:'muted'},'Local PCM WAV timeline playback. Import a canonical Aura 24-bit archive (up to one hour and 1 GiB). Each playback read is limited to a half-second chunk; late reads stop playback. Use Continuous mix export for a full-length realtime master recording.'),input,h('button',{onclick:()=>{status.textContent='Playback reads '+streamReads+' · late or failed reads '+streamMisses+' · pending '+streamPending; }},'Refresh stream diagnostics'),status]);
  function open(){if(canLeaveProject())panel.hidden=false;}
  productionToolbar.append(h('button',{id:'openStream',onclick:open},'Streamed audio'));studioActions.push(['Streamed audio','Long WAV timeline playback and stream diagnostics',open]);
 })();
