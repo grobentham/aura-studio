@@ -20,7 +20,7 @@
   list.append(h('h3',{},'Local WAV copies'));
   try{const dir=await directory();let count=0;for await(const [name,handle] of dir.entries()){
    if(handle.kind!=='file'||!/^[0-9a-f-]{36}\.wav$/i.test(name))continue;const file=await handle.getFile();if(file.size<44)continue;count++;
-   list.append(h('article',{class:'recovery-take'},h('strong',{},sessions.find(s=>s.id+'.wav'===name)?.title||name),h('p',{},readable(file.size)),h('audio',{controls:true,preload:'none',src:previewUrl(file),'aria-label':'Archive playback'}),action('Download WAV copy',()=>offerFile(fileSafe(sessions.find(s=>s.id+'.wav'===name)?.title||name.slice(0,-4))+'-archive.wav',file)),action('Delete WAV copy',async()=>{if(confirm('Delete this local WAV copy? This does not delete a source journal.'))await dir.removeEntry(name);})));
+   list.append(h('article',{class:'recovery-take'},h('strong',{},sessions.find(s=>s.id+'.wav'===name)?.title||name),h('p',{},readable(file.size)),h('audio',{controls:true,preload:'none',src:previewUrl(file),'aria-label':'Archive playback'}),action('Add streamed timeline clip',async()=>{await addStreamedWav(file,sessions.find(s=>s.id+'.wav'===name)?.title||'Archive recording');status.textContent='Streamed clip added to current project.';}),action('Download WAV copy',()=>offerFile(fileSafe(sessions.find(s=>s.id+'.wav'===name)?.title||name.slice(0,-4))+'-archive.wav',file)),action('Delete WAV copy',async()=>{if(confirm('Delete this local WAV copy? This does not delete a source journal.'))await dir.removeEntry(name);})));
   }if(!count)list.append(h('p',{class:'muted'},'No local WAV copies.'));}
   catch(e){list.append(h('p',{class:'muted'},e.message));}
  }

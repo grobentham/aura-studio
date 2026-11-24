@@ -1,7 +1,7 @@
 /* Binary portable package: 8-byte magic, 4-byte manifest size, JSON, raw asset blobs. */
 (function(root){
 'use strict';
-const magic='AURAPAK1',maxManifest=16*1048576,maxAsset=128*1048576,maxTotal=1024**3;
+const magic='AURAPAK1',maxManifest=16*1048576,maxAsset=1024**3,maxTotal=1024**3;
 function manifest(project,assets){
  if(!project||!Array.isArray(project.tracks)||project.tracks.length>128||!Array.isArray(assets)||assets.length>4096)throw Error('Invalid project package manifest.');
  let total=0;const ids=new Set();
