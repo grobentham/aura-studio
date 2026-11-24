@@ -104,8 +104,21 @@ mkNodes=function(){const n=originalMkNodes();n.filter.disconnect(n.vol);n.fx=add
 // Dispose all track-owned nodes, including sends and the shared processing strip.
 const syncBeforeChannelDispose=syncNodes;
 syncNodes=function(){if(ctx){const ids=new Set(state.tracks.map(t=>t.id));for(const [id,n] of nodes){if(!ids.has(id)){AuraChannel.dispose(n.fx);for(const value of Object.values(n))if(value&&typeof value.disconnect==='function')try{value.disconnect();}catch(e){} }}}return syncBeforeChannelDispose();};
+const liveGroups=new Map();
+function routeLiveGroups(){
+ if(!ctx)return;const groups=AuraRouting.groups(state.groupMix);
+ for(const id of AuraRouting.ids){let bus=liveGroups.get(id);if(!bus){bus=ctx.createGain();bus.connect(master);liveGroups.set(id,bus);}bus.gain.setTargetAtTime(AuraRouting.gain(groups[id]),ctx.currentTime,.02);}
+ for(const t of state.tracks){const n=nodes.get(t.id);if(!n)continue;const id=AuraRouting.route(t.group),destination=id?liveGroups.get(id):master;if(n.groupDestination!==destination){
+  try{n.mute.disconnect(n.groupDestination||master);}catch(e){}
+  n.mute.connect(destination);n.groupDestination=destination;
+ }
+ // Group gain applies to post-track send levels as well as the shared dry bus.
+ const factor=id?AuraRouting.gain(groups[id]):1,value=key=>sched.playing?AuraProduction.automationAt(t.automation?.[key],curBeat(),t[key]):t[key];
+ n.rv.gain.setTargetAtTime(value('rev')*factor,ctx.currentTime,.02);n.dl.gain.setTargetAtTime(value('dly')*.8*factor,ctx.currentTime,.02);
+ }
+}
 const originalUpdateMix=updateMix;
-updateMix=function(){originalUpdateMix();if(ctx)for(const t of state.tracks){const n=nodes.get(t.id);if(n?.fx)setTrackProcessing(n.fx,t,ctx.currentTime);}};
+updateMix=function(){originalUpdateMix();if(ctx)for(const t of state.tracks){const n=nodes.get(t.id);if(n?.fx)setTrackProcessing(n.fx,t,ctx.currentTime);}routeLiveGroups();};
 // Existing nodes may have been created while restoring local audio.
 for(const n of nodes.values())if(!n.fx){n.filter.disconnect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.vol,{});}updateMix();
 function renderTrackFX(){
@@ -130,11 +143,13 @@ function createOfflineGraph(audio,tracks,masterVolume,options={}){
   for(let c=0;c<2;c++){const d=impulse.getChannelData(c);for(let i=0;i<d.length;i++)d[i]=(random()*2-1)*Math.pow(1-i/d.length,2.4);}conv.buffer=impulse;
   const reverb=audio.createGain();reverb.gain.value=.8;conv.connect(reverb);reverb.connect(output);
   const delay=audio.createDelay(2),filter=audio.createBiquadFilter(),feedback=audio.createGain(),echo=audio.createGain();delay.delayTime.value=Math.min(1.9,.75*spb());filter.type='lowpass';filter.frequency.value=3200;feedback.gain.value=.38;echo.gain.value=.7;delay.connect(filter);filter.connect(feedback);feedback.connect(delay);filter.connect(echo);echo.connect(output);
+  const groupSettings=AuraRouting.groups(options.groupMix),groupNodes=new Map();
+  for(const id of AuraRouting.ids){const bus=audio.createGain();bus.gain.value=AuraRouting.gain(groupSettings[id]);bus.connect(output);groupNodes.set(id,bus);}
   const channels=new Map();for(const t of tracks){
     const input=audio.createGain(),tone=audio.createBiquadFilter(),volume=audio.createGain(),pan=audio.createStereoPanner(),rev=audio.createGain(),dly=audio.createGain();
     tone.type='lowpass';tone.Q.value=.7;tone.frequency.value=cutoffHz(t.cutoff);volume.gain.value=t.vol*t.vol*1.2;pan.pan.value=t.pan;rev.gain.value=t.rev;dly.gain.value=t.dly*.8;
-    input.connect(tone);addTrackProcessing(audio,tone,volume,t);volume.connect(pan);pan.connect(output);pan.connect(rev);rev.connect(conv);pan.connect(dly);dly.connect(delay);channels.set(t.id,input);
-    if(typeof scheduleTrackAutomation==='function')scheduleTrackAutomation(audio,t,[['vol',volume.gain,v=>v*v*1.2],['pan',pan.pan,v=>v],['cutoff',tone.frequency,cutoffHz],['rev',rev.gain,v=>v],['dly',dly.gain,v=>v*.8]],options);
+    input.connect(tone);addTrackProcessing(audio,tone,volume,t);volume.connect(pan);const group=AuraRouting.route(t.group),factor=group?AuraRouting.gain(groupSettings[group]):1;pan.connect(group?groupNodes.get(group):output);rev.gain.value*=factor;dly.gain.value*=factor;pan.connect(rev);rev.connect(conv);pan.connect(dly);dly.connect(delay);channels.set(t.id,input);
+    if(typeof scheduleTrackAutomation==='function')scheduleTrackAutomation(audio,t,[['vol',volume.gain,v=>v*v*1.2],['pan',pan.pan,v=>v],['cutoff',tone.frequency,cutoffHz],['rev',rev.gain,v=>v*factor],['dly',dly.gain,v=>v*.8*factor]],options);
   }
   return channels;
 }
@@ -163,9 +178,9 @@ scheduleRange=function(from,to,first){
   }}
 };
 async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
-  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{}}));masterVolume=1;masterProcessing=false;}
+  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[]}));masterVolume=1;masterProcessing=false;}
   const seconds=(end-start)*spb()+tail;if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
-  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing});
+  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing,groupMix:channelEffects?state.groupMix:{}});
   const noise=audio.createBuffer(1,sampleRate*2,sampleRate),nd=noise.getChannelData(0),random=rng(382);for(let i=0;i<nd.length;i++)nd[i]=random()*2-1;
   for(const t of tracks){const dest=destinations.get(t.id);for(const r of t.regions){
     if(r.start>=end||r.start+r.len<=start)continue;
@@ -331,7 +346,7 @@ function setupProWorkspace(){
   const narrowScreen=matchMedia('(max-width:800px)'),focusResponsiveWorkspace=e=>{if(e.matches&&!document.body.dataset.focus)mobile.querySelector('[data-focus="arrange"]').click();else if(!e.matches&&document.body.dataset.focus){delete document.body.dataset.focus;setEditorCollapsed(false);performanceOpen=false;renderEditor();}};
   narrowScreen.addEventListener('change',focusResponsiveWorkspace);focusResponsiveWorkspace(narrowScreen);
   const proStarter=loadStarter;loadStarter=function(name){releaseMidi();proStarter(name);renderClipTools();renderTrackFX();};
-  const proOpenProject=openProjectFile;openProjectFile=async function(file){if(!canLeaveProject())return;try{await flushProject();const previous=state,previousId=activeProjectId;activeProjectId=crypto.randomUUID();await proOpenProject(file);if(state===previous){activeProjectId=previousId;return;}undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();}catch(e){toast('Could not import the project. Check browser storage.');}};
+  const proOpenProject=openProjectFile;openProjectFile=async function(file,assetProvider){if(!canLeaveProject())return;try{await flushProject();const previous=state,previousId=activeProjectId;activeProjectId=crypto.randomUUID();await proOpenProject(file,assetProvider);if(state===previous){activeProjectId=previousId;return;}undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();}catch(e){toast('Could not import the project. Check browser storage.');}};
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){for(const id of ['projectsModal','historyModal','exportModal'])$('#'+id).hidden=true;}
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&!e.target.closest('.overlay')){e.preventDefault();e.stopImmediatePropagation();flushProject(true).then(()=>toast('Saved on this device.')).catch(()=>toast('Save failed. Download a project backup.'));}

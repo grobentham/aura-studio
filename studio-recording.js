@@ -57,7 +57,7 @@ updateInputMeter=function(){inputMeterBeforePCM();if(inputCapture.analyser){cons
 
 startAudioTake=function(){if(countIn.active){cancelCountIn();renderLibrary();return;}if(!inputCapture.connected||inputCapture.pending||inputCapture.recording)return;beginPCMRecording();};
 async function beginPCMRecording(){
-  if(!inputCapture.connected||inputCapture.pending||inputCapture.recording||sched.bouncing)return;
+  if(!inputCapture.connected||inputCapture.pending||inputCapture.recording||sched.bouncing||productionBusy)return;
   inputCapture.pending=true;inputCapture.error='';recordingState();renderLibrary();
   try{
     if(!projectReady)throw Error('Wait for project storage to open.');await flushProject();await ctx.resume();await loadPCMRecorder();await prepareTrackSounds();releaseTouch();stopLoopPreview();rec.armed=false;
@@ -136,7 +136,7 @@ wavBlob=function(buffer){return new Blob([AuraCore.wavBytes(buffer,24)],{type:'a
 const tempoBeforeTakes=$('#bpm').onchange;
 $('#bpm').onchange=function(e){if(recordingBusy())return;const old=state.bpm;tempoBeforeTakes(e);for(const t of state.tracks)for(const p of t.takes||[])p.len*=state.bpm/old;renderAll();save();};
 const importBeforeTakes=openProjectFile;
-openProjectFile=async function(file){try{if(file.size>100*1024*1024)throw Error('Choose a project under 100 MB.');const data=JSON.parse(await file.text());if(Array.isArray(data.tracks))AuraRecording.validateTakes(data.tracks);}catch(e){return toast(e.message||'Invalid project.');}return importBeforeTakes(file);};
+openProjectFile=async function(file,assetProvider){try{if(file.size>100*1024*1024)throw Error('Choose a project under 100 MB.');const data=JSON.parse(await file.text());if(Array.isArray(data.tracks))AuraRecording.validateTakes(data.tracks);}catch(e){return toast(e.message||'Invalid project.');}return importBeforeTakes(file,assetProvider);};
 const applyBeforeTakes=applyProject;
 applyProject=function(data){AuraRecording.validateTakes(data.tracks||[]);return applyBeforeTakes(data);};
 
