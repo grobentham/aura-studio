@@ -1,0 +1,3 @@
+'use strict';
+importScripts('producer-core.js?v=2','master-pro-core.js?v=1');
+self.onmessage=({data})=>{try{if(data.type==='analyse'){self.postMessage({ok:true,value:AuraMasterPro.analyse(data.channels)});}else if(data.type==='master'){const value=AuraMasterPro.process(data.channels,data.settings,data.reference);self.postMessage({ok:true,value},value.channels.map(a=>a.buffer));}else if(data.type==='wav'){const value=AuraMasterPro.ditherWav(data.channels,data.bits);self.postMessage({ok:true,value},[value.buffer]);}else throw Error('Unknown mastering task.');}catch(e){self.postMessage({ok:false,error:e.message});}};
