@@ -15,3 +15,5 @@ Goal: an account-optional, local-first workstation for singer-songwriters that t
 Do not prioritise collaboration, social network, VST bridge or generative song APIs until the core workflow proves demand. Retain free core recording, editing and portable project exports. Proposed commercial terms are hypotheses, not commitments.
 
 Next implementation PR: extract the current recording cap policy (with no behavior change), add boundary tests and document the storage migration design. Never just remove caps while allocating a whole AudioBuffer.
+
+Architecture increment: archive capture, bounded random-access section recovery, OPFS local WAV copies, quota/persistence dashboard and shared channel-strip lifecycle with editable EQ shape. Next: sustained physical capture stress test, archive-backed realtime playback, streaming portable project package, explicit routing graph and delay compensation. The 60-minute archive limit is a design target, not a verified hardware benchmark.
