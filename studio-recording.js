@@ -57,7 +57,7 @@ updateInputMeter=function(){inputMeterBeforePCM();if(inputCapture.analyser){cons
 
 startAudioTake=function(){if(countIn.active){cancelCountIn();renderLibrary();return;}if(!inputCapture.connected||inputCapture.pending||inputCapture.recording)return;beginPCMRecording();};
 async function beginPCMRecording(){
-  if(!inputCapture.connected||inputCapture.pending||inputCapture.recording||sched.bouncing)return;
+  if(!inputCapture.connected||inputCapture.pending||inputCapture.recording||sched.bouncing||productionBusy)return;
   inputCapture.pending=true;inputCapture.error='';recordingState();renderLibrary();
   try{
     if(!projectReady)throw Error('Wait for project storage to open.');await flushProject();await ctx.resume();await loadPCMRecorder();await prepareTrackSounds();releaseTouch();stopLoopPreview();rec.armed=false;

@@ -178,7 +178,7 @@ scheduleRange=function(from,to,first){
   }}
 };
 async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
-  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null}));masterVolume=1;masterProcessing=false;}
+  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[]}));masterVolume=1;masterProcessing=false;}
   const seconds=(end-start)*spb()+tail;if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
   const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing,groupMix:channelEffects?state.groupMix:{}});
   const noise=audio.createBuffer(1,sampleRate*2,sampleRate),nd=noise.getChannelData(0),random=rng(382);for(let i=0;i<nd.length;i++)nd[i]=random()*2-1;
