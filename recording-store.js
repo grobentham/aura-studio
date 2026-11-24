@@ -25,5 +25,15 @@ const RecordingJournal=(()=>{
     if((at*meta.channels*3)%2)parts.push(new Uint8Array(1));
     return new Blob(parts,{type:'audio/wav'});
   }
-  return{create,append,list,assemble,remove,exportWav};
+  // Caller owns the writable file and commits only after every block is verified.
+  async function writeWav(meta,writer,onProgress=()=>{}){
+    await writer.write(AuraRecording.wavHeader(meta.frames,meta.rate,meta.channels));let at=0,expected=null;
+    for(let i=0;i<meta.blocks;i++){
+      const b=await block(meta.id,i);if(!b||b.sequence!==i||b.data.length!==meta.channels||expected!==null&&b.frame!==expected||at+b.frames>meta.frames)throw Error('Incomplete recording journal; source retained.');
+      await writer.write(AuraRecording.pcm24Block(b.data,b.frames));at+=b.frames;expected=b.frame+b.frames;onProgress(at,meta.frames);
+    }
+    if(at!==meta.frames)throw Error('Incomplete recording journal; source retained.');
+    if((at*meta.channels*3)%2)await writer.write(new Uint8Array(1));
+  }
+  return{create,append,list,assemble,remove,exportWav,writeWav};
 })();
