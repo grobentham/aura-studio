@@ -14,5 +14,16 @@ const RecordingJournal=(()=>{
     if(at!==meta.frames)throw Error('Incomplete recording journal.');return buffer;
   }
   async function remove(id){await transaction(['sessions','chunks'],tx=>{tx.objectStore('sessions').delete(id);const q=tx.objectStore('chunks').openCursor(IDBKeyRange.bound([id,0],[id,Number.MAX_SAFE_INTEGER]));q.onsuccess=()=>{const c=q.result;if(c){c.delete();c.continue();}};});}
-  return{create,append,list,assemble,remove};
+  // Export committed source blocks without allocating a whole decoded AudioBuffer.
+  async function exportWav(meta){
+    const parts=[AuraRecording.wavHeader(meta.frames,meta.rate,meta.channels)];let at=0,expected=null;
+    for(let i=0;i<meta.blocks;i++){
+      const b=await block(meta.id,i);if(!b||b.sequence!==i||b.data.length!==meta.channels||expected!==null&&b.frame!==expected||at+b.frames>meta.frames)throw Error('Incomplete recording journal; original blocks retained.');
+      parts.push(new Blob([AuraRecording.pcm24Block(b.data,b.frames)]));at+=b.frames;expected=b.frame+b.frames;
+    }
+    if(at!==meta.frames)throw Error('Incomplete recording journal; original blocks retained.');
+    if((at*meta.channels*3)%2)parts.push(new Uint8Array(1));
+    return new Blob(parts,{type:'audio/wav'});
+  }
+  return{create,append,list,assemble,remove,exportWav};
 })();

@@ -2,7 +2,7 @@
 'use strict';
 (()=>{
 const api=AuraProducer;
-let busy=false,analysis=null;
+let busy=false,analysis=null,mixPlan=null;
 const fmt=n=>Number.isFinite(n)?n.toFixed(1)+' dBFS':'−∞ dBFS';
 const status=h('p',{id:'producerStatus',role:'status',class:'producer-status'},'Select an audio or MIDI clip to begin.');
 const results=h('div',{id:'producerResults',class:'producer-results'});
@@ -30,7 +30,7 @@ const tuneButton=guarded('Align stable note to project scale','producerTune',asy
  if(Math.abs(shift)<.025){status.textContent='Already aligned to '+noteName(target)+'.';return;}
  if(!confirm('Shift this entire isolated clip by '+shift.toFixed(2)+' semitones to '+noteName(target)+'? Undo preserves the original.'))return;
  if(sched.playing)stop();productionBusy=true;
- try{const out=await transformAudioBuffer(extractAudioClip(source,r),{pitch:shift,rate:1});if(state!==a.project||state.bpm!==a.bpm||JSON.stringify(r)!==a.snapshot||getSel().r!==r)throw Error('Clip changed; retry.');await replaceAudioClip(r,out,'pitch aligned');status.textContent='Pitch alignment applied. Undo restores original audio.';analysis=null;}finally{productionBusy=false;}
+ try{const out=await transformAudioBuffer(extractAudioClip(source,r),{pitch:shift,rate:1});if(state!==a.project||state.bpm!==a.bpm||JSON.stringify(r)!==a.snapshot||getSel().r!==r)throw Error('Clip changed; retry.');const id=uid();await persistRecordedAsset(id,out);if(state!==a.project||state.bpm!==a.bpm||JSON.stringify(r)!==a.snapshot||getSel().r!==r)throw Error('Clip changed while saving; original retained.');buffers.set(id,out);pushUndo();r.buf=id;r.offset=0;r.len=out.duration/spb();r.name=(r.name||'Audio')+' · pitch aligned';for(const key of ['fadeIn','fadeOut'])r[key]=Math.min(r[key]||0,out.duration/2);renderAll();save();status.textContent='Pitch alignment applied. Undo restores original audio.';analysis=null;}finally{productionBusy=false;}
 });
 const gainButton=guarded('Reduce clip peaks to −6 dBFS','producerGain',()=>{
  const {r,source,from,end}=clipAudio();if(end-from>source.sampleRate*120)throw Error('Choose a clip under two minutes for this analysis.');
@@ -57,6 +57,28 @@ const composeButton=guarded('Generate editable accompaniment','producerCompose',
  status.textContent='Created three editable MIDI tracks. Undo removes the accompaniment in one step.';
  display(['Project key: '+noteName(60+state.root).replace(/\d+$/,'')+' '+state.scale,'Chords: '+part.labels.map(chord=>chord.map(p=>noteName(60+p).replace(/\d+$/,'')).join('–')).join(' | '),'Generated from project scale and melody evidence; audition and edit to taste.']);
 });
+const mixButton=guarded('Analyse track gain staging','producerMix',async()=>{
+ const tracks=state.tracks.filter(t=>!t.mute&&(!state.tracks.some(t=>t.solo)||t.solo)&&t.regions.length);
+ if(!tracks.length||tracks.length>8)throw Error('Unmute between one and eight tracks for gain staging.');
+ const end=Math.min(songEnd(),30/spb());if(end<=0)throw Error('Project is empty.');
+ if(sched.playing)stop();productionBusy=true;mixPlan=null;const before=snapshot(),plan=[];
+ try{for(const t of tracks){
+   if(t.automation?.vol?.length){plan.push({id:t.id,name:t.name,skip:true});continue;}
+   status.textContent='Measuring '+t.name+'…';
+   const buffer=await renderOffline([t],{sampleRate:48000,end,tail:0,masterVolume:1,masterProcessing:false});
+   if(snapshot()!==before)throw Error('Project changed during analysis; retry.');
+   const level=api.levels(Array.from({length:buffer.numberOfChannels},(_,i)=>buffer.getChannelData(i)));
+   plan.push({id:t.id,name:t.name,from:t.vol,to:api.suggestedFader(t.vol,level.peak,level.rms),peak:level.peakDb});
+ }
+ mixPlan={before,plan};display(['First '+(end*spb()).toFixed(1)+' seconds · tracks measured independently with channel effects, no master processing.',...plan.map(p=>p.skip?p.name+': skipped (volume automation)':p.name+': '+Math.round(p.from*100)+'% → '+Math.round(p.to*100)+'% · '+fmt(p.peak)), 'Attenuation only; not an artistic mix or clipping repair.']);status.textContent='Review recommendations, then apply if desired.';
+ }finally{productionBusy=false;}
+});
+const applyMix=guarded('Apply suggested faders','producerApplyMix',()=>{
+ if(!mixPlan||snapshot()!==mixPlan.before)throw Error('Analyse the current project first; recommendations expire when it changes.');
+ const changes=mixPlan.plan.filter(p=>!p.skip&&p.to<p.from-1e-6);
+ if(!changes.length){status.textContent='No reductions recommended.';return;}
+ if(sched.playing)stop();pushUndo();for(const p of changes){const t=trackById(p.id);if(t)t.vol=p.to;}syncNodes();renderAll();save();mixPlan=null;status.textContent='Applied '+changes.length+' fader reductions. Undo restores all faders.';
+});
 const renderButton=guarded('Export peak-normalised WAV','producerExport',async()=>{
  const end=songEnd();if(end<=0||end*spb()+3>120)throw Error('Choose a song under two minutes (including the three-second effect tail).');
  const tracks=state.tracks.filter(t=>!t.mute&&(!state.tracks.some(t=>t.solo)||t.solo));if(!tracks.length)throw Error('No audible tracks.');
@@ -65,18 +87,19 @@ const renderButton=guarded('Export peak-normalised WAV','producerExport',async()
  try{status.textContent='Rendering project locally…';const buffer=await renderOffline(tracks,{sampleRate:48000,end,tail:3});if(snapshot()!==before)throw Error('Project changed while rendering. Retry.');
  const channels=Array.from({length:buffer.numberOfChannels},(_,c)=>buffer.getChannelData(c)),l=api.levels(channels);if(l.peak===0)throw Error('Rendered song is silent.');
  const gain=api.peakGain(l.peak,-1,6);for(const data of channels)for(let i=0;i<data.length;i++)data[i]*=gain;
- const after=api.levels(channels);await offerFile(fileSafe(title)+'-peak-normalised.wav',new Blob([AuraCore.wavBytes(buffer,24)],{type:'audio/wav'}));
- display(['Before: '+fmt(l.peakDb)+' sample peak','After: '+fmt(after.peakDb)+' sample peak','Gain adjustment: '+api.db(gain).toFixed(1)+' dB','48 kHz · 24-bit stereo WAV. Project unchanged.']);
+ const after=api.levels(channels),loudness=api.integratedLoudness(channels,48000);await offerFile(fileSafe(title)+'-peak-normalised.wav',new Blob([AuraCore.wavBytes(buffer,24)],{type:'audio/wav'}));
+ display(['Before: '+fmt(l.peakDb)+' sample peak','After: '+fmt(after.peakDb)+' sample peak','Gain adjustment: '+api.db(gain).toFixed(1)+' dB',(loudness===null?'Estimated integrated loudness: below gate':'Estimated integrated loudness: '+loudness.toFixed(1)+' LUFS'),'48 kHz · 24-bit stereo WAV. Project unchanged.']);
  status.textContent='Exported. This is sample-peak normalisation, not LUFS/true-peak mastering.';}finally{productionBusy=false;}
 });
 const panel=productionDialog('auraProducerModal','Aura Producer',[
  h('p',{class:'muted'},'Local production assistance. Select audio for analysis or a melody clip for accompaniment. All changes are explicit and undoable.'),
  h('section',{class:'producer-section'},h('h3',{},'Analyse & vocal'),analyseButton,tuneButton,gainButton),
  h('section',{class:'producer-section'},h('h3',{},'Compose'),h('label',{},'Style ',style),h('label',{},'Bars ',bars),composeButton),
- h('section',{class:'producer-section'},h('h3',{},'Finalise'),renderButton,h('p',{class:'muted'},'Peak normalisation only. No true-peak limiter or loudness mastering yet.')),
+ h('section',{class:'producer-section'},h('h3',{},'Mix assist'),mixButton,applyMix,h('p',{class:'muted'},'Measures up to eight audible tracks across the first 30 seconds; suggests attenuation only.')),
+ h('section',{class:'producer-section'},h('h3',{},'Finalise'),renderButton,h('p',{class:'muted'},'Peak normalisation only. Includes estimated integrated loudness reporting; no true-peak limiter or loudness mastering yet.')),
  status,results
 ]);
-function open(){if(!canLeaveProject())return;panel.hidden=false;status.textContent='Choose a production action.';results.replaceChildren();}
+function open(){if(!canLeaveProject())return;panel.hidden=false;status.textContent='Choose a production action.';mixPlan=null;results.replaceChildren();}
 productionToolbar.append(h('button',{id:'openAuraProducer',onclick:open},'Aura Producer'));
 studioActions.push(['Aura Producer','Analyse audio, generate accompaniment and prepare a WAV',open]);
 })();

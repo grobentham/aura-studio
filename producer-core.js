@@ -89,6 +89,30 @@ function peakGain(peak,targetDb=-1,maxBoostDb=6){
   if(!Number.isFinite(peak)||peak<0||!Number.isFinite(targetDb)||targetDb>0||targetDb<-30||!Number.isFinite(maxBoostDb)||maxBoostDb<0||maxBoostDb>24)throw Error('Invalid normalization settings.');
   return peak===0?1:Math.min(10**(targetDb/20)/peak,10**(maxBoostDb/20));
 }
-const api={levels,pitchFrame,analysePitch,nearestScale,accompaniment,peakGain,db};
+// BS.1770-style K weighting and absolute/relative gating at 48 kHz, mono/stereo.
+// This is an engineering estimate, not a certified conformance meter.
+function integratedLoudness(channels,rate){
+  if(rate!==48000||![1,2].includes(channels.length)||channels.some(c=>c.length!==channels[0].length))throw Error('Loudness estimation requires aligned mono/stereo at 48 kHz.');
+  const size=19200,hop=4800,n=channels[0].length;if(n<size)return null;
+  const shelfB=[1.53512485958697,-2.69169618940638,1.19839281085285],shelfA=[-1.69065929318241,.73248077421585];
+  const hpB=[1,-2,1],hpA=[-1.99004745483398,.99007225036621];
+  const stage=(b,a)=>{let x1=0,x2=0,y1=0,y2=0;return x=>{const y=b[0]*x+b[1]*x1+b[2]*x2-a[0]*y1-a[1]*y2;x2=x1;x1=x;y2=y1;y1=y;return y;};};
+  const blocks=new Float64Array(Math.floor((n-size)/hop)+1);
+  for(const channel of channels){
+    const shelf=stage(shelfB,shelfA),hp=stage(hpB,hpA),ring=new Float64Array(size);let sum=0;
+    for(let i=0;i<n;i++){if(!Number.isFinite(channel[i]))throw Error('Non-finite audio.');const y=hp(shelf(channel[i])),e=y*y,k=i%size;sum+=e-ring[k];ring[k]=e;if(i+1>=size&&(i+1-size)%hop===0)blocks[(i+1-size)/hop]+=Math.max(0,sum)/size;}
+  }
+  const threshold=10**((-70+.691)/10),absolute=Array.from(blocks).filter(e=>e>=threshold);if(!absolute.length)return null;
+  const relative=absolute.reduce((s,e)=>s+e,0)/absolute.length/10,kept=absolute.filter(e=>e>=relative);
+  return kept.length?-.691+10*Math.log10(kept.reduce((s,e)=>s+e,0)/kept.length):null;
+}
+function suggestedFader(current,peak,rms){
+  if(![current,peak,rms].every(Number.isFinite)||current<0||current>1||peak<0||rms<0)throw Error('Invalid mix levels.');
+  if(peak===0||rms===0)return current;
+  // Current graph uses a squared fader law. Attenuate only; never automatically boost.
+  const gain=Math.min(1,10**(-12/20)/peak,10**(-24/20)/rms);
+  return current*Math.sqrt(gain);
+}
+const api={levels,pitchFrame,analysePitch,nearestScale,accompaniment,peakGain,db,integratedLoudness,suggestedFader};
 if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraProducer=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

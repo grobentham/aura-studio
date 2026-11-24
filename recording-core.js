@@ -57,5 +57,19 @@
     if(!Number.isSafeInteger(chunk.sequence)||chunk.sequence!==previous.blocks||!Number.isSafeInteger(chunk.frame)||chunk.frame<0||!Number.isSafeInteger(chunk.frames)||chunk.frames<1||!Array.isArray(chunk.data)||chunk.data.length!==channels||chunk.data.some(a=>!(a instanceof Float32Array)||a.length!==chunk.frames)||previous.nextFrame!=null&&chunk.frame!==previous.nextFrame)throw Error('Invalid or out-of-order recording block.');
     return {frames:previous.frames+chunk.frames,blocks:previous.blocks+1,nextFrame:chunk.frame+chunk.frames};
   }
-  const api={takes,comp,validateTakes,captureLimit,validateBlock};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
+  // Standard PCM WAV header; separate encoding keeps journal export block-sized.
+  function wavHeader(frames,rate,channels){
+    const size=frames*channels*3;
+    if(!Number.isSafeInteger(frames)||frames<1||!Number.isInteger(rate)||rate<8000||rate>384000||![1,2].includes(channels)||size>0xffffffff-37)throw Error('Invalid or oversized WAV.');
+    const bytes=new Uint8Array(44),v=new DataView(bytes.buffer);
+    const text=(at,s)=>{for(let i=0;i<s.length;i++)bytes[at+i]=s.charCodeAt(i);};
+    text(0,'RIFF');v.setUint32(4,36+size+(size%2),true);text(8,'WAVE');text(12,'fmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,channels,true);v.setUint32(24,rate,true);v.setUint32(28,rate*channels*3,true);v.setUint16(32,channels*3,true);v.setUint16(34,24,true);text(36,'data');v.setUint32(40,size,true);return bytes;
+  }
+  function pcm24Block(data,frames){
+    if(!Array.isArray(data)||![1,2].includes(data.length)||!Number.isSafeInteger(frames)||frames<1||data.some(a=>!(a instanceof Float32Array)||a.length!==frames))throw Error('Malformed PCM block.');
+    const out=new Uint8Array(frames*data.length*3);let at=0;
+    for(let i=0;i<frames;i++)for(const channel of data){const s=Math.max(-1,Math.min(1,Number.isFinite(channel[i])?channel[i]:0)),n=Math.round(s*(s<0?8388608:8388607));out[at++]=n&255;out[at++]=(n>>8)&255;out[at++]=(n>>16)&255;}
+    return out;
+  }
+  const api={takes,comp,validateTakes,captureLimit,validateBlock,wavHeader,pcm24Block};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

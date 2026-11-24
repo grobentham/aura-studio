@@ -12,7 +12,7 @@ For browser diagnostics:
     npx playwright install chromium
     node scripts/run-browser-diagnostics.cjs
 
-The runner starts serve.mjs on localhost:4173, creates a clean browser context for each of the six existing diagnostic pages, clicks Run, and checks its exact terminal success marker and absence of FAIL. The runner reports browser errors to aid investigation. It does not use your personal browser storage. Stop any other local server on port 4173 first. Set AURA_DIAGNOSTIC_TIMEOUT_MS to override the default 180000 ms per suite. To run one suite, pass its name (browser, interface, instruments, production, feedback or recording).
+The runner starts serve.mjs on localhost:4173, creates a clean browser context for each of the seven diagnostic pages, clicks Run, and checks its exact terminal success marker and absence of FAIL. The runner reports browser errors to aid investigation. It does not use your personal browser storage. Stop any other local server on port 4173 first. Set AURA_DIAGNOSTIC_TIMEOUT_MS to override the default 180000 ms per suite. To run one suite, pass its name (browser, interface, instruments, production, feedback, recording or producer).
 
 The GitHub workflow runs unit tests and browser diagnostics independently. Browser diagnostics are generated-signal/browser integration tests, not a substitute for manual hardware or listening tests. Before merging, review all check results; if the baseline fails, record the cause and fix it rather than silently skipping a suite. Branch protection must be configured separately by the owner.
 
