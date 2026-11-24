@@ -136,7 +136,7 @@ wavBlob=function(buffer){return new Blob([AuraCore.wavBytes(buffer,24)],{type:'a
 const tempoBeforeTakes=$('#bpm').onchange;
 $('#bpm').onchange=function(e){if(recordingBusy())return;const old=state.bpm;tempoBeforeTakes(e);for(const t of state.tracks)for(const p of t.takes||[])p.len*=state.bpm/old;renderAll();save();};
 const importBeforeTakes=openProjectFile;
-openProjectFile=async function(file){try{if(file.size>100*1024*1024)throw Error('Choose a project under 100 MB.');const data=JSON.parse(await file.text());if(Array.isArray(data.tracks))AuraRecording.validateTakes(data.tracks);}catch(e){return toast(e.message||'Invalid project.');}return importBeforeTakes(file);};
+openProjectFile=async function(file,assetProvider){try{if(file.size>100*1024*1024)throw Error('Choose a project under 100 MB.');const data=JSON.parse(await file.text());if(Array.isArray(data.tracks))AuraRecording.validateTakes(data.tracks);}catch(e){return toast(e.message||'Invalid project.');}return importBeforeTakes(file,assetProvider);};
 const applyBeforeTakes=applyProject;
 applyProject=function(data){AuraRecording.validateTakes(data.tracks||[]);return applyBeforeTakes(data);};
 
