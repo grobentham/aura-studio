@@ -17,3 +17,6 @@ Do not prioritise collaboration, social network, VST bridge or generative song A
 Next implementation PR: extract the current recording cap policy (with no behavior change), add boundary tests and document the storage migration design. Never just remove caps while allocating a whole AudioBuffer.
 
 Architecture increment: archive capture, bounded random-access section recovery, OPFS local WAV copies, quota/persistence dashboard and shared channel-strip lifecycle with editable EQ shape. Next: sustained physical capture stress test, archive-backed realtime playback, streaming portable project package, explicit routing graph and delay compensation. The 60-minute archive limit is a design target, not a verified hardware benchmark.
+
+## Aura Studio 3.0 consolidated phases
+1. Stability and data integrity (current); 2. Performance and scalability; 3. Professional audio architecture; 4. Recording and audio editing; 5. Mixing and mastering; 6. Instruments and sound design; 7. Intelligent music production; 8. Stem separation and plugin ecosystem; 9. Interface and user experience; 10. Offline and platform compatibility; 11. QA and beta; 12. Commercial launch. Each phase requires demonstrated exit gates, not feature-count completion. See docs/data-integrity.md for current phase evidence and remaining blockers.

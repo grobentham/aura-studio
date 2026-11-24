@@ -29,3 +29,5 @@ Existing tests were inspected but not executed during the static audit. CI intro
 See docs/release-hardening.md for the current scoped findings, fixes, and remaining release gates. Earlier architecture baseline findings remain historical.
 
 Data integrity follow-up: see docs/data-integrity.md. Legacy imports use independent asset identities and atomic add-only asset writes. Recurring archive test investigated; completion guards and frame-based diagnostic added, root cause not yet proven.
+
+Phase 1 follow-up: invalid fixture take metadata identified as import regression cause; staged project commit, cross-tab save conflict protection, per-tab recovery drafts, read-only asset health inventory and Master Pro audition bug fixed in code. CI required before merge. No automatic deletion of unreferenced assets until cross-tab ownership is coordinated.
