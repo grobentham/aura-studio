@@ -736,6 +736,7 @@ function drawPiano(t,r){const rows=HIGH-LOW+1,H=rows*ed.rowH,W=(r.len+4)*ed.ppb;
   for(let i=0;i<rows;i++){const p=HIGH-i;const black=[1,3,6,8,10].includes(p%12);g.fillStyle=black?'#0b0d11':'#10141a';if(!inScale(p)&&state.scale!=='Chromatic')g.fillStyle=black?'#08090c':'#0c0f13';else if(state.scale!=='Chromatic')g.fillStyle=black?'#12161d':'#161b23';
     g.fillRect(0,i*ed.rowH,W,ed.rowH);if(p%12===0){g.fillStyle='#2b3240';g.fillRect(0,(i+1)*ed.rowH-1,W,1);}}
   drawGridLines(g,W,H,r.len);
+  if(typeof drawMidiGhosts==='function')drawMidiGhosts(g,t,r);
   for(const n of r.notes){const x=n.t*ed.ppb,y=(HIGH-n.p)*ed.rowH,w=Math.max(3,n.d*ed.ppb-1);const sel=ed.sel.has(n);
     g.globalAlpha=.45+.55*n.v;g.fillStyle=t.color;g.beginPath();g.roundRect?g.roundRect(x+.5,y+1,w,ed.rowH-2,3):g.rect(x+.5,y+1,w,ed.rowH-2);g.fill();g.globalAlpha=1;
     if(sel){g.strokeStyle='#fff';g.lineWidth=1.5;g.stroke();g.lineWidth=1;}
@@ -1065,5 +1066,7 @@ initStudio();
 <script src="studio-analyse-pro.js?v=2"></script>
 <script src="compose-pro-core.js?v=1"></script>
 <script src="studio-compose-pro.js?v=1"></script>
+<script src="midi-pro-core.js?v=1"></script>
+<script src="studio-midi-pro.js?v=1"></script>
 </body>
 </html>
