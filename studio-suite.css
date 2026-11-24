@@ -1,0 +1,9 @@
+#auraSuiteModal .pro-dialog{width:min(780px,calc(100vw - 24px));max-height:90vh;overflow:auto}
+#auraSuiteModal .producer-section input[type=number]{width:76px}
+.suite-pitch-chart{height:160px;position:relative;background:repeating-linear-gradient(0deg,#212833 0,#212833 1px,#141a22 1px,#141a22 20px);border:1px solid #3a424e;border-radius:6px;overflow:hidden;margin:8px 0}
+.suite-note{position:absolute;background:#d6a14d;color:#13161c;height:17px;overflow:hidden;border-radius:3px;font-size:10px;white-space:nowrap;padding:1px 2px;box-sizing:border-box}
+.suite-note.off{opacity:.3}
+.suite-table-wrap{max-height:220px;overflow:auto}
+.suite-table{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}
+.suite-table th,.suite-table td{padding:4px 6px;text-align:left;border-bottom:1px solid #39414d}
+.suite-table input[type=number]{width:62px}
