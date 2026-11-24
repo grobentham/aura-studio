@@ -11,7 +11,7 @@
  function stopPreview(){if(preview){try{preview.stop();}catch(e){}preview=null;}}
  function valid(){if(!plan||plan.projectId!==activeProjectId||plan.before!==snapshot())throw Error('The project changed. Analyse it again.');return plan;}
  const percent=v=>Math.round(v*100)+'%';
- const names={low:'Low shelf · 180 Hz',mid:'Mid bell · 1.2 kHz',high:'High shelf · 5.5 kHz'};
+ const names={low:'Low shelf',mid:'Mid bell',high:'High shelf'};
  const analyse=button('mixNextAnalyse','Analyse frequency overlap',async()=>{
   stopPreview();plan=null;results.replaceChildren();const focus=trackById(view.selTrack),tracks=state.tracks.filter(t=>!t.mute&&(!state.tracks.some(t=>t.solo)||t.solo)&&t.regions.length);
   if(!focus||!tracks.includes(focus)||tracks.length<2||tracks.length>8)throw Error('Select an audible priority track in a mix of 2–8 audible tracks.');
@@ -22,9 +22,9 @@
     status.textContent='Measuring '+t.name+'…';const b=await renderOffline([t],{sampleRate:48000,start,end,tail:0,masterVolume:1,masterProcessing:false});
     const channels=Array.from({length:b.numberOfChannels},(_,i)=>new Float32Array(b.getChannelData(i))),profile=await worker(channels,b.sampleRate);
     if(before!==snapshot()||projectId!==activeProjectId)throw Error('Project changed during analysis.');
-    analyses.push({id:t.id,name:t.name,profile,eq:{...t.eq},automation:!!t.automation?.vol?.length});
+    analyses.push({id:t.id,name:t.name,profile,eq:{...t.eq},shape:AuraChannel.shape(t.eqShape),automation:!!t.automation?.vol?.length});
    }
-   const reference=analyses.find(t=>t.id===focus.id);const changes=analyses.filter(t=>t.id!==focus.id).flatMap(t=>M.recommend(reference.profile,t.profile,t.eq).map(c=>({...c,id:t.id,name:t.name,enabled:true})));
+   const reference=analyses.find(t=>t.id===focus.id);const changes=analyses.filter(t=>t.id!==focus.id).flatMap(t=>M.recommend(reference.profile,t.profile,t.eq).map(c=>({...c,id:t.id,name:t.name,hz:t.shape[c.key+'Hz'],enabled:true})));
    plan={before,projectId,start,end,tracks:tracks.map(t=>t.id),analyses,changes,focus:focus.name};draw();status.textContent='Analysis complete. '+changes.length+' conservative EQ suggestions; select and audition before applying.';
   }finally{productionBusy=false;}
  });
@@ -34,7 +34,7 @@
    results.append(h('article',{class:'mixnext-track'},h('strong',{},t.name),bar,h('small',{},'Low '+percent(x.shares[0])+' · Mid '+percent(x.shares[1])+' · High '+percent(x.shares[2])),h('small',{},'Peak '+x.peakDb.toFixed(1)+' dBFS · RMS '+x.rmsDb.toFixed(1)+' dBFS · Crest '+x.crestDb.toFixed(1)+' dB · Stereo correlation '+(x.correlation===null?'n/a':x.correlation.toFixed(2))+(x.correlation!==null&&x.correlation<-.1?' · check mono compatibility':''))));
   }
   if(!p.changes.length)results.append(h('p',{},'No substantial simultaneous overlap found. No EQ change recommended.'));
-  for(const [i,c] of p.changes.entries())results.append(h('label',{class:'mixnext-choice'},h('input',{type:'checkbox',checked:c.enabled,'aria-label':'Apply suggestion '+(i+1),onchange:e=>c.enabled=e.target.checked}),c.name+' · '+names[c.key]+' · '+c.from+' → '+c.to+' dB (overlap '+percent(c.score)+')'));
+  for(const [i,c] of p.changes.entries())results.append(h('label',{class:'mixnext-choice'},h('input',{type:'checkbox',checked:c.enabled,'aria-label':'Apply suggestion '+(i+1),onchange:e=>c.enabled=e.target.checked}),c.name+' · '+names[c.key]+' ('+c.hz+' Hz) · '+c.from+' → '+c.to+' dB (overlap '+percent(c.score)+')'));
  }
  async function audition(after){
   const p=valid();stopPreview();if(sched.playing)stop();productionBusy=true;

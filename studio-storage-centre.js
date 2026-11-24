@@ -5,7 +5,7 @@
  const list=h('div',{id:'storageCentreList'});let busy=false;
  const readable=n=>Number.isFinite(n)?(n/1048576).toFixed(1)+' MiB':'unknown';
  async function directory(){if(!navigator.storage?.getDirectory)throw Error('OPFS is unavailable in this browser. Use direct file export or the normal download.');const root=await navigator.storage.getDirectory();return root.getDirectoryHandle('aura-archive-wav-v1',{create:true});}
- const action=(label,fn)=>h('button',{onclick:async e=>{if(busy||recordingBusy())return;busy=true;e.currentTarget.disabled=true;try{await fn();}catch(error){status.textContent=error.message||'Storage operation failed.';}finally{busy=false;await refresh();}}},label);
+ const action=(label,fn)=>h('button',{onclick:async e=>{if(busy||recordingBusy())return;busy=true;const button=e.currentTarget;button.disabled=true;try{await fn();}catch(error){status.textContent=error.message||'Storage operation failed.';}finally{busy=false;button.disabled=false;try{await refresh();}catch(error){status.textContent=error.message||'Storage refresh failed.';}}}},label);
  async function refresh(){
   const estimate=await navigator.storage?.estimate?.().catch(()=>null),persisted=await navigator.storage?.persisted?.().catch(()=>false);
   list.replaceChildren(h('p',{},'Used '+readable(estimate?.usage)+' · quota '+readable(estimate?.quota)+' · persistent storage '+(persisted?'granted':'not granted')));

@@ -22,6 +22,24 @@ document.querySelector('#run').onclick=async()=>{
       countIn.beats=1;const beforeCancel=state.tracks.length;await beginPCMRecording();check(countIn.active&&Math.abs(lastSeg().t0-recordingRuntime.session.startFrame/ctx.sampleRate)<1/ctx.sampleRate&&curBeat()===recordingRuntime.session.startBeat,'PCM count-in pins the playhead and shares the transport audio-frame anchor');cancelCountIn();for(let i=0;i<100&&inputCapture.pending;i++)await wait(30);check(!countIn.active&&!inputCapture.recording&&!inputCapture.pending&&!sched.playing&&state.tracks.length===beforeCancel,'Cancelling PCM count-in stops capture without a ghost take');countIn.beats=0;
       const appendBeforeFailure=RecordingJournal.append;let writes=0;RecordingJournal.append=async(meta,chunk)=>{if(++writes===3)throw Error('Simulated quota failure');return appendBeforeFailure(meta,chunk);};try{recordingPrefs.mode='linear';state.pos=0;const trackCount=state.tracks.length;await beginPCMRecording();for(let i=0;i<120&&(inputCapture.recording||inputCapture.pending);i++)await wait(50);check(!inputCapture.recording&&!inputCapture.pending&&recordingRuntime.error.startsWith('Browser storage'),'A storage failure stops capture and reports the interruption');check(state.tracks.length===trackCount+1&&buffers.get(state.tracks.at(-1).takes[0].buf).length===8192,'Completed PCM blocks survive a later storage failure');}finally{RecordingJournal.append=appendBeforeFailure;}
       const tickBeforeFailure=tick;tick=function(){throw Error('Simulated scheduling failure');};try{await beginPCMRecording();check(!inputCapture.recording&&!inputCapture.pending&&!sched.playing&&!recordingRuntime.node&&!recordingRuntime.session,'A failed transport initialization releases the capture graph and leaves the input reconnectable');}finally{tick=tickBeforeFailure;}
+      // A short real worklet capture exercises the archive path; the one-hour duration is a separate stress target.
+      const estimateBefore=navigator.storage.estimate,archiveBefore=recordingPrefs.archive;
+      try{
+        navigator.storage.estimate=async()=>({quota:4*1024**3,usage:0});recordingPrefs.mode='linear';recordingPrefs.archive=true;state.pos=0;
+        const tracksBefore=state.tracks.length;await beginPCMRecording();check(recordingRuntime.session?.archive===true,'Long capture uses an archive session');
+        const archiveId=recordingRuntime.session.id;await wait(450);finishAudioTake();for(let i=0;i<100&&inputCapture.pending;i++)await wait(40);
+        const archive=(await RecordingJournal.list()).find(s=>s.id===archiveId);check(archive?.status==='archived'&&archive.frames>0&&state.tracks.length===tracksBefore,'Finishing archive capture retains committed PCM without adding a decoded track');
+        const restored=await RecordingJournal.readSection(archive,ctx,0,Math.min(.2,archive.frames/archive.rate));check(restored.getChannelData(0).some(v=>Math.abs(v)>.01),'Archive range is audible and editable');
+        if(navigator.storage.getDirectory){
+          $('#openStorageCentre').click();for(let i=0;i<80&&!$('#storageCentreList').textContent.includes('Create local WAV copy');i++)await wait(50);
+          const create=[...$('#storageCentreList').querySelectorAll('button')].find(b=>b.textContent.includes('Create local WAV copy'));check(!!create,'Storage centre lists archive export');create.click();
+          const dir=await (await navigator.storage.getDirectory()).getDirectoryHandle('aura-archive-wav-v1',{create:true});
+          let copied;for(let i=0;i<100;i++){try{const f=await (await dir.getFileHandle(archiveId+'.wav')).getFile();if(f.size>44){copied=f;break;}}catch(e){}await wait(50);}
+          check(copied?.size===44+archive.frames*archive.channels*3+(archive.frames*archive.channels*3)%2,'OPFS WAV has exactly the committed archive frame count');
+          await dir.removeEntry(archiveId+'.wav');$('#storageCentreModal').hidden=true;
+        }
+        await RecordingJournal.remove(archiveId);
+      }finally{navigator.storage.estimate=estimateBefore;recordingPrefs.archive=archiveBefore;}
       openStudioCommands();$('#commandSearch').value='record';renderStudioCommands();check([...document.querySelectorAll('#commandResults button')].every(b=>b.textContent.toLowerCase().includes('record')),'Searchable studio actions filter correctly');commandDialog.hidden=true;
       return results.join('\\n')+'\\nALL RECORDING CHECKS PASSED';
     }finally{
