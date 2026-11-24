@@ -37,3 +37,9 @@ These are interfaces to establish incrementally. Initially keep JS and browser c
 5. Build analysis and assisted production on tested interfaces.
 
 Each slice has a rollback path; no destructive migrations and no simultaneous rewrite of audio, storage and UI.
+
+## Audio architecture increment (2026-11-24)
+
+`AuraChannel` is the shared channel processor contract for realtime/offline EQ and compression, with bounded optional parametric EQ shape and explicit disposal. Defaults preserve previous projects. Long capture is an opt-in linear journal archive, limited to 60 minutes or quota budget; normal editable takes retain the 64 MiB limit. `RecordingJournal.readSection` uses block-frame lookup and bounded decoding. `writeWav` streams committed PCM to direct files or OPFS archive copies through Storage centre. No large-project streaming playback, full portable backup migration or general bus topology is claimed yet. OPFS exports are additional local copies, not a substitute for external backup.
+
+Archive browser diagnostic captures a short synthetic performance with the actual worklet, verifies that stopping seals the journal without installing a whole track, checks audible bounded extraction and OPFS file size. Frequency mix assist displays the actual configurable EQ frequencies.

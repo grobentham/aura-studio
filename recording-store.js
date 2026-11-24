@@ -5,7 +5,7 @@ const RecordingJournal=(()=>{
   function db(){if(!database)database=new Promise((resolve,reject)=>{const q=indexedDB.open('aura-recordings-v1',1);q.onupgradeneeded=()=>{q.result.createObjectStore('sessions',{keyPath:'id'});q.result.createObjectStore('chunks',{keyPath:['session','sequence']});};q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);q.onblocked=()=>reject(Error('Close other Aura tabs to open recording recovery.'));});return database;}
   async function transaction(stores,action){const d=await db();return new Promise((resolve,reject)=>{const tx=d.transaction(stores,'readwrite');action(tx);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Recording storage interrupted.'));tx.onerror=()=>reject(tx.error);});}
   async function create(meta){await transaction(['sessions'],tx=>tx.objectStore('sessions').put({...meta,frames:0,blocks:0,status:'capturing',created:Date.now()}));}
-  async function append(meta,chunk){await transaction(['sessions','chunks'],tx=>{const q=tx.objectStore('sessions').get(meta.id);q.onsuccess=()=>{if(!q.result){tx.abort();return;}let next;try{next=AuraRecording.validateBlock(q.result,chunk,q.result.channels);}catch(e){tx.abort();return;}tx.objectStore('chunks').add({session:meta.id,sequence:chunk.sequence,frame:chunk.frame,frames:chunk.frames,data:chunk.data});tx.objectStore('sessions').put({...q.result,...next});};});}
+  async function append(meta,chunk){await transaction(['sessions','chunks'],tx=>{const q=tx.objectStore('sessions').get(meta.id);q.onsuccess=()=>{if(!q.result||q.result.status!=='capturing'){tx.abort();return;}let next;try{next=AuraRecording.validateBlock(q.result,chunk,q.result.channels);}catch(e){tx.abort();return;}tx.objectStore('chunks').add({session:meta.id,sequence:chunk.sequence,frame:chunk.frame,frames:chunk.frames,data:chunk.data});tx.objectStore('sessions').put({...q.result,...next});};});}
   async function list(){const d=await db();return new Promise((resolve,reject)=>{const q=d.transaction('sessions').objectStore('sessions').getAll();q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);});}
   async function block(id,sequence){const d=await db();return new Promise((resolve,reject)=>{const q=d.transaction('chunks').objectStore('chunks').get([id,sequence]);q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);});}
   async function assemble(meta,audio){
@@ -35,5 +35,26 @@ const RecordingJournal=(()=>{
     if(at!==meta.frames)throw Error('Incomplete recording journal; source retained.');
     if((at*meta.channels*3)%2)await writer.write(new Uint8Array(1));
   }
-  return{create,append,list,assemble,remove,exportWav,writeWav};
+  async function seal(id){
+    await transaction(['sessions'],tx=>{const store=tx.objectStore('sessions'),q=store.get(id);q.onsuccess=()=>{if(!q.result){tx.abort();return;}store.put({...q.result,status:'archived',sealed:Date.now()});};});
+  }
+  // Random-access section read: locate the first block by absolute frame and
+  // copy only the requested range. Never allocate the complete long capture.
+  async function readSection(meta,audio,startSeconds,durationSeconds){
+    const range=AuraRecording.sectionRange(meta,startSeconds,durationSeconds),first=await block(meta.id,0);
+    if(!first||!Number.isSafeInteger(first.frame))throw Error('Recording starts with a missing block.');
+    const start=first.frame+range.start,end=first.frame+range.end;
+    let lo=0,hi=meta.blocks-1;
+    while(lo<hi){const mid=Math.floor((lo+hi)/2),b=await block(meta.id,mid);if(!b||!Number.isSafeInteger(b.frame)||!Number.isSafeInteger(b.frames))throw Error('Recording block missing.');if(b.frame+b.frames<=start)lo=mid+1;else hi=mid;}
+    const out=audio.createBuffer(meta.channels,range.frames,meta.rate);let expected=start,at=0;
+    for(let i=lo;i<meta.blocks&&expected<end;i++){
+      const b=await block(meta.id,i);if(!b||b.sequence!==i||b.frame>expected||b.frame+b.frames<=expected||b.data.length!==meta.channels||b.data.some(d=>!(d instanceof Float32Array)||d.length!==b.frames))throw Error('Recording section has a missing or malformed block.');
+      const from=expected-b.frame,to=Math.min(b.frames,end-b.frame);
+      for(let c=0;c<meta.channels;c++)out.copyToChannel(b.data[c].subarray(from,to),c,at);
+      at+=to-from;expected=b.frame+to;
+    }
+    if(at!==range.frames)throw Error('Recording section is incomplete.');
+    return out;
+  }
+  return{create,append,list,assemble,remove,exportWav,writeWav,seal,readSection};
 })();

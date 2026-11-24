@@ -53,6 +53,21 @@
     if(frames<1)throw Error('Not enough available storage to record. Back up projects and free space.');
     return frames;
   }
+  // Archive captures retain journal blocks, never a full decoded AudioBuffer.
+  function archiveLimit(meta,availableBytes){
+    if(meta.mode!=='linear'||!Number.isInteger(meta.rate)||meta.rate<8000||meta.rate>192000||![1,2].includes(meta.channels))throw Error('Archive capture requires a valid linear PCM format.');
+    if(!Number.isFinite(availableBytes)||availableBytes<=16*1048576)throw Error('Storage quota is unknown or too low for long capture. Use a normal take.');
+    const budget=Math.floor((availableBytes-16*1048576)*.75/(4*meta.channels));
+    const frames=Math.min(meta.rate*3600,budget);
+    if(frames<meta.rate)throw Error('Not enough available storage for archive capture.');
+    return frames;
+  }
+  function sectionRange(meta,startSeconds,durationSeconds){
+    if(!Number.isFinite(startSeconds)||!Number.isFinite(durationSeconds)||startSeconds<0||durationSeconds<=0||!Number.isInteger(meta.frames)||!Number.isInteger(meta.rate)||![1,2].includes(meta.channels))throw Error('Choose a valid section.');
+    const start=Math.round(startSeconds*meta.rate),end=Math.min(meta.frames,start+Math.round(durationSeconds*meta.rate));
+    if(start>=end||end-start>Math.min(meta.rate*600,Math.floor(64*1048576/(meta.channels*4))))throw Error('Choose a section within the recording and normal editing memory limit.');
+    return {start,end,frames:end-start};
+  }
   function validateBlock(previous,chunk,channels){
     if(!Number.isSafeInteger(chunk.sequence)||chunk.sequence!==previous.blocks||!Number.isSafeInteger(chunk.frame)||chunk.frame<0||!Number.isSafeInteger(chunk.frames)||chunk.frames<1||!Array.isArray(chunk.data)||chunk.data.length!==channels||chunk.data.some(a=>!(a instanceof Float32Array)||a.length!==chunk.frames)||previous.nextFrame!=null&&chunk.frame!==previous.nextFrame)throw Error('Invalid or out-of-order recording block.');
     return {frames:previous.frames+chunk.frames,blocks:previous.blocks+1,nextFrame:chunk.frame+chunk.frames};
@@ -71,5 +86,5 @@
     for(let i=0;i<frames;i++)for(const channel of data){const s=Math.max(-1,Math.min(1,Number.isFinite(channel[i])?channel[i]:0)),n=Math.round(s*(s<0?8388608:8388607));out[at++]=n&255;out[at++]=(n>>8)&255;out[at++]=(n>>16)&255;}
     return out;
   }
-  const api={takes,comp,validateTakes,captureLimit,validateBlock,wavHeader,pcm24Block};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
+  const api={takes,comp,validateTakes,captureLimit,archiveLimit,sectionRange,validateBlock,wavHeader,pcm24Block};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

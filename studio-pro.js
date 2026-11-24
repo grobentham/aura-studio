@@ -97,18 +97,13 @@ async function openHistory(){
 }
 
 /* One processing chain is used by both playback and offline export. */
-function addTrackProcessing(audio,input,output,t){
-  const low=audio.createBiquadFilter(),mid=audio.createBiquadFilter(),high=audio.createBiquadFilter(),compressor=audio.createDynamicsCompressor();
-  low.type='lowshelf';low.frequency.value=180;mid.type='peaking';mid.frequency.value=1200;mid.Q.value=.8;high.type='highshelf';high.frequency.value=5500;
-  input.connect(low);low.connect(mid);mid.connect(high);high.connect(compressor);compressor.connect(output);
-  const effects={low,mid,high,compressor};setTrackProcessing(effects,t,audio.currentTime);return effects;
-}
-function setTrackProcessing(fx,t,time){
-  const eq=t.eq||{};for(const key of ['low','mid','high'])fx[key].gain.setValueAtTime(clamp(Number(eq[key])||0,-18,18),time);
-  const amount=clamp(Number(t.compression)||0,0,1);fx.compressor.threshold.setValueAtTime(amount?-12-amount*20:0,time);fx.compressor.ratio.setValueAtTime(amount?1+amount*7:1,time);fx.compressor.knee.value=18;fx.compressor.attack.value=.008;fx.compressor.release.value=.16;
-}
+function addTrackProcessing(audio,input,output,t){return AuraChannel.create(audio,input,output,t);}
+function setTrackProcessing(fx,t,time){AuraChannel.update(fx,t,time);}
 const originalMkNodes=mkNodes;
 mkNodes=function(){const n=originalMkNodes();n.filter.disconnect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.vol,{});return n;};
+// Dispose all track-owned nodes, including sends and the shared processing strip.
+const syncBeforeChannelDispose=syncNodes;
+syncNodes=function(){if(ctx){const ids=new Set(state.tracks.map(t=>t.id));for(const [id,n] of nodes){if(!ids.has(id)){AuraChannel.dispose(n.fx);for(const value of Object.values(n))if(value&&typeof value.disconnect==='function')try{value.disconnect();}catch(e){} }}}return syncBeforeChannelDispose();};
 const originalUpdateMix=updateMix;
 updateMix=function(){originalUpdateMix();if(ctx)for(const t of state.tracks){const n=nodes.get(t.id);if(n?.fx)setTrackProcessing(n.fx,t,ctx.currentTime);}};
 // Existing nodes may have been created while restoring local audio.
@@ -121,8 +116,10 @@ function renderTrackFX(){
     const output=h('output',{},`${t.eq?.[key]||0} dB`),input=h('input',{type:'range',min:-18,max:18,step:1,value:t.eq?.[key]||0,'aria-label':`${t.name} ${label} EQ`,onpointerdown:()=>pushUndo(),onkeydown:e=>{if(e.key.startsWith('Arrow'))pushUndo();},oninput:e=>{t.eq={...t.eq,[key]:+e.target.value};output.textContent=e.target.value+' dB';updateMix();},onchange:save});
     panel.append(h('label',{},label,input,output));
   }
+  const shape=AuraChannel.shape(t.eqShape);
+  panel.append(h('details',{},h('summary',{},'Advanced EQ frequencies'),...Object.entries({lowHz:'Low shelf Hz',midHz:'Mid bell Hz',highHz:'High shelf Hz',midQ:'Mid Q'}).map(([key,label])=>{const [min,max,step]=AuraChannel.ranges[key];return h('label',{},label,h('input',{type:'number',min,max,step,value:shape[key],'aria-label':label,onchange:e=>{if(recordingBusy())return;const value=Number(e.target.value);if(!Number.isFinite(value)||value<min||value>max){e.target.value=shape[key];return;}pushUndo();t.eqShape=AuraChannel.shape({...t.eqShape,[key]:value});updateMix();save();}}));})));
   const amount=h('output',{},`${Math.round((t.compression||0)*100)}%`);
-  panel.append(h('label',{},'Compress',h('input',{type:'range',min:0,max:1,step:.05,value:t.compression||0,'aria-label':`${t.name} compression`,onpointerdown:()=>pushUndo(),oninput:e=>{t.compression=+e.target.value;amount.textContent=Math.round(t.compression*100)+'%';updateMix();},onchange:save}),amount),h('button',{onclick:()=>{pushUndo();t.eq={low:0,mid:0,high:0};t.compression=0;updateMix();renderTrackFX();save();}},'Reset FX'));
+  panel.append(h('label',{},'Compress',h('input',{type:'range',min:0,max:1,step:.05,value:t.compression||0,'aria-label':`${t.name} compression`,onpointerdown:()=>pushUndo(),oninput:e=>{t.compression=+e.target.value;amount.textContent=Math.round(t.compression*100)+'%';updateMix();},onchange:save}),amount),h('button',{onclick:()=>{pushUndo();t.eq={low:0,mid:0,high:0};delete t.eqShape;t.compression=0;updateMix();renderTrackFX();save();}},'Reset FX'));
 }
 function createOfflineGraph(audio,tracks,masterVolume,options={}){
   const output=audio.createGain();output.gain.value=masterVolume;
