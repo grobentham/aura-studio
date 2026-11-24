@@ -105,7 +105,7 @@ const originalMkNodes=mkNodes;
 mkNodes=function(){const n=originalMkNodes();n.filter.disconnect(n.vol);n.alignment=ctx.createDelay(1);n.alignment.connect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.alignment,{});return n;};
 // Dispose all track-owned nodes, including sends and the shared processing strip.
 const syncBeforeChannelDispose=syncNodes;
-syncNodes=function(){if(ctx){const ids=new Set(state.tracks.map(t=>t.id));for(const [id,n] of nodes){if(!ids.has(id)){AuraChannel.dispose(n.fx);for(const value of Object.values(n))if(value&&typeof value.disconnect==='function')try{value.disconnect();}catch(e){} }}}return syncBeforeChannelDispose();};
+syncNodes=function(){if(ctx){const ids=new Set(state.tracks.map(t=>t.id));for(const [id,n] of nodes){if(!ids.has(id)){AuraChannel.dispose(n.fx);for(const [key,value] of Object.entries(n))if(key!=='groupDestination'&&value&&typeof value.disconnect==='function')try{value.disconnect();}catch(e){} }}}return syncBeforeChannelDispose();};
 const liveGroups=new Map();
 function routeLiveGroups(){
  if(!ctx)return;const groups=AuraRouting.groups(state.groupMix);
