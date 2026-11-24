@@ -31,6 +31,21 @@ async function recordedAudio(item,fit=fitRecordedTempo,bpm=state.bpm){
         result=out;
       }
       if(!result.getChannelData(0).some(v=>Number.isFinite(v)&&Math.abs(v)>.001))throw Error('Tempo fitting rendered silent audio; retry with Fit tempo off.');
+    }else if(item.oneShot){
+      // The source catalog records the intended PCM duration before Vorbis encoding.
+      // Some decoders round or expose padding; restore that length without stretching the hit.
+      if(!Number.isFinite(item.duration)||item.duration<=0)throw Error('Invalid one-shot duration.');
+      const target=Math.round(item.duration*original.sampleRate);
+      if(target<1||Math.abs(original.length-target)>Math.round(original.sampleRate*.1))throw Error('Decoded one-shot duration differs unexpectedly from the catalog.');
+      if(original.length!==target){
+        result=ctx.createBuffer(original.numberOfChannels,target,original.sampleRate);
+        const copy=Math.min(original.length,target),fade=Math.min(copy,Math.round(original.sampleRate*.002));
+        for(let c=0;c<result.numberOfChannels;c++){
+          const channel=result.getChannelData(c);channel.set(original.getChannelData(c).subarray(0,copy));
+          // Only fade a potentially discontinuous boundary, never change the attack or speed.
+          if(fade>1&&Math.abs(channel[copy-1])>1e-4)for(let i=0;i<fade;i++)channel[copy-fade+i]*=1-i/(fade-1);
+        }
+      }
     }
     recordedBuffers.set(key,result);while(recordedBuffers.size>28)recordedBuffers.delete(recordedBuffers.keys().next().value);return result;
   })();recordedLoads.set(key,job);try{return await job;}finally{recordedLoads.delete(key);}
