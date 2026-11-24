@@ -12,7 +12,7 @@ concurrency:
 jobs:
   unit:
     name: Node regression suites
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 10
     steps:
       - uses: actions/checkout@v4
@@ -22,12 +22,12 @@ jobs:
       - run: node --test tests/*.test.cjs
   browser:
     name: Chromium / ${{ matrix.suite }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 15
     strategy:
       fail-fast: false
       matrix:
-        suite: [browser, interface, instruments, production, feedback, recording]
+        suite: [browser, interface, instruments, production, feedback, recording, producer]
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4

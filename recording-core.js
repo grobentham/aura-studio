@@ -40,5 +40,22 @@
     }
     return true;
   }
-  const api={takes,comp,validateTakes};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
+  // Keep the existing whole-buffer safety ceiling until playback and backup are streamed.
+  function captureLimit(meta,availableBytes=Infinity){
+    const {rate,channels,mode,range,beatSeconds}=meta;
+    if(!Number.isFinite(rate)||rate<=0||![1,2].includes(channels)||!['linear','loop','punch'].includes(mode)||!Number.isFinite(beatSeconds)||beatSeconds<=0)throw Error('Invalid recording format.');
+    if(mode!=='linear'&&(!range||!Number.isFinite(range.start)||!Number.isFinite(range.end)||range.end<=range.start))throw Error('Invalid recording range.');
+    if(availableBytes!==Infinity&&(!Number.isFinite(availableBytes)||availableBytes<0))throw Error('Invalid storage budget.');
+    const cycle=mode==='linear'?Infinity:Math.round((range.end-range.start)*beatSeconds*rate*(mode==='loop'?64:1));
+    // PCM journal + encoded asset coexist at completion; leave room for metadata and other writes.
+    const budget=availableBytes===Infinity?Infinity:Math.max(0,availableBytes-8*1048576)/2;
+    const frames=Math.min(Math.floor(64*1048576/(4*channels)),Math.floor(rate*600),Math.floor(budget/(4*channels)),cycle);
+    if(frames<1)throw Error('Not enough available storage to record. Back up projects and free space.');
+    return frames;
+  }
+  function validateBlock(previous,chunk,channels){
+    if(!Number.isSafeInteger(chunk.sequence)||chunk.sequence!==previous.blocks||!Number.isSafeInteger(chunk.frame)||chunk.frame<0||!Number.isSafeInteger(chunk.frames)||chunk.frames<1||!Array.isArray(chunk.data)||chunk.data.length!==channels||chunk.data.some(a=>!(a instanceof Float32Array)||a.length!==chunk.frames)||previous.nextFrame!=null&&chunk.frame!==previous.nextFrame)throw Error('Invalid or out-of-order recording block.');
+    return {frames:previous.frames+chunk.frames,blocks:previous.blocks+1,nextFrame:chunk.frame+chunk.frames};
+  }
+  const api={takes,comp,validateTakes,captureLimit,validateBlock};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraRecording=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

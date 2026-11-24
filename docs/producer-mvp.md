@@ -1,0 +1,7 @@
+# Producer MVP — development branch
+
+This incremental release implements local selected-clip peak/RMS measurement, bounded monophonic YIN-style pitch estimates, scale alignment of a single stable note via existing SoundTouch processing, reversible clip peak reduction, melody-aware editable major/minor accompaniment (chords/bass/drums), and sample-peak-normalised 48 kHz/24-bit WAV export. It does not claim phrase-level vocal correction, automatic mixing, true peak, LUFS, professional mastering, or polyphonic transcription.
+
+Recording policy retains the 64 MiB whole-buffer cap while using available storage estimates to reduce risk, and journal writes reject malformed/duplicate/out-of-order blocks atomically. Long-duration chunk-backed playback, export and backup are future work. The source of truth remains the existing project schema.
+
+New tests cover pure algorithms and isolated browser interaction. CI pins Ubuntu 24.04 because Playwright 1.56.1 installation failed on Ubuntu 26.04 in the baseline run. Hardware and listening tests remain required. The first baseline Node suites passed; browser suites did not run due to the runner OS issue.
