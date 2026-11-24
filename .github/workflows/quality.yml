@@ -1,0 +1,38 @@
+name: Aura quality checks
+on:
+  pull_request:
+  push:
+    branches: [main, 'develop/**']
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: aura-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  unit:
+    name: Node regression suites
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: node --test tests/*.test.cjs
+  browser:
+    name: Chromium / ${{ matrix.suite }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    strategy:
+      fail-fast: false
+      matrix:
+        suite: [browser, interface, instruments, production, feedback, recording]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --no-save --package-lock=false --ignore-scripts playwright@1.56.1
+      - run: npx playwright install --with-deps chromium
+      - run: node scripts/run-browser-diagnostics.cjs ${{ matrix.suite }}
