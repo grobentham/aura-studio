@@ -29,7 +29,7 @@ async function main(){
       const context=await browser.newContext({viewport:{width:1600,height:1000}});
       const page=await context.newPage();
       const errors=[];
-      page.on('pageerror',e=>errors.push(e.message));
+      page.on('pageerror',e=>errors.push(e.stack||e.message));
       try{
         await page.goto(origin+'/tests/'+name+'.html',{waitUntil:'load',timeout:60000});
         await page.locator('#run').click({timeout:30000});

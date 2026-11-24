@@ -14,7 +14,7 @@ function projectDB(){
   });return projectDBPromise;
 }
 async function projectRead(store,key){const db=await projectDB();return new Promise((resolve,reject)=>{const r=db.transaction(store).objectStore(store);const q=key===undefined?r.getAll():r.get(key);q.onsuccess=()=>resolve(q.result);q.onerror=()=>reject(q.error);});}
-async function projectWrite(record){const db=await projectDB();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(record);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error);tx.onerror=()=>reject(tx.error);});}
+async function projectWrite(record){const db=await projectDB();return new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite');tx.objectStore('projects').put(record);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Storage transaction interrupted.'));tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));});}
 function saveStatus(label,kind='saved'){
   const el=$('#saveStatus');if(!el)return;el.textContent=label;el.dataset.status=kind;
   el.title=kind==='error'?'Use Download project to keep a portable backup.':'Projects are saved in this browser on this device. Download a backup before clearing site data.';
@@ -26,7 +26,7 @@ async function persistProject(id,data,generation,force=false){
   for(const asset of projectAudioIds(data)){
     const stored=await readStoredAudio(asset);if(streamed.has(asset)){if(!stored)throw Error('A streamed audio source is missing.');await AuraStream.verify(stored,streamed.get(asset));continue;}
     if(!stored){const ab=buffers.get(asset);if(!ab)throw Error('An audio sample is missing. Import the project backup.');
-      const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').add(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(tx.error);});
+      const db=await assetDB();await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').add(wavBlob(ab),asset);tx.oncomplete=resolve;tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));tx.onabort=()=>reject(tx.error||Error('Storage transaction interrupted.'));});
     }
   }
   if(!force&&projectFingerprints.get(id)===fingerprint){const stored=await projectRead('projects',id);if(stored&&!stored.trashed&&JSON.stringify(stored.data)===fingerprint){clearCommittedDraft(id,fingerprint);if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');return;}}
@@ -40,7 +40,7 @@ async function persistProject(id,data,generation,force=false){
     };
     revisions.put({id:crypto.randomUUID(),projectId:id,created:now,data});
     const list=revisions.index('projectId').getAll(id);list.onsuccess=()=>{const sorted=list.result.sort((a,b)=>b.created-a.created);for(const entry of sorted.slice(12))revisions.delete(entry.id);};
-    tx.oncomplete=resolve;tx.onerror=()=>reject(tx.error);tx.onabort=()=>reject(conflict||tx.error||Error('Project save was interrupted.'));
+    tx.oncomplete=resolve;tx.onabort=()=>reject(conflict||tx.error||Error('Project save was interrupted.'));
   });projectFingerprints.set(id,fingerprint);projectVersions.set(id,now);clearCommittedDraft(id,fingerprint);
   if(id===activeProjectId&&generation===saveGeneration)saveStatus('Saved on this device');
 }
@@ -48,7 +48,7 @@ function queueProjectSave(force=false){
   if(!projectReady)return Promise.resolve();
   const id=activeProjectId,data={...JSON.parse(snapshot()),pos:0},generation=saveGeneration;
   projectQueue=projectQueue.catch(()=>{}).then(()=>persistProject(id,data,generation,force));
-  projectQueue.catch(e=>{if(id===activeProjectId){saveStatus('Save needs attention','error');$('#saveStatus').title=e.message;}console.warn('Project save:',e.message);});
+  projectQueue.catch(e=>{const message=e?.message||'Project storage transaction failed.';if(id===activeProjectId){saveStatus('Save needs attention','error');const status=$('#saveStatus');if(status)status.title=message;}console.warn('Project save:',message);});
   return projectQueue;
 }
 function flushProject(force=false){clearTimeout(projectTimer);return queueProjectSave(force);}
@@ -75,7 +75,7 @@ async function newProject(starter){
     loadStarter(starter);undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();toast('New project ready.');
   }catch(e){saveStatus('Save needs attention','error');toast('Could not create a project. Download a backup and check browser storage.');}finally{productionBusy=false;}
 }
-async function setProjectTrashed(id,trashed){const db=await projectDB();await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite'),store=tx.objectStore('projects'),q=store.get(id);q.onsuccess=()=>{if(!q.result){tx.abort();return;}store.put({...q.result,trashed,updated:Math.max(Date.now(),q.result.updated+1)});};tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Project no longer exists.'));tx.onerror=()=>reject(tx.error);});}
+async function setProjectTrashed(id,trashed){const db=await projectDB();await new Promise((resolve,reject)=>{const tx=db.transaction('projects','readwrite'),store=tx.objectStore('projects'),q=store.get(id);q.onsuccess=()=>{if(!q.result){tx.abort();return;}store.put({...q.result,trashed,updated:Math.max(Date.now(),q.result.updated+1)});};tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Project no longer exists.'));tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));});}
 let showTrash=false;
 async function renderProjects(){
   const list=$('#projectList');list.replaceChildren(h('p',{class:'muted'},'Opening your projects…'));

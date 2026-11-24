@@ -119,7 +119,7 @@ async function persistRecordedAsset(id,buffer){
     if((buffer.length*buffer.numberOfChannels*3)%2)parts.push(new Uint8Array(1));
   }else parts.push(AuraCore.wavBytes(buffer,24));
   const blob=new Blob(parts,{type:'audio/wav'});
-  await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(blob,id);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Audio storage failed.'));tx.onerror=()=>reject(tx.error);});
+  await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').put(blob,id);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Audio storage failed.'));tx.onerror=e=>reject(tx.error||e.target?.error||Error('Storage transaction failed.'));});
 }
 async function installRecordedTake(meta,buffer){
   const descriptions=AuraRecording.takes(buffer.length,buffer.sampleRate,meta);if(!descriptions.length)throw Error('The recording offset removed this short take. Change it in Studio settings.');
