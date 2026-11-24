@@ -73,3 +73,5 @@ Effects Pro extends the shared native insert rack to 19 effect types, explicit m
 Sound Library Pro and opt-in offline app: bounded separate sample storage and portable packs, independent project copies, explicit shell cache with versioned dependencies and factory cache management. See docs/offline-library.md.
 
 Declarative plugin SDK 1 adds validated data-only native effect macros, embedded per-track plugin manifests/state, a shared eight-processor budget and dry export exclusion. No executable third-party plugin hosting. See docs/plugin-sdk.md.
+
+Stem Splitter adds bounded offline harmonic/percussive spectral estimates and an experimental fixed-shape local HTDemucs ONNX adapter. Real model validation remains open. See docs/stems.md.
