@@ -61,3 +61,5 @@ Master Pro adds an independent pure offline processing module and worker, with b
 Vocal Pro introduces a bounded worker-based waveform-synchronous note renderer, independent derived vocal/harmony assets, and an experimental separate dry-recording-preserving mono monitor worklet. See docs/vocal-pro.md.
 
 Analyse Pro introduces reusable local musical feature extraction and ranked key/tempo hypotheses, coarse chords, transient and quality diagnostics with explicit key and tempo changes. See docs/analyse-pro.md.
+
+Compose Pro adds deterministic section-based MIDI generation, optional motif-conditioned progression, bounded voicing and six independent procedural roles. See docs/compose-pro.md.
