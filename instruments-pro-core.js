@@ -5,6 +5,7 @@ const engines=['subtractive','fm','wavetable','additive','pluck'],waves=['sine',
 const fields={attack:[.002,2,.02],decay:[.01,3,.25],sustain:[0,1,.65],release:[.02,3,.3],cutoff:[80,18000,5500],resonance:[.1,12,.7],detune:[0,30,8],blend:[0,1,.3],fmRatio:[.5,8,2],fmIndex:[0,6,1.5],morph:[0,1,.35],brightness:[0,1,.5],lfoRate:[.1,15,4],lfoPitch:[0,50,0],lfoFilter:[0,3000,0],filterEnv:[0,6000,800],velocityFilter:[0,1,.2],level:[.05,.65,.35]};
 const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),hz=p=>440*2**((p-69)/12);
 function patch(raw={}){
+ if(!raw||typeof raw!=='object')raw={};
  const out={version:1,name:typeof raw.name==='string'?raw.name.trim().slice(0,48)||'Custom patch':'Custom patch',engine:engines.includes(raw.engine)?raw.engine:'subtractive',wave:waves.includes(raw.wave)?raw.wave:'sawtooth',wave2:waves.includes(raw.wave2)?raw.wave2:'triangle'};
  for(const [k,[a,b,d]] of Object.entries(fields))out[k]=Number.isFinite(raw[k])?clamp(raw[k],a,b):d;return out;
 }
@@ -33,7 +34,7 @@ function voice(audio,dest,raw,midi,time,velocity,onSource=()=>{}){
  if(s.lfoPitch||s.lfoFilter){const lfo=oscillator('sine',s.lfoRate);if(s.lfoPitch){const g=audio.createGain();g.gain.value=s.lfoPitch;lfo.connect(g);for(const o of carriers)g.connect(o.detune);nodes.push(g);}if(s.lfoFilter){const g=audio.createGain();g.gain.value=s.lfoFilter;lfo.connect(g);g.connect(filter.frequency);nodes.push(g);}}
  let ended=0;const cleanup=()=>{if(++ended===sources.length){for(const n of [...sources,...nodes])try{n.disconnect();}catch(e){}}};
  for(const o of sources){o.addEventListener('ended',cleanup,{once:true});o.start(start);onSource(o);if(s.engine!=='pluck'||o!==carriers[0])o.stop(start+120);}
- return {release(time){if(this.done)return;this.done=true;const at=Math.max(start,audio.currentTime,time),level=envelope(s,at-start,peak);amp.gain.cancelScheduledValues(at);amp.gain.setValueAtTime(level,at);amp.gain.linearRampToValueAtTime(0,at+s.release);for(const o of sources)try{o.stop(at+s.release+.01);}catch(e){}},sources};
+ return {release(time){if(this.done)return;this.done=true;const at=Math.max(start,audio.currentTime,time),level=envelope(s,at-start,peak);amp.gain.cancelScheduledValues(at);if(at>start&&at<start+s.attack+s.decay)amp.gain.linearRampToValueAtTime(level,at);else amp.gain.setValueAtTime(level,at);amp.gain.linearRampToValueAtTime(0,at+s.release);for(const o of sources)try{o.stop(at+s.release+.01);}catch(e){}},sources};
 }
 const api={engines,waves,fields,patch,harmonics,pluck,envelope,voice};if(typeof module==='object'&&module.exports)module.exports=api;else root.AuraSynthPro=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

@@ -3,3 +3,5 @@ test('bounded versioned patch and invalid data normalization',()=>{const p=S.pat
 test('harmonic wave morph endpoints and additive brightness',()=>{const a=S.harmonics({engine:'wavetable',morph:0}),b=S.harmonics({engine:'wavetable',morph:1});assert.equal(a.imag[1],1);assert.equal(a.imag[2],0);assert.equal(b.imag[2],0);assert.ok(b.imag[3]>.3);const c=S.harmonics({engine:'additive',brightness:1,morph:0});assert.ok(c.imag[16]>.06);});
 test('plucked string fixture is deterministic, finite, decays',()=>{const a=S.pluck({brightness:.5},60),b=S.pluck({brightness:.5},60);assert.deepEqual(a.buffer,b.buffer);assert.ok(a.buffer.every(Number.isFinite));const energy=x=>x.reduce((a,b)=>a+b*b,0);assert.ok(energy(a.buffer.slice(-2400))<energy(a.buffer.slice(0,2400)));});
 test('ADSR release start uses current envelope level',()=>{const p=S.patch({attack:.1,decay:.2,sustain:.5});assert.ok(Math.abs(S.envelope(p,.05,1)-.5)<1e-9);assert.ok(Math.abs(S.envelope(p,.2,1)-.75)<1e-9);assert.equal(S.envelope(p,1,1),.5);});
+
+test('missing patch data uses safe defaults',()=>{assert.equal(S.patch(null).engine,'subtractive');assert.equal(S.patch('invalid').version,1);});
