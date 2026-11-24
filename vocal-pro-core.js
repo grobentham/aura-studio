@@ -42,7 +42,7 @@ function pitchMarks(signal,begin,end,period){
 function shiftNote(ch,out,note,rate,harmony){
  const {begin,end,midi,shift}=note,len=end-begin,period=rate/frequency(midi),targetPeriod=period/2**(shift/12);
  if(len<Math.max(rate*.07,period*4)||!Number.isFinite(period)||period<8)return false;
- const marks=pitchMarks(ch[0],begin,end,period);if(marks.length<4)return false;
+ let strongest=0,bestEnergy=-1;for(let c=0;c<ch.length;c++){let energy=0;for(let i=begin;i<end;i+=8)energy+=ch[c][i]**2;if(energy>bestEnergy){bestEnergy=energy;strongest=c;}}const marks=pitchMarks(ch[strongest],begin,end,period);if(marks.length<4)return false;
  const weight=new Float32Array(len),sum=ch.map(()=>new Float32Array(len));let mark=0;
  // Choose the nearest source pitch mark for each synthesis position.
  for(let center=marks[0]-targetPeriod;center<end+targetPeriod;center+=targetPeriod){
