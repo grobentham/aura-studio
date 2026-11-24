@@ -1,0 +1,18 @@
+{
+  "id": "./",
+  "name": "Aura Studio",
+  "short_name": "Aura",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#171c24",
+  "theme_color": "#171c24",
+  "icons": [
+    {
+      "src": "aura-icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
