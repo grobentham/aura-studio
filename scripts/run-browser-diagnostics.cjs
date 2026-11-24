@@ -3,7 +3,7 @@ const {spawn}=require('node:child_process');
 const {once}=require('node:events');
 const {chromium}=require('playwright');
 const path=require('node:path');
-const suites={browser:'ALL CHECKS PASSED',interface:'ALL INTERFACE CHECKS PASSED',instruments:'ALL INSTRUMENT CHECKS PASSED',production:'ALL PRODUCTION CHECKS PASSED',feedback:'ALL FEEDBACK CHECKS PASSED',recording:'ALL RECORDING CHECKS PASSED',producer:'ALL PRODUCER CHECKS PASSED',suite:'ALL SUITE CHECKS PASSED',mix:'ALL MIX CHECKS PASSED',routing:'ALL ROUTING CHECKS PASSED',stream:'ALL STREAM CHECKS PASSED',continuous:'ALL CONTINUOUS CHECKS PASSED',master:'ALL MASTER CHECKS PASSED',vocal:'ALL VOCAL CHECKS PASSED',analyse:'ALL ANALYSE CHECKS PASSED',compose:'ALL COMPOSE CHECKS PASSED',midi:'ALL MIDI PRO CHECKS PASSED',synthpro:'ALL SYNTH PRO CHECKS PASSED',effectspro:'ALL EFFECTS PRO CHECKS PASSED'};
+const suites={browser:'ALL CHECKS PASSED',interface:'ALL INTERFACE CHECKS PASSED',instruments:'ALL INSTRUMENT CHECKS PASSED',production:'ALL PRODUCTION CHECKS PASSED',feedback:'ALL FEEDBACK CHECKS PASSED',recording:'ALL RECORDING CHECKS PASSED',producer:'ALL PRODUCER CHECKS PASSED',suite:'ALL SUITE CHECKS PASSED',mix:'ALL MIX CHECKS PASSED',routing:'ALL ROUTING CHECKS PASSED',stream:'ALL STREAM CHECKS PASSED',continuous:'ALL CONTINUOUS CHECKS PASSED',master:'ALL MASTER CHECKS PASSED',vocal:'ALL VOCAL CHECKS PASSED',analyse:'ALL ANALYSE CHECKS PASSED',compose:'ALL COMPOSE CHECKS PASSED',midi:'ALL MIDI PRO CHECKS PASSED',synthpro:'ALL SYNTH PRO CHECKS PASSED',effectspro:'ALL EFFECTS PRO CHECKS PASSED',libraryoffline:'ALL LIBRARY OFFLINE CHECKS PASSED'};
 const origin='http://127.0.0.1:4173';
 const timeout=Number(process.env.AURA_DIAGNOSTIC_TIMEOUT_MS||180000);
 const selected=process.argv.slice(2);
@@ -41,6 +41,15 @@ async function main(){
         const result=await page.locator('#results').innerText();
         console.log(name+'\n'+result);
         if(!result.split(/\r?\n/).some(line=>line.trim()===suites[name])||result.includes('FAIL ')||errors.length)throw Error('Diagnostic failed or page error occurred');
+        if(name==='libraryoffline'){
+          const offlinePage=await context.newPage(),offlineErrors=[];offlinePage.on('pageerror',e=>offlineErrors.push(e.message));
+          await offlinePage.goto(origin+'/index.html');await offlinePage.waitForFunction(()=>!!navigator.serviceWorker.controller,{},{timeout:30000});
+          await context.setOffline(true);await offlinePage.reload({waitUntil:'load'});
+          await offlinePage.waitForFunction(()=>typeof AuraLibrary!=='undefined'&&typeof AuraSynthPro!=='undefined'&&projectReady);
+          if(offlineErrors.length)throw Error('Offline startup errors: '+offlineErrors.join('; '));
+          console.log('PASS Actual network-disabled reload starts local DAW');
+          await context.setOffline(false);await offlinePage.close();
+        }
       }catch(error){
         failed++;
         console.error(name+': '+error.message);
