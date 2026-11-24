@@ -1,6 +1,26 @@
 /* Continuous master capture, bounded stream clip editing and explicit alignment. */
 'use strict';
 let continuousJob=null;
+async function realtimeChannelProbe(count,seconds=3){
+ if(![16,32,64].includes(count)||!Number.isFinite(seconds)||seconds<.25||seconds>5||document.hidden)throw Error('Invalid or hidden realtime diagnostic.');
+ ensureAudio();await ctx.resume();await loadPCMRecorder();const rate=ctx.sampleRate,frames=Math.round(rate*seconds),startFrame=Math.ceil((ctx.currentTime+.5)*rate);
+ const mix=ctx.createGain(),quiet=ctx.createGain(),voices=[],strips=[];mix.gain.value=1/count;quiet.gain.value=0;let node,timer;
+ try{
+  node=new AudioWorkletNode(ctx,'aura-pcm-recorder',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],channelCount:2,channelCountMode:'explicit',processorOptions:{channels:2}});
+  mix.connect(node);node.connect(quiet);quiet.connect(ctx.destination);
+  let received=0,sequence=0,maxGap=0,last=0,peak=0;
+  const done=new Promise((resolve,reject)=>{timer=setTimeout(()=>reject(Error('Realtime diagnostic timed out.')),Math.ceil((seconds+5)*1000));node.onprocessorerror=()=>reject(Error('Audio processor failed.'));node.port.onmessage=({data:m})=>{
+   try{if(document.hidden||ctx.state!=='running')throw Error('Keep the tab visible during the diagnostic.');
+    if(m.type==='chunk'){if(m.sequence!==sequence||m.frame!==startFrame+received||m.data.length!==2||m.data.some(a=>a.length!==m.frames)||received+m.frames>frames)throw Error('Realtime capture lost frame continuity.');const now=performance.now();if(last)maxGap=Math.max(maxGap,now-last);last=now;sequence++;received+=m.frames;for(const a of m.data)for(const v of a){if(!Number.isFinite(v))throw Error('Invalid realtime sample.');peak=Math.max(peak,Math.abs(v));}}
+    else if(m.type==='done'){if(received!==frames||peak<.001)throw Error('Incomplete or silent synthetic capture.');resolve({frames:received,chunks:sequence,maxGap,peak});}
+   }catch(e){reject(e);}
+  };});done.catch(()=>{});
+  for(let i=0;i<count;i++){const osc=ctx.createOscillator(),input=ctx.createGain();osc.frequency.value=110+i*17;input.gain.value=.1;osc.connect(input);const fx=AuraChannel.create(ctx,input,mix,{eq:{mid:-1},compression:.1,effects:[{type:'highpass',value:60}]});strips.push({input,fx});voices.push(osc);}
+  node.port.postMessage({type:'start',frame:startFrame,endFrame:startFrame+frames});
+  for(const osc of voices){osc.start(startFrame/rate);osc.stop((startFrame+frames)/rate);}
+  return await done;
+ }finally{clearTimeout(timer);if(node){node.port.onmessage=null;node.disconnect();}for(const osc of voices){try{osc.stop();}catch(e){}osc.disconnect();}for(const s of strips){AuraChannel.dispose(s.fx);s.input.disconnect();}mix.disconnect();quiet.disconnect();}
+}
 const continuousNoteBefore=noteOn;noteOn=function(...args){if(!continuousJob)return continuousNoteBefore(...args);};
 async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}={}){
  if(continuousJob||!canLeaveProject())throw Error('Finish current activity first.');
@@ -30,7 +50,7 @@ async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}
   const guardedTick=()=>{try{const now=performance.now(),gap=lastTick?now-lastTick:0;lastTick=now;maxTickGap=Math.max(maxTickGap,gap);if(gap>(hasStreamRegions()?750:110)){lateTicks++;throw Error('Transport scheduling stalled; continuous export cancelled.');}tick();}catch(e){abort(e);}};
   sched.timer=setInterval(guardedTick,25);guardedTick();renderTransport();await done;
   if(!same()||!sched.playing||streamMisses)throw Error('Playback interrupted before finalisation.');
-  stats=await writerState.finish();return {...stats,maxTickGap,lateTicks,streamReads,streamMisses};
+  stats=await writerState.finish();if(!same()||!sched.playing||streamMisses)throw Error('Export interrupted during disk finalisation.');return {...stats,maxTickGap,lateTicks,streamReads,streamMisses};
  }finally{
   clearInterval(timer);if(visibility)document.removeEventListener('visibilitychange',visibility);if(node){try{masterAnalyser.disconnect(node);node.disconnect();quiet?.disconnect();}catch(e){}node.port.onmessage=null;}
   if(sched.playing)stop();sched.bouncing=oldBouncing;if(state===project&&activeProjectId===id){state.pos=oldPos;renderTransport();}productionBusy=false;continuousJob=null;
@@ -72,6 +92,12 @@ async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}
  const editPanel=productionDialog('streamClipModal','Stream clip editor',[h('p',{class:'muted'},'Choose a bounded section relative to the selected clip. Waveform uses real PCM samples; trim and extract preserve the original source.'),details,h('section',{class:'producer-section'},h('label',{},'Start (s)',from),h('label',{},'Duration (s)',duration),preview,trim,extract),canvas,clipStatus]);
  function openEdit(){if(!canLeaveProject())return;try{const {t,r}=clip();selected=null;from.value=0;duration.value=Math.min(5,r.len*spb());details.textContent=t.name+' · '+(r.len*spb()).toFixed(2)+' s';canvas.getContext('2d').clearRect(0,0,canvas.width,canvas.height);editPanel.hidden=false;}catch(e){toast(e.message);}}
  productionToolbar.append(h('button',{id:'openStreamClip',onclick:openEdit},'Stream clip editor'));studioActions.push(['Stream clip editor','Range waveform, non-destructive trim and extraction',openEdit]);
+ const stressStatus=h('p',{id:'realtimeStressStatus',role:'status',class:'producer-status'},'Runs silent synthetic Web Audio channels; does not exercise a microphone or physical output device.');
+ const stressButton=h('button',{id:'runRealtimeStress',onclick:async()=>{
+  if(!canLeaveProject())return;if(sched.playing)stop();productionBusy=true;stressButton.disabled=true;
+  try{const lines=[];for(const count of [16,32,64]){stressStatus.textContent='Testing '+count+' live synthetic channels…';const r=await realtimeChannelProbe(count,3);lines.push(count+' channels · '+r.frames+' frames · '+r.chunks+' blocks · longest block delivery gap '+r.maxGap.toFixed(1)+' ms');}stressStatus.textContent=lines.join(' | ')+' — frame continuity passed. This is not a hardware dropout measurement.';}catch(e){stressStatus.textContent=e.message||'Realtime test failed.';}finally{productionBusy=false;stressButton.disabled=false;}
+ }},'Run realtime 16 / 32 / 64-channel test');
+ $('#engineToolsModal').querySelector('.producer-section').after(h('section',{class:'producer-section'},stressButton,stressStatus));
  const alignmentList=h('div',{id:'alignmentList'});
  function drawAlignment(){const delays=AuraAlignment.plan(state.tracks);alignmentList.replaceChildren(...state.tracks.map(t=>h('section',{class:'producer-section'},h('strong',{},t.name),h('label',{},'Measured path latency (ms)',h('input',{type:'number',min:0,max:500,step:.1,value:AuraAlignment.latency(t.pathLatencyMs),'aria-label':t.name+' measured latency',onchange:e=>{const v=Number(e.target.value);if(!Number.isFinite(v)||v<0||v>500||!canLeaveProject())return drawAlignment();if(sched.playing)stop();pushUndo();t.pathLatencyMs=v;updateMix();save();drawAlignment();}})),h('span',{},'Added alignment delay '+delays.get(t.id).toFixed(1)+' ms'))));}
  const alignmentPanel=productionDialog('alignmentModal','Track latency alignment',[h('p',{class:'muted'},'Enter independently measured extra path latency for each track. Shorter paths receive the difference to the slowest declared path. This is manual relative alignment, not automatic plugin latency reporting; leave zero unless a real extra delay exists.'),alignmentList]);
