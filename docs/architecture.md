@@ -65,3 +65,5 @@ Analyse Pro introduces reusable local musical feature extraction and ranked key/
 Compose Pro adds deterministic section-based MIDI generation, optional motif-conditioned progression, bounded voicing and six independent procedural roles. See docs/compose-pro.md.
 
 MIDI Pro: pure bounded note transformations with selection-aware preview/commit, seeded humanization, groove quantize, velocity, accents, duration, legato, scale snap, strum, arpeggio and repeat. Optional time-aligned ghost-note overlay (noninteractive, capped at 4,000) on existing piano roll. All edits use existing notes schema and one undo. External MIDI routing, CC/pitch-bend editing, probability playback and MPE remain outstanding.
+
+Instruments Pro adds bounded project-embedded native synth patches, local preset library, five synthesis modes and shared realtime/offline voice graph. See docs/instruments-pro.md.
