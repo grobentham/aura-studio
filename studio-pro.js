@@ -350,7 +350,28 @@ function setupProWorkspace(){
   const narrowScreen=matchMedia('(max-width:800px)'),focusResponsiveWorkspace=e=>{if(e.matches&&!document.body.dataset.focus)mobile.querySelector('[data-focus="arrange"]').click();else if(!e.matches&&document.body.dataset.focus){delete document.body.dataset.focus;setEditorCollapsed(false);performanceOpen=false;renderEditor();}};
   narrowScreen.addEventListener('change',focusResponsiveWorkspace);focusResponsiveWorkspace(narrowScreen);
   const proStarter=loadStarter;loadStarter=function(name){releaseMidi();proStarter(name);renderClipTools();renderTrackFX();};
-  const proOpenProject=openProjectFile;openProjectFile=async function(file,assetProvider){if(!canLeaveProject())return;try{await flushProject();const previous=state,previousId=activeProjectId;activeProjectId=crypto.randomUUID();await proOpenProject(file,assetProvider);if(state===previous){activeProjectId=previousId;return;}undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;save();await flushProject();}catch(e){toast('Could not import the project. Check browser storage.');}};
+  const proOpenProject=openProjectFile;
+  let importingProject=false;
+  openProjectFile=async function(file,assetProvider){
+    if(importingProject||!canLeaveProject())return;
+    importingProject=true;
+    const previous=state,previousId=activeProjectId,previousSnapshot=snapshot();
+    try{
+      await flushProject();
+      const opened=await proOpenProject(file,assetProvider,()=>{
+        if(!canLeaveProject())return;
+        if(state!==previous||activeProjectId!==previousId||snapshot()!==previousSnapshot){
+          toast('The current project changed during import. Open the backup again.');
+          return;
+        }
+        return crypto.randomUUID();
+      });
+      if(!opened)return;
+      undoStack.length=0;redoStack.length=0;$('#projectsModal').hidden=true;
+      await flushProject();
+    }catch(e){toast('Could not import the project. Check browser storage.');}
+    finally{importingProject=false;}
+  };
   document.addEventListener('keydown',e=>{
     if(e.key==='Escape'){for(const id of ['projectsModal','historyModal','exportModal'])$('#'+id).hidden=true;}
     if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='s'&&!e.target.closest('.overlay')){e.preventDefault();e.stopImmediatePropagation();flushProject(true).then(()=>toast('Saved on this device.')).catch(()=>toast('Save failed. Download a project backup.'));}
