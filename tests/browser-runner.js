@@ -6,6 +6,7 @@ document.querySelector('#run').onclick=async()=>{
     await flushProject();check(projectReady,'Project storage initialized');
     const initial=structuredClone(state),initialId=activeProjectId;
     activeProjectId=crypto.randomUUID();
+    const diagnosticIds=new Set([activeProjectId]);
     try{
       for(const name of ['Lo-fi Sunday','Deep House','Trap Night','Night Drive']){
         loadStarter(name);const buffer=await renderOffline(state.tracks,{start:0,end:4,sampleRate:44100,tail:.5});
@@ -37,7 +38,42 @@ document.querySelector('#run').onclick=async()=>{
       state.loop.on=false;state.bpm=240;view.selTrack=state.tracks[0].id;view.selRegion=state.tracks[0].regions[0].id;state.pos=0;countIn.beats=4;
       toggleRec();await new Promise(resolve=>setTimeout(resolve,100));check(countIn.active&&!sched.playing,'Recording count-in leaves the transport at the punch-in point');togglePlay();check(!countIn.active&&!rec.armed&&!sched.playing,'Stop cancels the count-in without recording');
       const noteCount=state.tracks[0].regions.reduce((n,r)=>n+r.notes.length,0);toggleRec();await new Promise(resolve=>setTimeout(resolve,1250));check(rec.armed&&sched.playing,'Recording starts after the count-in');noteOn('diagnostic-note',64,.7);await new Promise(resolve=>setTimeout(resolve,90));noteOff('diagnostic-note');stop();check(state.tracks[0].regions.reduce((n,r)=>n+r.notes.length,0)>noteCount,'Live instrument notes are captured after the count-in');
+      const beforeImport=snapshot(),sourceProjectId=activeProjectId;
+      const backup={app:'aura-studio',version:2,...JSON.parse(beforeImport),title:'Imported audio test',assets:{}};
+      const sourceTrack=backup.tracks.find(track=>track.type==='audio');
+      sourceTrack.takes=[{id:uid(),name:'Original take',buf:id,start:0,len:4,offset:0}];
+      backup.tracks[0].sampler={mode:'pads',zones:[{key:60,root:60,buf:id,name:'Shared sample',start:0,end:2,gain:1,tune:0,oneShot:false}]};
+      const replacement=ctx.createBuffer(1,ab.length,ab.sampleRate);
+      replacement.getChannelData(0).fill(.12);
+      backup.assets[id]=await blobBase64(wavBlob(replacement));
+      const importBackup=async data=>{
+        await openProjectFile(new File([JSON.stringify(data)],'diagnostic-backup.json'));
+        diagnosticIds.add(activeProjectId);
+      };
+      await importBackup(backup);
+      const imported=state.tracks.find(track=>track.type==='audio'),importedId=imported.regions[0].buf;
+      const importedSample=buffers.get(importedId).getChannelData(0)[0];
+      const sourceAudio=await ctx.decodeAudioData(await (await readStoredAudio(id)).arrayBuffer());
+      check(activeProjectId!==sourceProjectId&&importedId!==id,'JSON import assigns a fresh ID to conflicting audio');
+      check(imported.takes[0].buf===importedId&&state.tracks[0].sampler.zones[0].buf===importedId,
+        'The imported clip, take and sampler zone share the remapped source');
+      check(Math.abs(importedSample-.12)<.001&&Math.abs(sourceAudio.getChannelData(0)[0]-.3)<.001
+        && buffers.get(id)===ab,'JSON import preserves existing audio in memory and in storage');
+      const missing={...backup,assets:{}};
+      const currentId=activeProjectId,current=snapshot();
+      await importBackup(missing);
+      check(activeProjectId===currentId&&snapshot()===current&&$('#toast').textContent.includes('missing audio'),
+        'An incomplete JSON backup reports missing audio and leaves the current project open');
+      delete missing.assets;
+      await importBackup(missing);
+      check(activeProjectId===currentId&&snapshot()===current&&$('#toast').textContent.includes('missing audio'),
+        'A version 2 backup without embedded assets does not substitute unrelated local audio');
+      const legacy={...JSON.parse(beforeImport),app:'aura-studio',version:1,title:'Legacy local-audio project'};
+      const sourceRecord=await projectRead('projects',sourceProjectId);
+      check(sourceRecord.data.tracks.find(track=>track.type==='audio').regions[0].buf===id,'Original project retains its source reference after JSON import');
+      await importBackup(legacy);
+      check(state.title===legacy.title&&state.tracks.find(track=>track.type==='audio').regions[0].buf===id,'Legacy metadata-only imports still open when their audio exists locally');
       return results.join('\\n')+'\\nALL CHECKS PASSED';
-    }finally{if(countIn.active)cancelCountIn();if(sched.playing)stop();await flushProject().catch(()=>{});const diagnosticRecord=await projectRead('projects',activeProjectId);if(diagnosticRecord){diagnosticRecord.trashed=true;await projectWrite(diagnosticRecord);}applyProject(initial);activeProjectId=initialId;clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));}
+    }finally{if(countIn.active)cancelCountIn();if(sched.playing)stop();await flushProject().catch(()=>{});for(const id of diagnosticIds){const diagnosticRecord=await projectRead('projects',id);if(diagnosticRecord){diagnosticRecord.trashed=true;await projectWrite(diagnosticRecord);}}applyProject(initial);activeProjectId=initialId;clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));}
   })()`);}catch(e){output.textContent+='\nFAIL '+e.stack;}finally{button.disabled=false;}
 };
