@@ -10,3 +10,11 @@
  search.addEventListener('keydown',e=>{if(e.key==='Enter'){const b=productionToolbar.querySelector('.tool-menu-group:not([hidden]) button:not([hidden]):not(:disabled)');if(b){e.preventDefault();b.click();}}});
  filter();
 })();
+// Late wrappers retain previous transport/recording/project integrations.
+const playBeforePreviewCleanup=play;play=function(...args){stopProductionPreviews();return playBeforePreviewCleanup(...args);};
+const stopBeforePreviewCleanup=stop;stop=function(...args){stopProductionPreviews();return stopBeforePreviewCleanup(...args);};
+const recordBeforePreviewCleanup=startAudioTake;startAudioTake=function(...args){stopProductionPreviews();return recordBeforePreviewCleanup(...args);};
+const projectBeforePreviewCleanup=applyProject;applyProject=function(...args){stopProductionPreviews();return projectBeforePreviewCleanup(...args);};
+const importBeforePreviewCleanup=openProjectFile;openProjectFile=function(...args){stopProductionPreviews();return importBeforePreviewCleanup(...args);};
+window.addEventListener('pagehide',stopProductionPreviews);
+

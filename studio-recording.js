@@ -58,9 +58,9 @@ updateInputMeter=function(){inputMeterBeforePCM();if(inputCapture.analyser){cons
 startAudioTake=function(){if(countIn.active){cancelCountIn();renderLibrary();return;}if(!inputCapture.connected||inputCapture.pending||inputCapture.recording)return;beginPCMRecording();};
 async function beginPCMRecording(){
   if(!inputCapture.connected||inputCapture.pending||inputCapture.recording||sched.bouncing||productionBusy)return;
-  inputCapture.pending=true;inputCapture.error='';recordingState();renderLibrary();
+  inputCapture.pending=true;inputCapture.error='';const project=state,pid=activeProjectId,bus=inputCapture.bus,stream=inputCapture.stream;const guard=()=>{if(project!==state||pid!==activeProjectId||bus!==inputCapture.bus||stream!==inputCapture.stream||!inputCapture.connected)throw Error('Input or project changed during recording setup. Retry.');};recordingState();renderLibrary();
   try{
-    if(!projectReady)throw Error('Wait for project storage to open.');await flushProject();await ctx.resume();await loadPCMRecorder();await prepareTrackSounds();releaseTouch();stopLoopPreview();rec.armed=false;
+    if(!projectReady)throw Error('Wait for project storage to open.');await flushProject();await ctx.resume();await loadPCMRecorder();await prepareTrackSounds();guard();releaseTouch();stopLoopPreview();rec.armed=false;
     const mode=recordingPrefs.mode,range={start:state.loop.start,end:state.loop.end};if(mode!=='linear'&&(!(range.end>range.start)||range.end-range.start<.25))throw Error('Choose a cycle range of at least a sixteenth note.');
     // A known transport anchor avoids codec priming and the UI callback's timing.
     if(sched.playing)stop();if(mode!=='linear')state.pos=range.start;
@@ -70,7 +70,7 @@ async function beginPCMRecording(){
     session.archive=mode==='linear'&&recordingPrefs.archive===true;
     const limit=session.archive?AuraRecording.archiveLimit(session,available):AuraRecording.captureLimit(session,available);
     session.limitFrames=limit;
-    await RecordingJournal.create(session);recordingRuntime.session=session;recordingRuntime.queue=Promise.resolve();recordingRuntime.queued=0;recordingRuntime.received=0;recordingRuntime.sequence=0;recordingRuntime.error='';recordingRuntime.finishing=false;
+    await RecordingJournal.create(session);recordingRuntime.session=session;guard();recordingRuntime.queue=Promise.resolve();recordingRuntime.queued=0;recordingRuntime.received=0;recordingRuntime.sequence=0;recordingRuntime.error='';recordingRuntime.finishing=false;
     const node=new AudioWorkletNode(ctx,'aura-pcm-recorder',{numberOfInputs:1,numberOfOutputs:1,outputChannelCount:[1],processorOptions:{channels:session.channels}});recordingRuntime.node=node;recordingRuntime.silent=ctx.createGain();recordingRuntime.silent.gain.value=0;inputCapture.bus.connect(node);node.connect(recordingRuntime.silent);recordingRuntime.silent.connect(ctx.destination);
     node.port.onmessage=({data:m})=>{if(recordingRuntime.session!==session||recordingRuntime.finishing)return;if(m.type==='chunk')acceptRecordingBlock(session,m);if(m.type==='done')completePCMRecording();};node.onprocessorerror=()=>{if(recordingRuntime.session!==session||recordingRuntime.finishing)return;recordingRuntime.error='The audio processor stopped. Completed blocks have been retained.';finishAudioTake();};
     inputCapture.targetState=state;inputCapture.oldLoop=state.loop.on;state.loop.on=mode==='loop';inputCapture.recording=true;inputCapture.pending=false;
@@ -82,10 +82,11 @@ async function beginPCMRecording(){
   }catch(e){inputCapture.recording=false;if(countIn.active)cancelCountIn();if(sched.playing)stop();const failed=recordingRuntime.session;clearTimeout(recordingRuntime.timeout);recordingRuntime.timeout=null;if(failed){try{if(recordingRuntime.node){recordingRuntime.node.port.onmessage=null;recordingRuntime.node.onprocessorerror=null;recordingRuntime.node.port.postMessage({type:'stop',frame:Math.round(ctx.currentTime*ctx.sampleRate)});inputCapture.bus?.disconnect(recordingRuntime.node);recordingRuntime.node.disconnect();}recordingRuntime.silent?.disconnect();if(!recordingRuntime.received)await RecordingJournal.remove(failed.id);}catch(cleanupError){}state.loop.on=inputCapture.oldLoop;recordingRuntime.node=null;recordingRuntime.session=null;}inputCapture.pending=false;toast(e.message||'Recording could not start.');recordingState();renderLibrary();}
 }
 function acceptRecordingBlock(session,m){
-  if(m.sequence!==recordingRuntime.sequence||m.frame!==recordingRuntime.expectedFrame){recordingRuntime.error='A gap was detected. The completed portion is retained for recovery.';finishAudioTake();return;}
-  recordingRuntime.sequence++;recordingRuntime.expectedFrame=m.frame+m.frames;recordingRuntime.received+=m.frames;const bytes=m.frames*session.channels*4;recordingRuntime.queued+=bytes;
-  if(recordingRuntime.queued>8*1024*1024){recordingRuntime.error='Storage could not keep up. Recording stopped to preserve completed blocks.';finishAudioTake();}
-  recordingRuntime.queue=recordingRuntime.queue.then(async()=>{if(recordingRuntime.error?.startsWith('Browser storage'))return;await RecordingJournal.append(session,m);}).catch(e=>{recordingRuntime.error='Browser storage could not save more audio. Completed blocks remain recoverable.';finishAudioTake();}).finally(()=>recordingRuntime.queued-=bytes);
+  if(session!==recordingRuntime.session||session.rejectBlocks)return;
+  if(m.sequence!==recordingRuntime.sequence||m.frame!==recordingRuntime.expectedFrame||!Number.isSafeInteger(m.frames)||m.frames<1||m.frames>4096){session.rejectBlocks=true;recordingRuntime.error='A gap was detected. The completed portion is retained for recovery.';finishAudioTake();return;}
+  const bytes=m.frames*session.channels*4;if(recordingRuntime.queued+bytes>8*1024*1024){session.rejectBlocks=true;recordingRuntime.error='Storage could not keep up. Recording stopped to preserve completed blocks.';finishAudioTake();return;}
+  recordingRuntime.sequence++;recordingRuntime.expectedFrame=m.frame+m.frames;recordingRuntime.received+=m.frames;recordingRuntime.queued+=bytes;
+  recordingRuntime.queue=recordingRuntime.queue.then(async()=>{if(recordingRuntime.error?.startsWith('Browser storage'))return;await RecordingJournal.append(session,m);}).catch(e=>{session.rejectBlocks=true;recordingRuntime.error='Browser storage could not save more audio. Completed blocks remain recoverable.';finishAudioTake();}).finally(()=>recordingRuntime.queued-=bytes);
 }
 finishAudioTake=function(){
   if(!inputCapture.recording)return;inputCapture.recording=false;inputCapture.pending=true;if(countIn.active)cancelCountIn();setInputMonitor();recordingState();if(libraryTab==='record')renderLibrary();
@@ -95,7 +96,7 @@ finishAudioTake=function(){
 async function completePCMRecording(){
   if(recordingRuntime.finishing||!recordingRuntime.session)return;recordingRuntime.finishing=true;clearTimeout(recordingRuntime.timeout);recordingRuntime.timeout=null;const session=recordingRuntime.session;if(recordingRuntime.node){recordingRuntime.node.port.onmessage=null;recordingRuntime.node.onprocessorerror=null;}
   inputCapture.recording=false;inputCapture.pending=true;setInputMonitor();recordingState();
-  try{recordingRuntime.node?.disconnect();inputCapture.bus?.disconnect(recordingRuntime.node);recordingRuntime.silent?.disconnect();}catch(e){}
+  for(const cleanup of [()=>recordingRuntime.node?.disconnect(),()=>inputCapture.bus?.disconnect(recordingRuntime.node),()=>recordingRuntime.silent?.disconnect()])try{cleanup();}catch(e){}
   recordingRuntime.node=null;if(sched.playing)stop();state.loop.on=inputCapture.oldLoop;if(session.mode!=='linear')state.pos=session.range.start;
   try{
     await recordingRuntime.queue;const stored=(await RecordingJournal.list()).find(s=>s.id===session.id);

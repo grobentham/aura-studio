@@ -95,6 +95,11 @@ const synthBeforeSampler=synthVoice;synthVoice=function(name,midi,time,velocity,
 const performanceSamplerBefore=renderPerformance;renderPerformance=function(){performanceSamplerBefore();const t=trackById(view.selTrack);if(!performanceOpen||!t?.sampler)return;if(t.sampler.mode==='chromatic'){const board=$('#performance .performance-board');if(board&&!board.querySelector('.sampler-edit-button'))board.append(h('button',{class:'sampler-edit-button',onclick:openSamplerEditor},'Edit sampler'));return;}const board=$('#performance .performance-board');if(!board)return;board.replaceChildren();const pads=h('div',{class:'drum-pads'});for(let i=0;i<8;i++){const zone=t.sampler.zones.find(z=>z.key===60+i),b=h('button',{class:'drum-pad',disabled:!zone,'aria-label':`Play sampler pad ${i+1}`},h('span',{},zone?.name||'Empty'),h('small',{},Object.keys(DRUMKEYS)[i].toUpperCase()));touchButton(b,[60+i]);pads.append(b);}board.append(pads,h('button',{onclick:openSamplerEditor},'Edit sampler'));if($('#instrumentStatus'))$('#instrumentStatus').textContent=projectAudioIds({tracks:[t]}).every(id=>buffers.has(id))?'Sampler · ready':'Sampler · restore missing audio';};
 
 let productionBusy=false,soundTouchModule;
+const productionPreviewStops=new Set();
+function registerProductionPreview(stopFn){productionPreviewStops.add(stopFn);}
+function stopProductionPreviews(){for(const stopFn of productionPreviewStops)try{stopFn();}catch(e){console.warn('Preview cleanup:',e?.message||'cleanup failed');}}
+function productionPreviewAllowed(project,panel){return project===state&&!panel.hidden&&!sched.playing&&!inputCapture.recording&&!inputCapture.pending;}
+
 async function transformAudioBuffer(input,{pitch=0,rate=1}={}){
   if(!Number.isFinite(pitch)||!Number.isFinite(rate)||rate<.5||rate>2||pitch<-12||pitch>12)throw Error('Use pitch within one octave and speed from 50% to 200%.');
   if(!('AudioWorkletNode' in window)||!('OfflineAudioContext' in window))throw Error('Audio transforms need a browser with AudioWorklet support.');

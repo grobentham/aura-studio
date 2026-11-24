@@ -986,7 +986,7 @@ const LOOP_LIBRARY=[
 ];
 function loopNotes(item){const P=PROGS[ed.prog]||[0,3,4,0];if(item.type==='drums')return genDrums(16,item.genre,false);if(item.type==='bass')return genBass(16,P,'Roots');if(item.type==='arp')return genArp(16,P);return genChords(16,P,{sev:item.type!=='guitar',style:item.type==='guitar'?'offbeat':'hold'});}
 let loopAudition=null;
-function stopLoopPreview(){if(!loopAudition)return;for(const s of loopAudition.sources)try{s.stop();}catch(e){}loopAudition=null;document.querySelectorAll('.preview-loop').forEach(b=>{b.textContent='▶ Preview';b.classList.remove('on');});}
+function stopLoopPreview(){if(!loopAudition)return;for(const s of loopAudition.sources)try{s.stop();}catch(e){}try{loopAudition.dest.disconnect();}catch(e){}loopAudition=null;document.querySelectorAll('.preview-loop').forEach(b=>{b.textContent='▶ Preview';b.classList.remove('on');});}
 function previewLoop(item,button){const same=loopAudition?.item===item;stopLoopPreview();if(same)return;ensureAudio();const before=new Set(sched.srcs),dest=ctx.createGain();dest.gain.value=.65;dest.connect(master);const start=ctx.currentTime+.04;for(const n of loopNotes(item)){const time=start+n.t*spb();if(item.type==='drums')drum(item.kit,n.p,time,n.v,dest);else synthVoice(item.preset,n.p,time,n.v,dest).release(time+n.d*spb());}const sources=[...sched.srcs].filter(s=>!before.has(s));loopAudition={item,sources,dest};button.textContent='■ Stop';button.classList.add('on');setTimeout(()=>{if(loopAudition?.sources===sources){stopLoopPreview();}dest.disconnect();},(16*spb()+3)*1000);}
 function addLoop(item){pushUndo();const type=item.type==='drums'?'drums':'synth';const selected=trackById(view.selTrack);let t=selected&&selected.type===type&&(type==='drums'?selected.kit===item.kit:selected.preset===item.preset)?selected:null;if(!t)t=addT(type,{name:item.tag,preset:item.preset||'Warm Keys',kit:item.kit||'Studio 808',color:item.color,rev:type==='drums'?.08:.2});const start=Math.floor(curBeat()/4)*4;const r=mkRegion(start,16,loopNotes(item),{name:item.name});t.regions.push(r);view.selTrack=t.id;view.selRegion=r.id;ed.sel.clear();syncNodes();renderAll(true);save();toast(`${item.name} added at bar ${start/4+1}.`);}
 function renderLibrary(){document.querySelectorAll('[data-library]').forEach(b=>{b.classList.toggle('on',b.dataset.library===libraryTab);b.setAttribute('aria-pressed',String(b.dataset.library===libraryTab));});const content=$('#libContent');content.innerHTML='';if(libraryTab==='record'){renderInputPanel(content);return;}if(libraryTab==='instruments'){content.append(h('div',{class:'eyebrow'},'Your next idea starts here'));for(const[kind,icon,name,desc]of [['keys','♮','Keyboard','Warm keys & electric piano'],['guitar','≋','Guitar','Strum touch chord pads'],['drums','▦','Drum pads','Eight voices. Your rhythm.'],['synth','⌁','Synthesizer','Leads, bass & atmospheric pads']])content.append(h('button',{class:'instrument-card',onclick:()=>chooseInstrument(kind)},h('span',{class:'instrument-icon','aria-hidden':'true'},icon),h('span',{},h('b',{},name),h('small',{},desc))));content.append(h('p',{class:'lib-note'},'Play with touch, a mouse, or your keyboard. Press the red record button to capture notes into the timeline.'));return;}
@@ -1046,14 +1046,14 @@ initStudio();
 <script src="instrument-catalog.js?v=20261117-feedback1"></script>
 <script src="instruments.js?v=20261117-feedback1"></script>
 <script src="studio-ui.js"></script>
-<script src="studio-production.js?v=20261117.2"></script>
+<script src="studio-production.js?v=20261124-lifecycle1"></script>
 <script src="cloud-client.js"></script>
 <script src="studio-feedback.js?v=20261117-feedback1"></script>
 <script src="recorded-library.js?v=20261124-fit3"></script>
 <link rel="stylesheet" href="studio-workspace.css?v=20261118.1">
 <script src="recording-core.js?v=20261124.4"></script>
 <script src="recording-store.js?v=20261124.5"></script>
-<script src="studio-recording.js?v=20261124-integrity2"></script>
+<script src="studio-recording.js?v=20261124-lifecycle1"></script>
 <script src="studio-workspace.js?v=20261118.1"></script>
 <link rel="stylesheet" href="studio-producer.css?v=1">
 <script src="producer-core.js?v=2"></script>
@@ -1063,7 +1063,7 @@ initStudio();
 <script src="studio-suite.js?v=1"></script>
 <link rel="stylesheet" href="studio-mix-next.css?v=1">
 <script src="mix-next-core.js?v=1"></script>
-<script src="studio-mix-next.js?v=1"></script>
+<script src="studio-mix-next.js?v=20261124-lifecycle1"></script>
 <script src="studio-storage-centre.js?v=4"></script>
 <script src="project-pack-core.js?v=3"></script>
 <script src="studio-routing-backups.js?v=7"></script>
@@ -1073,10 +1073,10 @@ initStudio();
 <script src="continuous-render-core.js?v=1"></script>
 <script src="studio-continuous-render.js?v=2"></script>
 <script src="master-pro-core.js?v=1"></script>
-<script src="studio-master-pro.js?v=2"></script>
+<script src="studio-master-pro.js?v=20261124-lifecycle1"></script>
 <link rel="stylesheet" href="studio-vocal-pro.css?v=1">
 <script src="vocal-pro-core.js?v=2"></script>
-<script src="studio-vocal-pro.js?v=2"></script>
+<script src="studio-vocal-pro.js?v=20261124-lifecycle1"></script>
 <script src="analyse-pro-core.js?v=2"></script>
 <script src="studio-analyse-pro.js?v=2"></script>
 <script src="compose-pro-core.js?v=1"></script>
@@ -1084,15 +1084,15 @@ initStudio();
 <script src="midi-pro-core.js?v=1"></script>
 <script src="studio-midi-pro.js?v=1"></script>
 <script src="instruments-pro-core.js?v=2"></script>
-<script src="studio-instruments-pro.js?v=1"></script>
+<script src="studio-instruments-pro.js?v=20261124-lifecycle1"></script>
 <script src="sound-library-core.js?v=1"></script>
-<script src="studio-sound-library.js?v=3"></script>
+<script src="studio-sound-library.js?v=20261124-lifecycle1"></script>
 <script src="studio-offline.js?v=1"></script>
 <script src="studio-plugin-sdk.js?v=1"></script>
 <script src="stem-core.js?v=1"></script>
-<script src="studio-stems.js?v=1"></script>
+<script src="studio-stems.js?v=20261124-lifecycle1"></script>
 <script src="coordinator-core.js?v=1"></script>
-<script src="studio-coordinator.js?v=1"></script>
-<script src="studio-release.js?v=1"></script>
+<script src="studio-coordinator.js?v=20261124-lifecycle1"></script>
+<script src="studio-release.js?v=20261124-lifecycle1"></script>
 </body>
 </html>

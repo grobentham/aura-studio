@@ -8,7 +8,8 @@
  const buttons=[];
  function button(id,label,action){const b=h('button',{id,onclick:async()=>{if(busy||!canLeaveProject())return;busy=true;buttons.forEach(x=>x.disabled=true);try{await action();}catch(e){status.textContent=e.message||'Mix operation failed.';}finally{busy=false;buttons.forEach(x=>x.disabled=false);}}},label);buttons.push(b);return b;}
  function worker(channels,rate){return new Promise((resolve,reject)=>{const w=new Worker(new URL('mix-next-worker.js?v=1',document.baseURI)),timer=setTimeout(()=>{w.terminate();reject(Error('Analysis timed out.'));},60000);const done=(fn,v)=>{clearTimeout(timer);w.terminate();fn(v);};w.onmessage=e=>e.data.ok?done(resolve,e.data.value):done(reject,Error(e.data.error));w.onerror=e=>done(reject,Error(e.message));try{w.postMessage({channels,rate},channels.map(c=>c.buffer));}catch(e){done(reject,e);}});}
- function stopPreview(){if(preview){try{preview.stop();}catch(e){}preview=null;}}
+ let previewEpoch=0;
+ function stopPreview(){previewEpoch++;if(preview){try{preview.stop();}catch(e){}preview=null;}}
  function valid(){if(!plan||plan.projectId!==activeProjectId||plan.before!==snapshot())throw Error('The project changed. Analyse it again.');return plan;}
  const percent=v=>Math.round(v*100)+'%';
  const names={low:'Low shelf',mid:'Mid bell',high:'High shelf'};
@@ -37,13 +38,13 @@
   for(const [i,c] of p.changes.entries())results.append(h('label',{class:'mixnext-choice'},h('input',{type:'checkbox',checked:c.enabled,'aria-label':'Apply suggestion '+(i+1),onchange:e=>c.enabled=e.target.checked}),c.name+' · '+names[c.key]+' ('+c.hz+' Hz) · '+c.from+' → '+c.to+' dB (overlap '+percent(c.score)+')'));
  }
  async function audition(after){
-  const p=valid();stopPreview();if(sched.playing)stop();productionBusy=true;
+  const p=valid();if(sched.playing)stop();stopProductionPreviews();const token=previewEpoch,project=state;productionBusy=true;
   try{
    ensureAudio();await ctx.resume();const originals=p.tracks.map(trackById),modified=structuredClone(originals);
    for(const c of p.changes.filter(c=>c.enabled)){const t=modified.find(t=>t.id===c.id);t.eq={...t.eq,[c.key]:c.to};}
    status.textContent='Rendering both versions for level-matched audition…';
    const options={sampleRate:48000,start:p.start,end:p.end,tail:0,masterVolume:1,masterProcessing:false};
-   const original=await renderOffline(originals,options),changed=await renderOffline(modified,options);valid();
+   const original=await renderOffline(originals,options),changed=await renderOffline(modified,options);if(token!==previewEpoch||!productionPreviewAllowed(project,panel)||valid()!==p)return;
    const rms=b=>AuraProducer.levels(Array.from({length:b.numberOfChannels},(_,i)=>b.getChannelData(i)));
    const a=rms(original),b=rms(changed),common=Math.min(a.rms,b.rms,.12);
    const buffer=after?changed:original,level=after?b:a;if(!level.rms||!common)throw Error('Both versions need audible audio.');
@@ -61,6 +62,7 @@
   h('p',{class:'muted'},'Select a priority track (for example lead vocal). The engine compares overlapping spectral energy with other tracks across up to 15 seconds from the playhead. Recommendations are broad EQ cuts, not proof of audible masking.'),
   h('section',{class:'producer-section'},analyse,beforeButton,afterButton,h('button',{onclick:stopPreview},'Stop preview'),apply),status,results
  ]);
+ registerProductionPreview(stopPreview);
  new MutationObserver(()=>{if(panel.hidden)stopPreview();}).observe(panel,{attributes:true,attributeFilter:['hidden']});
  function open(){if(!canLeaveProject())return;stopPreview();plan=null;results.replaceChildren();status.textContent='Select a priority track and move the playhead to a busy section.';panel.hidden=false;}
  productionToolbar.append(h('button',{id:'openMixNext',onclick:open},'Frequency mix assist'));
