@@ -1,0 +1,12 @@
+# Producer MVP — development branch
+
+This incremental release implements local selected-clip peak/RMS measurement, bounded monophonic YIN-style pitch estimates, scale alignment of a single stable note via existing SoundTouch processing, reversible clip peak reduction, melody-aware editable major/minor accompaniment (chords/bass/drums), and sample-peak-normalised 48 kHz/24-bit WAV export. It does not claim phrase-level vocal correction, automatic mixing, true peak, LUFS, professional mastering, or polyphonic transcription.
+
+Recording policy retains the 64 MiB whole-buffer cap while using available storage estimates to reduce risk, and journal writes reject malformed/duplicate/out-of-order blocks atomically. Long-duration chunk-backed playback, export and backup are future work. The source of truth remains the existing project schema.
+
+New tests cover pure algorithms and isolated browser interaction. CI pins Ubuntu 24.04 because Playwright 1.56.1 installation failed on Ubuntu 26.04 in the baseline run. Hardware and listening tests remain required. The first baseline Node suites passed; browser suites did not run due to the runner OS issue.
+
+Second increment: recovery can download committed journal PCM as a 24-bit WAV without constructing an AudioBuffer (the Blob is still held for download); the journal remains intact. Mix assist measures up to eight tracks and recommends only fader reductions based on peak/RMS, with explicit application and Undo. Export reports an estimated K-weighted gated loudness value at 48 kHz; not certified LUFS or true-peak mastering. Pitch alignment persists the new asset before changing clip metadata. Added mathematical tests.
+Third increment: the earlier Chromium run passed core, recording, instruments, production and Producer; feedback failed at fitted beat duration/audibility and interface was cancelled by a newer commit. Beat fitting now derives exact decoded-frame length from catalog beat count and target tempo; it rejects silent transforms. Re-run feedback rather than relaxing its assertion. Browser tests now also cover recovery WAV, mix plan application/undo and normalized export.
+
+Release follow-up: both latest push and PR runs passed seven of eight jobs. The beat-grid fix passed (4 s, audible); feedback then exposed a one-shot duration mismatch. One-shot decoding now restores the catalog PCM frame count by bounded trim/zero-padding, without tempo/pitch processing. The original test tolerance is unchanged.

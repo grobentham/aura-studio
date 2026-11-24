@@ -1,0 +1,9 @@
+#auraProducerModal .pro-dialog{width:min(640px,calc(100vw - 24px));max-height:90vh;overflow:auto}
+.producer-section{border:1px solid var(--line);background:var(--panel-2);padding:12px;margin:8px 0;border-radius:8px;display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.producer-section h3{width:100%;margin:0 0 4px;color:var(--accent);font-size:14px}
+.producer-section label{display:flex;gap:6px;align-items:center}
+.producer-section input[type=number]{width:65px}
+.producer-section p{flex-basis:100%;margin:0}
+.producer-status{color:var(--accent);margin:10px 0}
+.producer-results{font-variant-numeric:tabular-nums}
+.producer-results p{margin:4px 0;overflow-wrap:anywhere}
