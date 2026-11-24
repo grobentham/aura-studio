@@ -43,8 +43,8 @@
    const streamed=streamedAssets(project),total=[...assets].reduce((s,[id,b])=>s+(streamed.has(id)?0:b.size),0);if(total>192*1048576)throw Error('Package exceeds this editor’s decoded import budget. Large archive playback is separate.');
    const remap=new Map(needed.map(id=>[id,uid()])),blobs=new Map(needed.map(id=>[remap.get(id),assets.get(id)]));
    for(const t of project.tracks){for(const r of t.regions||[])if(remap.has(r.buf))r.buf=remap.get(r.buf);for(const p of t.takes||[])if(remap.has(p.buf))p.buf=remap.get(p.buf);for(const z of t.sampler?.zones||[])if(remap.has(z.buf))z.buf=remap.get(z.buf);}
-   const old=activeProjectId;await openProjectFile(new File([JSON.stringify({...project,app:'aura-studio',version:2})],'package-metadata.json'),id=>blobs.get(id));
-   if(activeProjectId===old)throw Error('Project import rejected. Original project remains open.');
+   const old=activeProjectId;const opened=await openProjectFile(new File([JSON.stringify({...project,app:'aura-studio',version:2})],'package-metadata.json'),id=>blobs.get(id));
+   if(!opened||activeProjectId===old)throw Error('Project import did not complete. Check the current project and storage.');
    await flushProject(true);packStatus.textContent='Package imported as a separate project with new asset identities.';
   }catch(e){packStatus.textContent=e.message||'Import failed.';}finally{busy=false;}
  }
