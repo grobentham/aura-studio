@@ -1,0 +1,5 @@
+#vocalProModal .suite-pitch-chart{height:240px;touch-action:none;background-size:100% 16px}
+#vocalProModal .suite-note{cursor:ns-resize;touch-action:none;min-height:12px}
+#vocalProModal .suite-note:focus{outline:2px solid white}
+#vocalProModal .vocal-controls{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+#vocalProModal input[type=number]{width:72px}

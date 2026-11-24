@@ -57,3 +57,5 @@ Continuous capture also monitors scheduler callback gaps and aborts on a gap exc
 Realtime diagnostic: silent synthetic oscillator/channel-strip workloads at 16, 32 and 64 channels, three seconds each, captured through the PCM worklet. Reports contiguous frames, delivered blocks and maximum main-thread delivery gap. Browser test runs a short 16-channel fixture. This checks internal software processing, not audio interface/OS hardware underruns or sustained 64-track musical projects.
 
 Master Pro adds an independent pure offline processing module and worker, with bounded 30-second preview, reference-tone assistance, linked dynamics, width, interpolated peak lookahead limiter and dithered export. Current master processing remains unchanged. See docs/master-pro.md.
+
+Vocal Pro introduces a bounded worker-based waveform-synchronous note renderer, independent derived vocal/harmony assets, and an experimental separate dry-recording-preserving mono monitor worklet. See docs/vocal-pro.md.
