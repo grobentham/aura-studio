@@ -102,7 +102,7 @@ async function openHistory(){
 function addTrackProcessing(audio,input,output,t){return AuraChannel.create(audio,input,output,t);}
 function setTrackProcessing(fx,t,time){AuraChannel.update(fx,t,time);}
 const originalMkNodes=mkNodes;
-mkNodes=function(){const n=originalMkNodes();n.filter.disconnect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.vol,{});return n;};
+mkNodes=function(){const n=originalMkNodes();n.filter.disconnect(n.vol);n.alignment=ctx.createDelay(1);n.alignment.connect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.alignment,{});return n;};
 // Dispose all track-owned nodes, including sends and the shared processing strip.
 const syncBeforeChannelDispose=syncNodes;
 syncNodes=function(){if(ctx){const ids=new Set(state.tracks.map(t=>t.id));for(const [id,n] of nodes){if(!ids.has(id)){AuraChannel.dispose(n.fx);for(const value of Object.values(n))if(value&&typeof value.disconnect==='function')try{value.disconnect();}catch(e){} }}}return syncBeforeChannelDispose();};
@@ -120,9 +120,9 @@ function routeLiveGroups(){
  }
 }
 const originalUpdateMix=updateMix;
-updateMix=function(){originalUpdateMix();if(ctx)for(const t of state.tracks){const n=nodes.get(t.id);if(n?.fx)setTrackProcessing(n.fx,t,ctx.currentTime);}routeLiveGroups();};
+updateMix=function(){originalUpdateMix();if(ctx){const delays=AuraAlignment.plan(state.tracks);for(const t of state.tracks){const n=nodes.get(t.id);if(n?.fx)setTrackProcessing(n.fx,t,ctx.currentTime);if(n?.alignment){const seconds=delays.get(t.id)/1000;if(n.alignment.delayTime.value!==seconds)n.alignment.delayTime.setValueAtTime(seconds,ctx.currentTime);}}}routeLiveGroups();};
 // Existing nodes may have been created while restoring local audio.
-for(const n of nodes.values())if(!n.fx){n.filter.disconnect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.vol,{});}updateMix();
+for(const n of nodes.values())if(!n.fx){n.filter.disconnect(n.vol);n.alignment=ctx.createDelay(1);n.alignment.connect(n.vol);n.fx=addTrackProcessing(ctx,n.filter,n.alignment,{});}updateMix();
 function renderTrackFX(){
   const panel=$('#trackFx');if(!panel)return;panel.replaceChildren();const{t}=getSel();
   if(!t){panel.append(h('span',{class:'muted'},'Select a track to shape its sound.'));return;}
@@ -147,10 +147,10 @@ function createOfflineGraph(audio,tracks,masterVolume,options={}){
   const delay=audio.createDelay(2),filter=audio.createBiquadFilter(),feedback=audio.createGain(),echo=audio.createGain();delay.delayTime.value=Math.min(1.9,.75*spb());filter.type='lowpass';filter.frequency.value=3200;feedback.gain.value=.38;echo.gain.value=.7;delay.connect(filter);filter.connect(feedback);feedback.connect(delay);filter.connect(echo);echo.connect(output);
   const groupSettings=AuraRouting.groups(options.groupMix),groupNodes=new Map();
   for(const id of AuraRouting.ids){const bus=audio.createGain();bus.gain.value=AuraRouting.gain(groupSettings[id]);bus.connect(output);groupNodes.set(id,bus);}
-  const channels=new Map();for(const t of tracks){
+  const alignment=AuraAlignment.plan(options.alignmentTracks||tracks),channels=new Map();for(const t of tracks){
     const input=audio.createGain(),tone=audio.createBiquadFilter(),volume=audio.createGain(),pan=audio.createStereoPanner(),rev=audio.createGain(),dly=audio.createGain();
     tone.type='lowpass';tone.Q.value=.7;tone.frequency.value=cutoffHz(t.cutoff);volume.gain.value=t.vol*t.vol*1.2;pan.pan.value=t.pan;rev.gain.value=t.rev;dly.gain.value=t.dly*.8;
-    input.connect(tone);addTrackProcessing(audio,tone,volume,t);volume.connect(pan);const group=AuraRouting.route(t.group),factor=group?AuraRouting.gain(groupSettings[group]):1;pan.connect(group?groupNodes.get(group):output);rev.gain.value*=factor;dly.gain.value*=factor;pan.connect(rev);rev.connect(conv);pan.connect(dly);dly.connect(delay);channels.set(t.id,input);
+    input.connect(tone);const aligned=audio.createDelay(1);aligned.delayTime.value=(alignment.get(t.id)||0)/1000;addTrackProcessing(audio,tone,aligned,t);aligned.connect(volume);volume.connect(pan);const group=AuraRouting.route(t.group),factor=group?AuraRouting.gain(groupSettings[group]):1;pan.connect(group?groupNodes.get(group):output);rev.gain.value*=factor;dly.gain.value*=factor;pan.connect(rev);rev.connect(conv);pan.connect(dly);dly.connect(delay);channels.set(t.id,input);
     if(typeof scheduleTrackAutomation==='function')scheduleTrackAutomation(audio,t,[['vol',volume.gain,v=>v*v*1.2],['pan',pan.pan,v=>v],['cutoff',tone.frequency,cutoffHz],['rev',rev.gain,v=>v*factor],['dly',dly.gain,v=>v*.8*factor]],options);
   }
   return channels;
@@ -180,10 +180,10 @@ scheduleRange=function(from,to,first){
   }}
 };
 async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
-  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[]}));masterVolume=1;masterProcessing=false;}
+  if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[],pathLatencyMs:0}));masterVolume=1;masterProcessing=false;}
   const streamCount=tracks.flatMap(t=>t.regions).filter(r=>r.stream&&r.start<end&&r.start+r.len>start).length;
   const seconds=(end-start)*spb()+tail;if(streamCount&&(seconds>30||streamCount*seconds*192000*8>128*1048576))throw Error('Streamed audio mix export is limited to a short range (up to 30 seconds and bounded memory). Export the full source WAV separately.');if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
-  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing,groupMix:channelEffects?state.groupMix:{}});
+  const audio=new OfflineAudioContext(2,Math.ceil(seconds*sampleRate),sampleRate),destinations=createOfflineGraph(audio,tracks,masterVolume,{start,end,masterProcessing,groupMix:channelEffects?state.groupMix:{},alignmentTracks:channelEffects?state.tracks:tracks});
   const noise=audio.createBuffer(1,sampleRate*2,sampleRate),nd=noise.getChannelData(0),random=rng(382);for(let i=0;i<nd.length;i++)nd[i]=random()*2-1;
   for(const t of tracks){const dest=destinations.get(t.id);for(const r of t.regions){
     if(r.start>=end||r.start+r.len<=start)continue;
