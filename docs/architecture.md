@@ -59,3 +59,5 @@ Realtime diagnostic: silent synthetic oscillator/channel-strip workloads at 16, 
 Master Pro adds an independent pure offline processing module and worker, with bounded 30-second preview, reference-tone assistance, linked dynamics, width, interpolated peak lookahead limiter and dithered export. Current master processing remains unchanged. See docs/master-pro.md.
 
 Vocal Pro introduces a bounded worker-based waveform-synchronous note renderer, independent derived vocal/harmony assets, and an experimental separate dry-recording-preserving mono monitor worklet. See docs/vocal-pro.md.
+
+Analyse Pro introduces reusable local musical feature extraction and ranked key/tempo hypotheses, coarse chords, transient and quality diagnostics with explicit key and tempo changes. See docs/analyse-pro.md.
