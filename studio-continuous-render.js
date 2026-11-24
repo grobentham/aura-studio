@@ -1,13 +1,14 @@
 /* Continuous master capture, bounded stream clip editing and explicit alignment. */
 'use strict';
 let continuousJob=null;
+const continuousNoteBefore=noteOn;noteOn=function(...args){if(!continuousJob)return continuousNoteBefore(...args);};
 async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}={}){
  if(continuousJob||!canLeaveProject())throw Error('Finish current activity first.');
  if(state.loop.on||state.metro||inputCapture.connected||rec.armed||live.size)throw Error('Turn off cycle and metronome, disconnect microphone, and release live notes.');
  if(!Number.isFinite(tail)||tail<0||tail>3||!Number.isFinite(settle)||settle<0||settle>5)throw Error('Invalid render options.');
  const length=songEnd()*spb();if(!Number.isFinite(length)||length<=0||length>3600)throw Error('Continuous export supports a nonempty song of up to one hour.');
  if(document.hidden)throw Error('Keep Aura visible while exporting.');
- const project=state,id=activeProjectId,before=snapshot(),oldPos=state.pos,oldBouncing=sched.bouncing;let node,quiet,timer,visibility,writerState,abort,stats,complete=false;
+ const project=state,id=activeProjectId,before=snapshot(),oldPos=state.pos,oldBouncing=sched.bouncing;let node,quiet,timer,visibility,writerState,abort,stats,lastTick=0,maxTickGap=0,lateTicks=0;
  const job={cancelled:false,cancel(){this.cancelled=true;abort?.(Error('Continuous export cancelled.'));}};continuousJob=job;productionBusy=true;
  const same=()=>!job.cancelled&&state===project&&activeProjectId===id&&snapshot()===before&&!document.hidden;
  try{
@@ -26,9 +27,10 @@ async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}
   node.port.postMessage({type:'start',frame:startFrame,endFrame:startFrame+frames});
   // Abort if transport stalls, the user changes the project, or a stream misses its deadline.
   const wallStart=performance.now();timer=setInterval(()=>{try{if(!same()||!sched.playing||ctx.state!=='running'||streamMisses||performance.now()-wallStart>(length+tail+15)*1000)throw Error('Continuous export interrupted.');}catch(e){abort(e);}},200);
-  sched.timer=setInterval(tick,25);tick();renderTransport();await done;
+  const guardedTick=()=>{try{const now=performance.now(),gap=lastTick?now-lastTick:0;lastTick=now;maxTickGap=Math.max(maxTickGap,gap);if(gap>(hasStreamRegions()?750:110)){lateTicks++;throw Error('Transport scheduling stalled; continuous export cancelled.');}tick();}catch(e){abort(e);}};
+  sched.timer=setInterval(guardedTick,25);guardedTick();renderTransport();await done;
   if(!same()||!sched.playing||streamMisses)throw Error('Playback interrupted before finalisation.');
-  stats=await writerState.finish();complete=true;return stats;
+  stats=await writerState.finish();return {...stats,maxTickGap,lateTicks,streamReads,streamMisses};
  }finally{
   clearInterval(timer);if(visibility)document.removeEventListener('visibilitychange',visibility);if(node){try{masterAnalyser.disconnect(node);node.disconnect();quiet?.disconnect();}catch(e){}node.port.onmessage=null;}
   if(sched.playing)stop();sched.bouncing=oldBouncing;if(state===project&&activeProjectId===id){state.pos=oldPos;renderTransport();}productionBusy=false;continuousJob=null;
@@ -39,7 +41,7 @@ async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}
  const start=h('button',{id:'continuousStart',disabled:typeof showSaveFilePicker!=='function',onclick:async()=>{
   if(continuousJob||!canLeaveProject())return;let writer;start.disabled=true;try{
    const handle=await showSaveFilePicker({suggestedName:fileSafe(state.title)+'-continuous.wav',types:[{description:'24-bit WAV',accept:{'audio/wav':['.wav']}}]});writer=await handle.createWritable();
-   status.textContent='Preparing master capture…';const stats=await captureContinuousMix(writer,{onProgress:(n,total)=>status.textContent='Writing '+Math.floor(n/total*100)+'% · '+(n/ctx.sampleRate).toFixed(1)+' seconds'});await writer.close();writer=null;status.textContent='Saved '+(stats.frames/stats.rate).toFixed(1)+' s at '+stats.rate+' Hz, 24-bit stereo. Peak '+(20*Math.log10(Math.max(stats.peak,1e-12))).toFixed(1)+' dBFS; clipped samples '+stats.clipped+'.';
+   status.textContent='Preparing master capture…';const stats=await captureContinuousMix(writer,{onProgress:(n,total)=>status.textContent='Writing '+Math.floor(n/total*100)+'% · '+(n/ctx.sampleRate).toFixed(1)+' seconds'});await writer.close();writer=null;status.textContent='Saved '+(stats.frames/stats.rate).toFixed(1)+' s at '+stats.rate+' Hz, 24-bit stereo. Peak '+(20*Math.log10(Math.max(stats.peak,1e-12))).toFixed(1)+' dBFS; clipped samples '+stats.clipped+' · maximum scheduler callback gap '+stats.maxTickGap.toFixed(1)+' ms.';
   }catch(e){try{await writer?.abort();}catch(_){}status.textContent=e.name==='AbortError'?'File selection cancelled.':e.message||'Export failed.';}finally{start.disabled=false;}
  }},'Write continuous mix to disk');
  const panel=productionDialog('continuousModal','Continuous mix export',[h('p',{class:'muted'},'Writes the actual realtime master output, including channel inserts, buses and master dynamics, to 24-bit stereo WAV at the audio context sample rate. Up to one hour plus three seconds of tails. Export runs at playback speed; no microphone recording. Turn off cycle/metronome, disconnect input and keep this tab visible. Direct file writing requires browser support.'),h('section',{class:'producer-section'},start,h('button',{onclick:()=>continuousJob?.cancel()},'Cancel export')),status]);
@@ -49,9 +51,9 @@ async function captureContinuousMix(writer,{onProgress=()=>{},tail=3,settle=3.2}
  let selected=null,loading=false;
  function clip(){const {t,r}=getSel();if(!t||!r?.stream)throw Error('Select a streamed clip.');return {t,r};}
  async function read(){
-  const {t,r}=clip(),offset=Number(from.value),seconds=Number(duration.value);if(!Number.isFinite(offset)||offset<0||!Number.isFinite(seconds)||seconds<=0||seconds>15||offset+seconds>r.len*spb()+1e-6)throw Error('Select a section of up to 15 seconds within the clip.');
+  const {t,r}=clip(),original=JSON.stringify(r),project=state,bpm=state.bpm,offset=Number(from.value),seconds=Number(duration.value);if(!Number.isFinite(offset)||offset<0||!Number.isFinite(seconds)||seconds<=0||seconds>15||offset+seconds>r.len*spb()+1e-6)throw Error('Select a section of up to 15 seconds within the clip.');
   const meta=AuraStream.valid(r.stream),file=await readStoredAudio(r.buf);await AuraStream.verify(file,meta);ensureAudio();const range=AuraStream.range(meta,(r.offset||0)+offset,seconds);if(!range.count)throw Error('Empty source range.');
-  const b=await AuraStream.decode(file,meta,range.start,range.count,ctx);if(getSel().r!==r)throw Error('Selection changed.');return {t,r,b,offset};
+  const b=await AuraStream.decode(file,meta,range.start,range.count,ctx);if(getSel().r!==r||state!==project||state.bpm!==bpm||JSON.stringify(r)!==original)throw Error('Selection or clip changed.');return {t,r,b,offset};
  }
  function run(fn){return async()=>{if(loading||!canLeaveProject())return;loading=true;try{await fn();}catch(e){clipStatus.textContent=e.message;}finally{loading=false;}};}
  const preview=h('button',{id:'streamClipRead',onclick:run(async()=>{
