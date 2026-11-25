@@ -7,6 +7,9 @@
 - **Remix your own melody** (Plus): select a melody clip, then pick a style. Chords are inferred per bar from the melody (diatonic I/IV/V preferred), and the result opens as a new project.
 - **Aura Plus** (**✦ Get Plus** in the header): Free vs Plus comparison and Stripe checkout.
 
+## Styles and instruments
+Piano uses the recorded Steinway (Concert Grand). Cinematic uses the String Ensemble (real violin, viola and cello sections), Bowed Cellos, French horn (voiced in its recorded register) and the Orchestral Percussion kit. Acoustic (new) uses Expressive Nylon guitar arpeggios, the real double bass (Upright Bass), clarinet and soft Live Room Kit cross-stick. Each style's melody is kept inside its lead instrument's recorded range (`leadRange`).
+
 ## Song structure
 Every remix (Songbook, hummed or own clip) is laid out as Intro → Verse → Build → Chorus → Breakdown → Build → Final chorus → Outro. Builds hold the last chord under a rising snare (or tom) roll. The breakdown drops drums and bass. The final chorus adds crashes every 4 bars. Each track is split into one clip per section, so the structure shows on the timeline. Hums shorter than 8 bars are repeated to fill a verse.
 

@@ -64,3 +64,7 @@ sample CDN or account dependency. Sounds are loaded on demand and cached where
 browser storage supports it. Sample caches are not project backups.
 
 The original synthesized Aura presets and kits remain available and unchanged.
+
+## Recorded instruments (2026 upgrade)
+
+Concert Grand, Bright Grand, FM Electric Piano, String Ensemble, Upright Bass, Concert Flute, Tenor Sax, Studio Trumpet, Vibraphone and 22 new instruments/kits use real CC0 recordings from VSCO 2 CE and VCSL. See `recorded-sources/CREDITS.md` and `recorded-manifest.json`.
