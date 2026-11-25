@@ -45,6 +45,10 @@ document.querySelector('#run').onclick=async()=>{
       check(guide.hidden&&activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.tracks.length===5&&songEnd()===416,'The song lesson opens a separate editable project in Arrange');
       const saved=await projectRead('projects',activeProjectId),unchanged=await projectRead('projects',previousId);
       check(saved.data.title==='My Moon My Man · Full melodic study'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening the song study preserves the previous session and saves the new one');
+      stop();AuraPlayCountdown.beats=4;state.pos=0;togglePlay();await new Promise(r=>setTimeout(r,120));check(countIn.active&&!sched.playing&&!$('#playCountdown').hidden,'Play countdown counts down before playback when enabled');
+      togglePlay();await new Promise(r=>setTimeout(r,60));check(!countIn.active&&!sched.playing&&$('#playCountdown').hidden,'Pressing Play during the countdown cancels it');
+      AuraPlayCountdown.beats=4;togglePlay();await new Promise(r=>setTimeout(r,4*spb()*1000+300));{let waited=0;while(!sched.playing&&waited<8000){await new Promise(r=>setTimeout(r,100));waited+=100;}check(!countIn.active&&sched.playing&&$('#playCountdown').hidden,'Playback starts when the countdown finishes');}stop();
+      AuraPlayCountdown.beats=0;togglePlay();await new Promise(r=>setTimeout(r,80));check(!countIn.active&&(sched.playing||typeof preparingPlayback!=='undefined'&&preparingPlayback),'With the countdown off, Play starts straight away');stop();
       return results.join('\\n')+'\\nALL INTERFACE CHECKS PASSED';
     }finally{
       stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}activeProjectId=initialId;applyProject(initial);clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));
