@@ -39,6 +39,15 @@ document.querySelector('#run').onclick=async()=>{
         const part=await renderOffline([track],{start:32,end:36,tail:0});
         check(energy(part)>1e-8,track.name+' renders audible audio from the song study');
       }
+      loadStarter('My Moon My Man · Full backing');
+      check(songEnd()===416&&state.bars===104&&state.tracks.length===4,'Full backing lasts 104 bars without lead');
+      loadStarter('My Moon My Man · Full melodic study');
+      check(songEnd()===416&&state.tracks.length===5,'Full melodic arrangement has five tracks and 104 bars');
+      const leadStudy=state.tracks.find(t=>t.name==='Melodic lead');
+      check(leadStudy&&leadStudy.regions.length>0&&leadStudy.regions[0].start===16,'Original melodic lead enters after the intro');
+      check(state.tracks.every(t=>t.regions.every(r=>r.notes.every(n=>n.t>=0&&n.t+n.d<=r.len&&n.v<=1&&n.p>=0&&n.p<=127))),'Full study notes fit clips and valid velocity/pitch bounds');
+      const leadAudio=await renderOffline([leadStudy],{start:16,end:20,tail:0});
+      check(energy(leadAudio)>1e-8,'Original melodic lead renders audible audio');
       return results.join('\\n')+'\\nALL INSTRUMENT CHECKS PASSED';
     }finally{stopInstrumentPreview();if(countIn.active)cancelCountIn();if(sched.playing)stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}applyProject(initial);activeProjectId=initialId;clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));}
   })()`);}catch(e){output.textContent+='\nFAIL '+e.stack;}finally{button.disabled=false;}

@@ -100,33 +100,104 @@
     addSections(guitar, guitarBar);
   };
 
+
+  // Two full-length studies, with an original melodic line (not a transcription).
+  const backingTitle = 'My Moon My Man · Full backing';
+  const melodicTitle = 'My Moon My Man · Full melodic study';
+  const fullForm = [
+    ['Intro',4,'intro'], ['Verse A',16,'verse'], ['Lift A',16,'lift'],
+    ['Verse B',16,'verse2'], ['Instrumental break',8,'break'],
+    ['Lift B',16,'lift2'], ['Final groove',16,'final'], ['Outro groove',8,'outro'],
+    ['Ending',4,'ending'],
+  ];
+  const fullBars = fullForm.reduce((sum, section) => sum + section[1], 0);
+  function originalLead(chord, bar, mode) {
+    if (['intro','break','ending'].includes(mode)) return [];
+    if (mode === 'outro' && bar >= 4) return [];
+    const p = chord.piano.map(n => n + 12);
+    const lift = ['lift','lift2','final'].includes(mode);
+    const phrases = [
+      [[0,.5,.65,.78],[1,1.5,.42,.67],[2,2.25,1.25,.83]],
+      [[2,0,.8,.79],[1,1.25,.65,.69],[0,2.5,.95,.74]],
+      [[1,.25,.65,.71],[2,1.25,.9,.83],[1,2.75,.65,.67]],
+      [[0,0,1.4,.77],[2,2,.55,.72],[1,3,.55,.62]],
+    ];
+    const phrase = phrases[(bar + (mode === 'verse2' ? 1 : 0)) % 4];
+    if (!lift && bar % 8 === 7) return [];
+    return phrase.map(([degree,t,d,v],i) => ({
+      p: p[degree] + (lift && bar % 8 >= 4 && i === 2 ? 12 : 0),
+      t, d, v: Math.min(.96,v * (lift ? 1.12 : .87)),
+    }));
+  }
+  function fullPart(track, kind) {
+    let offset = 0;
+    for (const [name,count,mode] of fullForm) {
+      // Eight/four-bar editable clips keep the arrangement easy to navigate.
+      for (let first = 0; first < count; first += 4) {
+        const length = Math.min(4,count-first);
+        const notes = [];
+        for (let i=0;i<length;i++) {
+          const bar = first+i;
+          const chord = mode === 'ending' ? sections[4].bars[bar] : harmony[bar%4];
+          const virtual = mode === 'ending' ? 16+bar : mode === 'intro' ? bar :
+            mode === 'verse' || mode === 'verse2' ? 4+bar%4 :
+            mode === 'break' ? 8+bar%4 : mode === 'outro' ? 8+bar%4 : 12+bar%4;
+          let part = [];
+          if (kind === 'piano') part = pianoBar(chord,virtual);
+          if (kind === 'bass') part = bassBar(chord,virtual);
+          if (kind === 'drums') part = drumBar(chord,virtual);
+          if (kind === 'guitar') part = guitarBar(chord,virtual);
+          if (kind === 'lead') part = originalLead(chord,bar,mode);
+          if (mode === 'break' && kind === 'drums' && bar < 4) part = part.filter(n=>n.p===0||n.p===3).map(n=>({...n,v:n.v*.65}));
+          if (mode === 'verse2' && kind === 'guitar') part = guitarBar(chord,8+bar%4).filter(n=>n.t<2);
+          if (mode === 'outro' && bar >= 4 && kind !== 'piano') part = part.map(n=>({...n,v:n.v*.72}));
+          for (const n of part) notes.push({...n,t:i*beatsPerBar+n.t});
+        }
+        if (notes.length) track.regions.push(mkRegion((offset+first)*4,length*4,notes,{name:first ? name+' · '+(first/4+1) : name}));
+      }
+      offset += count;
+    }
+  }
+  function loadFullStudy(withLead) {
+    Object.assign(state,{title:withLead?melodicTitle:backingTitle,bpm:125,root:4,scale:'Minor',bars:fullBars,loop:{on:false,start:16,end:32}});
+    fullPart(addT('synth',{name:'Piano pulse',preset:'Dynamic Upright',vol:.64,rev:.09}),'piano');
+    fullPart(addT('synth',{name:'Bass roots',preset:'Finger Bass',vol:.70,rev:0}),'bass');
+    fullPart(addT('drums',{name:'Live drums',kit:'Live Room Kit',vol:.93,rev:.035}),'drums');
+    fullPart(addT('synth',{name:'Guitar answers',preset:'Clean Electric',vol:.43,pan:.32,rev:.12}),'guitar');
+    if (withLead) fullPart(addT('synth',{name:'Melodic lead',preset:'Warm Keys',vol:.83,pan:0,rev:.14,dly:.08}),'lead');
+  }
+  STARTERS[backingTitle] = () => loadFullStudy(false);
+  STARTERS[melodicTitle] = () => loadFullStudy(true);
+
   const steps = [
-    ['Listen to the layers', 'Press Play from bar 1. Piano opens the arrangement, bass and a drum pickup enter at bar 3, the full drum groove starts at bar 5 and guitar at bar 9. Listen for the stronger kick, snare accents and section changes.'],
+    ['Listen to the layers', 'Press Play from bar 1. Piano opens the arrangement, bass and a drum pickup enter at bar 3, the full drum groove starts at bar 5. Guitar enters in the lifts of the full arrangement (bar 9 in the short study). Listen for the stronger kick, snare accents and section changes.'],
     ['Look inside the piano clip', 'Double-click the first piano clip or select it and choose Edit. Each bar uses one chord, in order Am, C, Em and G. Try changing the length of one of the short notes.'],
     ['Loop and mix the groove', 'In Arrange, start playback at bar 5 with Cycle on. The Live drums track is the recorded acoustic kit; solo it to hear the kick, snare, hats and fills. Open Mix and use S to solo the bass or drums. Clear the solos and lower the guitar fader. Turn Cycle off, return to Arrange and listen from bar 9.'],
     ['Keep your version', 'Use Save to make a checkpoint. In Export song, choose Entire song to include the C–D–Em ending. Projects > Download project keeps your edited clips.'],
   ];
-  const start = h('button', { id: 'openSongPractice', class: 'primary', onclick: openPractice }, 'Open practice project');
+  const start = h('button', { id: 'openSongPractice', class: 'primary', onclick: () => openPractice(melodicTitle) }, 'Open melodic version');
+  const backing = h('button', { id: 'openSongBacking', onclick: () => openPractice(backingTitle) }, 'Open backing version');
+  const short = h('button', { id: 'openSongShort', onclick: () => openPractice(title) }, 'Open short study');
   const guide = productionDialog('songGuideModal', 'My Moon My Man', [
-    h('p', { class: 'muted' }, 'Instrumental groove study based on the song by Feist and Chilly Gonzales. Play and edit a short arrangement at 125 BPM in E minor.'),
-    h('div', { class: 'production-actions' }, start),
+    h('p', { class: 'muted' }, 'Instrumental groove study based on the song by Feist and Chilly Gonzales. Choose a 104-bar (about 3:20) arrangement at 125 BPM in E minor. The melodic version includes an original lead line in place of a vocal; it is not the original song melody. The backing version leaves space for singing.'),
+    h('div', { class: 'production-actions' }, start, backing, short),
     h('ol', { class: 'welcome-steps' }, steps.map(([label, instruction]) =>
       h('li', {}, h('b', {}, label), h('p', {}, instruction)))),
     h('p', { class: 'muted' }, 'The practice project opens as a separate session. Return to this guide from Quick guide or Projects.'),
     h('a', { href: 'https://www.youtube.com/watch?v=ltYq-jalYm0', target: '_blank', rel: 'noopener' }, 'Listen to Feist’s original'),
   ]);
 
-  async function openPractice() {
-    start.disabled = true;
+  async function openPractice(projectTitle) {
+    for (const button of [start, backing, short]) button.disabled = true;
     const previousId = activeProjectId;
     try {
-      await newProject(title);
-      if (activeProjectId === previousId || state.title !== title) return;
+      await newProject(projectTitle);
+      if (activeProjectId === previousId || state.title !== projectTitle) return;
       guide.hidden = true;
       const fit = $('#fitArrangement');
       if (fit?.getClientRects().length) fit.click();
     } finally {
-      start.disabled = false;
+      for (const button of [start, backing, short]) button.disabled = false;
     }
   }
 
@@ -160,6 +231,6 @@
     h('button', { id: 'quickSongGuide', onclick: openGuide }, 'Song guide · My Moon My Man')));
   $('#projectsModal .starter-grid').append(
     h('button', { id: 'projectSongGuide', class: 'starter-card', onclick: openGuide },
-      h('b', {}, 'My Moon My Man'), h('small', {}, 'Song guide · Piano, bass, drums and guitar')));
+      h('b', {}, 'My Moon My Man'), h('small', {}, 'Full versions · With or without melodic lead')));
   studioActions.push(['My Moon My Man song guide', 'Learn the groove and open an editable instrumental project', openGuide]);
 })();
