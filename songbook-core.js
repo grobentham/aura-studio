@@ -120,20 +120,32 @@
   function snapToScale(notes,root,scale){const st=scale==='Major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
     return notes.map(n=>{const pc=((n.p-root)%12+12)%12;if(st.includes(pc))return{...n};const up=st.includes((pc+1)%12),dn=st.includes((pc+11)%12);return{...n,p:n.p+(dn?-1:up?1:0)};});}
 
+  // Free-tempo humming: find the BPM (70–140) whose beat grid best explains the note onsets (seconds).
+  function estimateTempo(onsets){
+    const on=onsets.filter(Number.isFinite).sort((a,b)=>a-b);if(on.length<4)return{bpm:100,offset:on[0]||0,confidence:0};
+    let best={bpm:100,offset:on[0],score:-1};
+    for(let bpm=70;bpm<=140;bpm++){const beat=60/bpm;
+      for(let k=0;k<12;k++){const off=on[0]+(k/12-.5)*beat*.5;let e=0,q=0;
+        for(const t of on){const x=(t-off)/beat;const de=Math.abs(x*2-Math.round(x*2))/2,dq=Math.abs(x-Math.round(x));e+=Math.exp(-((de/.09)**2));q+=Math.exp(-((dq/.09)**2));}
+        const prior=Math.exp(-((Math.log2(bpm/100)/.45)**2));const sc=(.55*e+.45*q)/on.length*(.8+.2*prior);
+        if(sc>best.score)best={bpm,offset:off,score:sc};}}
+    return{bpm:best.bpm,offset:best.offset,confidence:+best.score.toFixed(3)};
+  }
   function chordAt(chs,t){for(const c of chs)if(t>=c.t&&t<c.t+c.d)return c;return chs[chs.length-1];}
 
-  function buildPass(song,G,scale,off,energy,R,tracks){
-    const L=song.len*scale,ch=song.chords.map(c=>({...c,t:c.t*scale,d:c.d*scale}));
-    const add=(k,p,t,d,v)=>{if(t<0||d<=0)return;tracks[k].push({p,t:+(off+t).toFixed(4),d:+d.toFixed(4),v:+clamp(v+(R()-.5)*.06,.05,1).toFixed(3)});};
+  // energy: 0 breakdown (no drums/bass), 1 verse, 2 chorus, 3 final chorus. limit: play only the first `limit` beats.
+  function buildPass(song,G,scale,off,energy,R,tracks,limit){
+    const L=Math.min(song.len*scale,limit||Infinity),ch=song.chords.map(c=>({...c,t:c.t*scale,d:c.d*scale}));
+    const add=(k,p,t,d,v)=>{if(t<0||d<=0||t>=L)return;d=Math.min(d,L-t+.5);if(energy===0&&(k==='drums'||k==='bass'||k==='arp'||k==='brass'||k==='lead2'))return;tracks[k].push({p,t:+(off+t).toFixed(4),d:+d.toFixed(4),v:+clamp(v+(R()-.5)*.06,.05,1).toFixed(3)});};
     // lead (melody) — auto-octave so it sits around C5..C6
     const ps=song.melody.map(n=>n.p).sort((a,b)=>a-b),med=ps[ps.length>>1];let shift=Math.round((76-med)/12)*12+G.leadOct*12;
-    for(const n of song.melody){add('lead',n.p+shift,n.t*scale,Math.max(.1,n.d*scale*.95),.7+(energy>1?.06:0));if(energy>1&&G.id!=='piano'){const q=n.p+shift-12>=55?n.p+shift-12:n.p+shift+12<=88?n.p+shift+12:null;if(q!=null)add('lead2',q,n.t*scale,Math.max(.1,n.d*scale*.95),.4);}}
+    for(const n of song.melody){add('lead',n.p+shift,n.t*scale,Math.max(.1,n.d*scale*.95),energy===0?.5:.7+(energy>1?.06:0));if(energy>1&&G.id!=='piano'){const q=n.p+shift-12>=55?n.p+shift-12:n.p+shift+12<=88?n.p+shift+12:null;if(q!=null)add('lead2',q,n.t*scale,Math.max(.1,n.d*scale*.95),.4);}}
     // harmony
     let prevV=null;
     for(const c of ch){
       const v=lead(c,prevV);prevV=v;const bars=[];for(let t=c.t;t<c.t+c.d-1e-6;t+=4)bars.push([t,Math.min(4,c.t+c.d-t)]);
       for(const[t,d]of bars){
-        const s=G.chordStyle;
+        const s=energy===0?'hold':G.chordStyle;
         if(s==='hold'||(s==='lofi'&&d<2))v.forEach(p=>add('chords',p,t,d-.05,.5));
         else if(s==='lofi'){v.forEach(p=>add('chords',p,t,Math.min(2.3,d)-.05,.5));if(d>2.4)v.forEach(p=>add('chords',p,t+2.5,d-2.55,.42));}
         else if(s==='offbeat')for(let k=.5;k<d;k+=1)v.forEach(p=>add('chords',p,t+k,.3,.5));
@@ -148,7 +160,7 @@
         else if(bs==='octaves'||bs==='eighths')for(let k=0;k<d;k+=.5)add('bass',root+(bs==='octaves'&&k%1?12:0),t+k,.42,k%1?.6:.72);
         else if(bs==='ostinato')for(let k=0;k<d;k+=.5)add('bass',k%1?root+7:root,t+k,.45,k%1?.5:.62);
         // pads / arps / brass for the second, fuller pass
-        if(G.pad&&energy>1)v.forEach(p=>add('pad',p+12,t,d-.05,.3));
+        if(G.pad&&(energy>1||energy===0))v.forEach(p=>add('pad',p+12,t,d-.05,energy===0?.36:.3));
         if(G.arp){const a=[v[0],v[1],v[2],v[0]+12];for(let k=0,i=0;k<d;k+=.25,i++)add('arp',a[i%4]+12,t+k,.22,energy>1?.42:.32);}
         if(G.brass&&energy>1)[v[0],v[2]].forEach(p=>add('brass',p,t,d-.1,.4));
       }
@@ -163,26 +175,47 @@
           add('drums',r,t,.25,r===0?.92:r===3?(i%4===0?.6:.4):.82);}}
       if(G.id==='trap'&&bar%2===1)for(let i=0;i<6;i++)add('drums',3,b+3+i/6,.15,.35+i*.08);
       if(G.id!=='piano'&&(bar%4===3||last)&&G.id!=='trap'&&G.id!=='house')for(let i=0;i<4;i++)add('drums',G.id==='cinematic'?5:1,b+3+i*.25,.25,.5+i*.1);
-      if(G.id!=='piano'&&bar%8===0&&energy>1)add('drums',7,b,1,.6);
+      if(G.id!=='piano'&&energy>1&&(bar%8===0||(energy>2&&bar%4===0)))add('drums',7,b,1,.6);
     }
     return L;
   }
 
-  // Build a full arrangement: intro, the song, the song again with more energy, final chord.
+  // Build-up: hold the song's last chord (usually the dominant) under a snare roll that rises into the next section.
+  function addBuild(S,G,off,tracks,R){
+    const c=S.chords[S.chords.length-1],v=voicing(c);
+    v.forEach(p=>tracks.chords.push({p,t:off,d:3.95,v:.46}));
+    if(G.pad)v.forEach(p=>tracks.pad.push({p:p+12,t:off,d:3.95,v:.34}));
+    if(!G.kit)return;
+    const row=G.id==='cinematic'?5:G.id==='house'||G.id==='trap'?2:1;
+    for(let i=0;i<8;i++)tracks.drums.push({p:row,t:off+i*.5,d:.25,v:+(.35+i*.03).toFixed(3)});
+    for(let i=0;i<8;i++)tracks.drums.push({p:row,t:off+2+i*.25,d:.2,v:+(.55+i*.05).toFixed(3)});
+    tracks.drums.push({p:0,t:off,d:.5,v:.8});
+  }
+
+  // Full song: intro, verse, build, chorus, breakdown, build, final chorus, outro.
   function remix(songId,genreId,opts={}){
     const S=SONGS.find(s=>s.id===songId),G=GENRES.find(g=>g.id===genreId);if(!S||!G)throw Error('Unknown song or style');
     const R=rng((opts.seed||7)+songId.length*31+genreId.length*17),scale=G.scale;
     const tracks={lead:[],lead2:[],chords:[],bass:[],pad:[],arp:[],brass:[],drums:[]};
-    const L=S.len*scale,intro=G.id==='piano'?0:4;
-    // intro: first chord(s) only
-    if(intro){const c=S.chords[0],v=voicing(c);v.forEach(p=>tracks.chords.push({p,t:0,d:intro-.05,v:.45}));
-      if(G.kit)for(let i=0;i<8;i++)tracks.drums.push({p:3,t:2+i*.25,d:.2,v:.3+i*.04});}
-    buildPass(S,G,scale,intro,1,R,tracks);
-    buildPass(S,G,scale,intro+L,2,R,tracks);
-    const end=intro+2*L,fc=S.chords[S.chords.length-1],fv=voicing(fc);
-    fv.forEach(p=>tracks.chords.push({p,t:end,d:4,v:.5}));
-    if(G.bass)tracks.bass.push({p:fit(fc.bass,36),t:end,d:4,v:.7});
-    if(G.kit){tracks.drums.push({p:0,t:end,d:.5,v:.9},{p:7,t:end,d:2,v:.7});}
+    const L=S.len*scale,intro=4,brk=Math.min(L,16),sections=[];let t=0;
+    // intro: first chord, hats creeping in
+    {const c=S.chords[0],v=voicing(c);v.forEach(p=>tracks.chords.push({p,t:0,d:intro-.05,v:.45}));if(G.pad)v.forEach(p=>tracks.pad.push({p:p+12,t:0,d:intro-.05,v:.28}));
+      if(G.kit)for(let i=0;i<8;i++)tracks.drums.push({p:3,t:2+i*.25,d:.2,v:+(.3+i*.04).toFixed(3)});}
+    sections.push(['Intro',0,intro]);t=intro;
+    buildPass(S,G,scale,t,1,R,tracks);sections.push(['Verse',t,L]);t+=L;
+    addBuild(S,G,t,tracks,R);sections.push(['Build',t,4]);t+=4;
+    buildPass(S,G,scale,t,2,R,tracks);sections.push(['Chorus',t,L]);t+=L;
+    buildPass(S,G,scale,t,0,R,tracks,brk);sections.push(['Breakdown',t,brk]);t+=brk;
+    addBuild(S,G,t,tracks,R);sections.push(['Build',t,4]);t+=4;
+    buildPass(S,G,scale,t,3,R,tracks);sections.push(['Final chorus',t,L]);t+=L;
+    // outro: last chord rings, then the home chord
+    const fc=S.chords[S.chords.length-1],home=chord(['C','C#','D','Eb','E','F','F#','G','Ab','A','Bb','B'][S.key.root]+(S.key.scale==='Minor'?'m':''));
+    const endChord=fc.root===home.root?fc:home,fv=voicing(endChord);
+    fv.forEach(p=>tracks.chords.push({p,t,d:7.5,v:.5}));if(G.pad)fv.forEach(p=>tracks.pad.push({p:p+12,t,d:7.5,v:.3}));
+    if(G.bass)tracks.bass.push({p:fit(endChord.bass,36),t,d:6,v:.7});
+    if(G.kit)tracks.drums.push({p:0,t,d:.5,v:.9},{p:7,t,d:2,v:.7});
+    tracks.lead.push({p:fit(endChord.root,72),t,d:6,v:.5});
+    sections.push(['Outro',t,8]);const end=t;
     const bpm=G.bpm||Math.round(S.bpm*(G.tempo||1));
     const out=[];const T=(key,name,type,preset,extra={})=>{const notes=tracks[key];if(!notes||!notes.length||!preset)return;notes.sort((a,b)=>a.t-b.t||a.p-b.p);out.push({key,name,type,preset,notes,...extra});};
     T('drums','Drums','drums',G.kit,{vol:.82});
@@ -193,15 +226,23 @@
     T('brass','Brass','synth',G.brass,{vol:.45,pan:.2});
     T('lead','Melody','synth',G.lead,{vol:.8});
     T('lead2','Melody (octave)','synth',G.lead,{vol:.35,pan:.2});
-    return{title:`${S.title} (${G.name} remix)`,bpm,root:S.key.root,scale:S.key.scale,tracks:out,lengthBeats:end+4,song:S,genre:G};
+    return{title:`${S.title} (${G.name} remix)`,bpm,root:S.key.root,scale:S.key.scale,tracks:out,lengthBeats:end+8,sections:sections.map(([name,start,len])=>({name,start,len})),song:S,genre:G};
   }
 
+  // One clip per section (Intro, Verse, Chorus…) so the arrangement is visible on the timeline.
+  function regionsFor(t,r,len,makeId){
+    const secs=r.sections&&r.sections.length?r.sections:[{name:t.name,start:0,len}],out=[];
+    for(let i=0;i<secs.length;i++){const s=secs[i],end=i===secs.length-1?len:s.start+s.len,rl=end-s.start;
+      const notes=t.notes.filter(n=>n.t>=s.start-1e-6&&n.t<end-1e-6).map(n=>({...n,t:+(n.t-s.start).toFixed(4),d:+Math.min(n.d,rl-(n.t-s.start)).toFixed(4)})).filter(n=>n.d>0.01);
+      if(notes.length)out.push({id:makeId(),start:s.start,len:rl,name:s.name,notes,fadeIn:0,fadeOut:0,offset:0,gain:1});}
+    return out;
+  }
   // Turn a remix into Aura project data, given an id factory and colours.
   function toProject(r,makeId,colors){
     const len=Math.ceil(r.lengthBeats/4)*4;
     const tracks=r.tracks.map((t,i)=>({id:makeId(),type:t.type,name:t.name,color:colors[i%colors.length],vol:t.vol??.8,pan:t.pan||0,mute:false,solo:false,cutoff:1,rev:t.type==='drums'?.12:.3,dly:t.key==='lead'&&/lofi|synthwave|trap/.test(r.genre.id)?.18:0,
       preset:t.type==='synth'?t.preset:'Warm Keys',kit:t.type==='drums'?t.preset:'Studio 808',eq:{low:0,mid:0,high:0},compression:0,
-      regions:[{id:makeId(),start:0,len,name:t.name,notes:t.notes.filter(n=>n.t+n.d<=len),fadeIn:0,fadeOut:0,offset:0,gain:1}]}));
+      regions:regionsFor(t,r,len,makeId)}));
     return{title:r.title,bpm:r.bpm,root:r.root,scale:r.scale,bars:len/4,loop:{on:false,start:0,end:Math.min(16,len/4)},masterVol:.9,metro:false,groupMix:{},pos:0,tracks};
   }
 
@@ -217,11 +258,13 @@
   }
   function remixMelody(notes,root,scale,bpm,genreId,title){
     const start=Math.min(...notes.map(n=>n.t)),mel=notes.map(n=>({p:n.p,t:+(n.t-start).toFixed(4),d:n.d}));
-    const len=Math.ceil(Math.max(...mel.map(n=>n.t+n.d))/4)*4||4;
+    let len=Math.ceil(Math.max(...mel.map(n=>n.t+n.d))/4)*4||4;
+    // short hums (under 8 bars) are repeated so the song has a full-length verse and chorus
+    const unit=mel.slice(),ulen=len;while(len<32){for(const n of unit)mel.push({...n,t:+(n.t+len).toFixed(4)});len+=ulen;}
     const S={id:'own',title:String(title||'My melody').replace(/(\s\([^()]* remix\))+$/,''),composer:'You',key:{root,scale:scale==='Major'?'Major':'Minor'},bpm,melody:mel,chords:chords(inferChords(mel,root,scale==='Major'?'Major':'Minor',len)),len};
     SONGS.push(S);try{return remix('own',genreId);}finally{SONGS.pop();}
   }
 
-  const api={SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing,lead,detectKey,snapToScale};
+  const api={SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing,lead,detectKey,snapToScale,estimateTempo};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AuraSongbook=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

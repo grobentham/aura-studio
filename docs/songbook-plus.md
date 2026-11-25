@@ -7,6 +7,18 @@
 - **Remix your own melody** (Plus): select a melody clip, then pick a style. Chords are inferred per bar from the melody (diatonic I/IV/V preferred), and the result opens as a new project.
 - **Aura Plus** (**✦ Get Plus** in the header): Free vs Plus comparison and Stripe checkout.
 
+## Song structure
+Every remix (Songbook, hummed or own clip) is laid out as Intro → Verse → Build → Chorus → Breakdown → Build → Final chorus → Outro. Builds hold the last chord under a rising snare (or tom) roll. The breakdown drops drums and bass. The final chorus adds crashes every 4 bars. Each track is split into one clip per section, so the structure shows on the timeline. Hums shorter than 8 bars are repeated to fill a verse.
+
+## After generating
+A "Your song is ready" panel offers Play, Sing over it (opens the Record panel), Keep editing, and Try another style (every style becomes its own project, so versions can be compared).
+
+## Hum review and tempo
+After humming, a review screen shows the notes on a mini piano roll with the key and tempo. It has Play my notes, Hum again, and a style switcher before building. With the click track off, the tempo (70–140 BPM) is estimated from note onsets (`estimateTempo`) and the grid is aligned to the first beat.
+
+## Feedback
+Start screen, the ready panel and Actions → "Send feedback" open a form. It opens a prefilled GitHub issue (label `feedback`) or copies the text. Only the typed text, project name and browser are included, never audio or files.
+
 ## Beta mode
 `PLAN.beta` in `plus-core.js` is `true`: every feature is free, the header shows **✦ Free beta**, and checkout is hidden. Set it to `false` when you're ready to charge.
 

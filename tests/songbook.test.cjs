@@ -25,7 +25,7 @@ test('remix is deterministic for a seed and keeps the melody pitches',()=>{
   const a=SB.remix('ode','house',{seed:3}),b=SB.remix('ode','house',{seed:3});
   assert.deepEqual(a.tracks,b.tracks);
   const mel=a.tracks.find(t=>t.key==='lead').notes,src=SB.SONGS.find(s=>s.id==='ode').melody;
-  assert.equal(mel.length,src.length*2);
+  assert.ok(mel.length>=src.length*3);
   const shift=mel[0].p-src[0].p;assert.equal(shift%12,0);
   for(let i=0;i<src.length;i++)assert.equal(mel[i].p-src[i].p,shift);
 });
@@ -78,3 +78,19 @@ test('voice leading keeps chord changes smooth and in range',()=>{
 });
 
 test('beta flag makes everything available',()=>{assert.equal(typeof PLUS.PLAN.beta,'boolean');});
+
+test('remixes have a full song structure and one clip per section',()=>{
+  const r=SB.remix('jingle','house');assert.deepEqual(r.sections.map(s=>s.name),['Intro','Verse','Build','Chorus','Breakdown','Build','Final chorus','Outro']);
+  for(let i=1;i<r.sections.length;i++)assert.equal(r.sections[i].start,r.sections[i-1].start+r.sections[i-1].len);
+  const p=SB.toProject(r,ids(),['#fff']),drums=p.tracks.find(t=>t.type==='drums');
+  assert.ok(drums.regions.some(x=>x.name==='Chorus')&&drums.regions.some(x=>x.name==='Build'));
+  assert.ok(!drums.regions.some(x=>x.name==='Breakdown'),'breakdown has no drums');
+  const total=r.tracks.reduce((a,t)=>a+t.notes.length,0),kept=p.tracks.reduce((a,t)=>a+t.regions.reduce((b,x)=>b+x.notes.length,0),0);assert.equal(kept,total);
+  const secs=r.lengthBeats*60/r.bpm;assert.ok(secs>90&&secs<300,'song length '+secs);
+});
+
+test('short hummed melodies are repeated to a full verse',()=>{
+  const four=[{p:60,t:0,d:1},{p:62,t:1,d:1},{p:64,t:2,d:1},{p:65,t:3,d:1},{p:67,t:4,d:2},{p:64,t:6,d:2}];
+  const r=SB.remixMelody(four,0,'Major',100,'lofi','Hum');const verse=r.sections.find(s=>s.name==='Verse');
+  assert.equal(verse.len,32);assert.ok(r.lengthBeats*60/r.bpm>60);
+});

@@ -39,3 +39,12 @@
 .hum-big{font-size:56px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
 .hum-meter{width:min(360px,80%);height:10px;border-radius:6px;background:#2a2f3a;overflow:hidden}
 .hum-meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5fdba7,var(--accent));transition:width .06s}
+
+.hum-found{font-weight:600;color:#f3dcaa;margin:6px 0 12px}
+.hum-roll{width:100%;height:170px;background:#12151b;border:1px solid var(--line);border-radius:10px;padding:8px;box-sizing:border-box}
+.hum-roll rect{fill:var(--accent)}.hum-roll .hum-grid{stroke:#2b303d;stroke-width:1}
+.ready-sections{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 6px}
+.ready-sec{font-size:11px;padding:4px 9px;border-radius:999px;background:#2a2f3a;color:#c9cfdb}
+.ready-sec.hot{background:#3a2e18;color:var(--accent)}
+.linkish{background:none;border:0;padding:0;color:var(--accent);text-decoration:underline;cursor:pointer;font-size:12px;min-height:0}
+#feedbackText{width:100%;box-sizing:border-box;padding:10px;border-radius:9px;background:#12151b;border:1px solid var(--line);color:inherit;font:inherit;resize:vertical}
