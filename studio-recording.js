@@ -10,6 +10,8 @@ recordingPrefs.monitor='off'; // Monitoring always requires a deliberate choice 
 function storeRecordingPrefs(){try{localStorage.setItem('aura-recording-prefs',JSON.stringify(recordingPrefs));}catch(e){}}
 function recordingBusy(){return inputCapture.recording||inputCapture.pending||countIn.active;}
 function updateRecordingQuickControls(){
+  // Keep the Record panel's main button in step with the take (it is drawn during the count-in and would otherwise stay disabled).
+  const main=$('#recordInput');if(main){main.disabled=!inputCapture.connected||inputCapture.pending||(countIn.active&&!inputCapture.recording);main.textContent=inputCapture.recording?'■ Finish recording':'● Record audio';}
   let bar=$('#recordingQuickControls');if(!bar){bar=h('div',{id:'recordingQuickControls'});$('#libContent').insertAdjacentElement('beforebegin',bar);}bar.hidden=libraryTab!=='record';if(bar.hidden)return;
   bar.replaceChildren(h('span',{},inputCapture.pending?'Saving completed audio…':inputCapture.recording?'● Recording':countIn.active?'Count-in…':inputCapture.connected?'Input ready':'Connect your input below'),h('button',{id:'quickRecordInput',disabled:inputCapture.pending||!inputCapture.connected,onclick:()=>inputCapture.recording?finishAudioTake():startAudioTake()},inputCapture.recording?'■ Finish':countIn.active?'Cancel':'● Record audio'));
 }
