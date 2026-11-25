@@ -1,0 +1,23 @@
+# Start screen, Songbook + Remix, Aura Plus
+
+## What users see
+- **Start screen** (first visit, or **⌂ Start** in the header, or Actions → "Start screen"): Learn & remix a song · Make a beat · Record a song · Remix your own melody · Open a project.
+- **Songbook** (**♫ Songbook** in the session bar, or Actions → "Songbook"): 10 public-domain songs. Pick a style and Aura builds a full, editable arrangement as a new project, so the current project is never changed.
+- **Remix your own melody** (Plus): select a melody clip, then pick a style. Chords are inferred per bar from the melody (diatonic I/IV/V preferred), and the result opens as a new project.
+- **Aura Plus** (**✦ Get Plus** in the header): Free vs Plus comparison and Stripe checkout.
+
+## Free vs Plus
+Free: everything that existed before (recording, editing, mixing, every export), the whole Songbook, Lo-fi and Piano styles.
+Plus: Trap, House, Synthwave, Cinematic, Rock and Reggaeton styles, plus remixing your own melodies.
+
+## Turning on payments (Stripe Payment Link)
+1. In Stripe → Product catalogue, create a product "Aura Plus" with a recurring price (default copy says US$4.99/month; change `priceLabel` in `plus-core.js` if you pick something else).
+2. Create a **Payment Link** for it. Under **After payment**, choose "Don't show confirmation page" and redirect to
+   `https://grobentham.github.io/aura-studio/?plus=success&session_id={CHECKOUT_SESSION_ID}`
+3. Paste the link (`https://buy.stripe.com/...`) into `paymentLink` in `plus-core.js` and bump the `?v=` on `plus-core.js` in `index.html` and `sw.js`.
+Until `paymentLink` is set, the button reads "Checkout opening soon" and is disabled.
+
+## Known limitations (be honest about these)
+- There is no server, so the unlock is stored in the buyer's browser (`aura-plus-v1`). It does not move to other browsers or devices, and someone who reads the code can unlock it without paying. A small verification endpoint (Stripe webhook plus license check, e.g. a Cloudflare Worker) is the next step before scaling.
+- A subscription cancelled in Stripe is not detected by the app for the same reason.
+- Remix arrangements are rule-based (patterns, voicings, inferred chords), not AI generation. Listening quality has not been evaluated with users.
