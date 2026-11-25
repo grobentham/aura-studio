@@ -16,6 +16,9 @@ A "Your song is ready" panel offers Play, Sing over it (opens the Record panel),
 ## Hum review and tempo
 After humming, a review screen shows the notes on a mini piano roll with the key and tempo. It has Play my notes, Hum again, and a style switcher before building. With the click track off, the tempo (70–140 BPM) is estimated from note onsets (`estimateTempo`) and the grid is aligned to the first beat.
 
+## Tutorial
+`studio-tour.js` runs a 2-minute guided tour that spotlights the real controls: Songbook → Play → sections on the timeline → track headers → Mixer → Hum → Export → Start. Each step can be done by the user, or with the orange button that does it for them ("Make it for me" creates an Ode to Joy lo-fi demo as a new project). It's offered as a banner on the Start screen, in Quick guide, and in Actions → "Tutorial". It works with the keyboard (←/→, Esc), and its layout was checked at 1440×900 and 390×844.
+
 ## Feedback
 Start screen, the ready panel and Actions → "Send feedback" open a form. It opens a prefilled GitHub issue (label `feedback`) or copies the text. Only the typed text, project name and browser are included, never audio or files.
 
