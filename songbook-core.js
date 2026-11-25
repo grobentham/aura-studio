@@ -73,6 +73,81 @@
        G#4 t,C5 t,F#5 t,G#4 t,C#5 t,E5 t,G#4 t,C#5 t,D#5 t,F#4 t,C5 t,D#5 t
        r h.,G#5 e.,G#5 s | G#5 h.,G#5 e.,G#5 s | G#5 h,A5 h | G#5 h,F#5,B5 | E5 w`,
       `C#m 4,C#m/B 4,A 2,D/F# 2,G#7 4, C#m 4,G#7 4,C#m 2,F#m 2,E/B 2,B7 2,E 4`),
+    song('entertainer','The Entertainer','Scott Joplin',1902,{root:0,scale:'Major'},140,
+      `r h.,D4 e,D#4 e | E4 e,C5 q,E4 e,C5 q,E4 e,C5 e | C5 q,C5 e,D5 e,D#5 e,E5 e,C5 e,D5 e | E5 q,B4 e,D5 q,C5 q.
+       r h.,D4 e,D#4 e | E4 e,C5 q,E4 e,C5 q,E4 e,C5 e | C5 q,A4 e,G4 e,F#4 e,A4 e,C5 e,E5 e | D5 e,C5 e,A4 e,D5 h,r e
+       r h.,D4 e,D#4 e | E4 e,C5 q,E4 e,C5 q,E4 e,C5 e | C5 q,C5 e,D5 e,D#5 e,E5 e,C5 e,D5 e | E5 q,B4 e,D5 q,C5 q.`,
+      `C 4,C 4,C 4,G7 2,C 2, C 4,C 4,D7 4,D7 2,G 2, C 4,C 4,C 4,G7 2,C 2`),
+    song('spring','Spring (The Four Seasons)','Antonio Vivaldi',1725,{root:4,scale:'Major'},100,
+      `r h.,E4 | G#4 e,G#4 e,G#4 e,F#4 s,E4 s,B4 q.,B4 s,A4 s | G#4 e,G#4 e,G#4 e,F#4 s,E4 s,B4 q.,B4 s,A4 s | G#4 e,A4 e,B4 e,A4 e,G#4 e,F#4 e,D#4 e,B3 e
+       E4 h.,E4 | G#4 e,G#4 e,G#4 e,F#4 s,E4 s,B4 q.,B4 s,A4 s | G#4 e,G#4 e,G#4 e,F#4 s,E4 s,B4 q.,B4 s,A4 s | G#4 e,A4 e,B4 e,A4 e,G#4 e,F#4 e,D#4 e,B3 e | E4 w`,
+      `E 4,E 4,E 4,E 2,B 2,E 4,E 4,E 4,E 2,B 2,E 4`),
+    song('williamtell','William Tell Overture (Finale)','Gioachino Rossini',1829,{root:9,scale:'Major'},132,
+      `E4 s,E4 s,E4 e,E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,B4 e,C#5 e | E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,C#5 s,C#5 s,B4 e,G#4 e,E4 e
+       E4 s,E4 s,E4 e,E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,B4 e,C#5 e | C#5 s,C#5 s,B4 e,E4 e,G#4 e,A4 h
+       E4 s,E4 s,E4 e,E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,B4 e,C#5 e | E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,C#5 s,C#5 s,B4 e,G#4 e,E4 e
+       E4 s,E4 s,E4 e,E4 s,E4 s,E4 e,E4 s,E4 s,A4 e,B4 e,C#5 e | C#5 s,C#5 s,B4 e,E4 e,G#4 e,A4 h`,
+      `A 4,E 4,A 4,E 2,A 2, A 4,E 4,A 4,E 2,A 2`),
+    song('turkish','Turkish March (Rondo alla Turca)','W. A. Mozart',1783,{root:9,scale:'Minor'},120,
+      `B4 s,A4 s,G#4 s,A4 s,C5 q,D5 s,C5 s,B4 s,C5 s,E5 q | F5 s,E5 s,D#5 s,E5 s,B5 s,A5 s,G#5 s,A5 s,B5 s,A5 s,G#5 s,A5 s,C6 q
+       B4 s,A4 s,G#4 s,A4 s,C5 q,D5 s,C5 s,B4 s,C5 s,E5 q | F5 s,E5 s,D#5 s,E5 s,B5 s,A5 s,G#5 s,A5 s,B5 s,A5 s,G#5 s,A5 s,C6 q
+       B4 s,A4 s,G#4 s,A4 s,C5 q,D5 s,C5 s,B4 s,C5 s,E5 q | F5 s,E5 s,D#5 s,E5 s,B5 s,A5 s,G#5 s,A5 s,B5 s,A5 s,G#5 s,A5 s,C6 q
+       B4 s,A4 s,G#4 s,A4 s,C5 q,D5 s,C5 s,B4 s,C5 s,E5 q | A5 e,B5 e,C6 e,B5 e,A5 e,G#5 e,A5 q`,
+      `Am 4,E 2,Am 2,Am 4,E 2,Am 2,Am 4,E 2,Am 2,Am 4,Am 2,E 1,Am 1`),
+    song('habanera','Habanera (Carmen)','Georges Bizet',1875,{root:2,scale:'Minor'},108,
+      `D5 q.,C#5 e,C5 e,C5 e,B4 q | Bb4 q.,A4 e,Ab4 e,Ab4 e,G4 q | F4 e,F4 e,E4 e,F4 e,G4 e,F4 e,E4 q | D4 h,r h
+       D5 q.,C#5 e,C5 e,C5 e,B4 q | Bb4 q.,A4 e,Ab4 e,Ab4 e,G4 q | F4 e,F4 e,E4 e,F4 e,G4 e,F4 e,E4 q | D4 w`,
+      `Dm 4,Dm 4,A7 4,Dm 4,Dm 4,Dm 4,A7 4,Dm 4`),
+    song('bride','Here Comes the Bride (Bridal Chorus)','Richard Wagner',1850,{root:10,scale:'Major'},84,
+      `r h.,F4 | Bb4 q.,Bb4 e,Bb4 h | F4,C5 q.,A4 e,Bb4 | F4,Bb4 q.,Eb5 e,Eb5 | D5,C5,Bb4,A4 | Bb4,C5 h.
+       r h.,F4 | Bb4 q.,Bb4 e,Bb4 h | F4,C5 q.,A4 e,Bb4 | Bb4 w`,
+      `Bb 4,Bb 4,F 3,Bb 1,Bb 2,Eb 2,Bb 2,F 2,Bb 1,F 3,F 4,Bb 4,F 3,Bb 1,Bb 4`),
+    song('deckthehalls','Deck the Halls','Traditional Welsh',1862,{root:5,scale:'Major'},112,
+      `C5 q.,Bb4 e,A4,G4 | F4,G4,A4,F4 | G4 e,A4 e,Bb4 e,G4 e,A4 q.,G4 e | F4,E4,F4 h
+       C5 q.,Bb4 e,A4,G4 | F4,G4,A4,F4 | G4 e,A4 e,Bb4 e,G4 e,A4 q.,G4 e | F4,E4,F4 h
+       G4 q.,A4 e,Bb4,G4 | A4 q.,Bb4 e,C5,G4 | A4 e,B4 e,C5,D5 e,E5 e,F5 | E5,D5,C5 h
+       C5 q.,Bb4 e,A4,G4 | F4,G4,A4,F4 | G4 e,A4 e,Bb4 e,G4 e,A4 q.,G4 e | F4,E4,F4 h`,
+      `F 4,F 4,C 2,F 1,C 1,F 1,C 1,F 2, F 4,F 4,C 2,F 1,C 1,F 1,C 1,F 2, C 4,F 2,C 2,F 2,Bb 2,C 4, F 4,F 4,C 2,F 1,C 1,F 1,C 1,F 2`),
+    song('susanna','Oh! Susanna','Stephen Foster',1848,{root:0,scale:'Major'},112,
+      `r h.,C4 e,D4 e | E4 e,G4 e,G4 e.,A4 s,G4 e,E4 e,C4 e.,D4 s | E4 e,E4 e,D4 e,C4 e,D4,C4 e,D4 e | E4 e,G4 e,G4 e.,A4 s,G4 e,E4 e,C4 e.,D4 s | E4 e,E4 e,D4 e,D4 e,C4 h
+       F4,F4,A4 h | A4,G4,G4,E4 | C4,D4 h. | E4 e,G4 e,G4 e.,A4 s,G4 e,E4 e,C4 e.,D4 s | E4 e,E4 e,D4 e,D4 e,C4 h`,
+      `C 4,C 4,G 4,C 4,G 2,C 2,F 4,C 4,G 4,C 4,G 2,C 2`),
+  ];
+
+  // Original hooks for the song starters (written for Aura; not shown in the Songbook list).
+  // Most recognisable songs first in the Songbook list.
+  const FEATURED=['ode','canon','entertainer','turkish','williamtell','spring','habanera','mountain','moonlight','bride','jingle','deckthehalls','mozart','saints','twinkle','susanna','frere','auld'];
+  SONGS.sort((a,b)=>(FEATURED.indexOf(a.id)+1||99)-(FEATURED.indexOf(b.id)+1||99));
+
+  const STARTER_SONGS=[
+    song('st-lofi','Lo-fi Sunday','Aura',2026,{root:5,scale:'Major'},82,
+      `A4,C5 e,A4 e,G4 q.,F4 e | E4 h,r,G4 e,A4 e | F4,A4 e,D5 e,C5,A4 | G4 h.,r
+       A4,C5 e,A4 e,G4 q.,F4 e | E4 h,r,G4 e,A4 e | D5,C5 e,A4 e,G4,E4 | F4 w`,
+      `F 4,Em 4,Dm 4,C 4,F 4,Em 4,Dm 2,C 2,F 4`),
+    song('st-trap','Trap Night','Aura',2026,{root:0,scale:'Minor'},140,
+      `G5 e,G5 e,Eb5,r e,D5 e,C5 | Eb5 e,F5 e,G5,Bb5 q.,G5 e | Ab5,G5 e,F5 e,Eb5,D5 | D5 h,r h
+       G5 e,G5 e,Eb5,r e,D5 e,C5 | Eb5 e,F5 e,G5,Bb5 q.,G5 e | Ab5,Bb5 e,Ab5 e,G5,F5 | G5 h,r h`,
+      `Cm 4,Ab 4,Fm 4,G 4,Cm 4,Ab 4,Fm 4,G 4`),
+    song('st-house','Deep House','Aura',2026,{root:9,scale:'Minor'},122,
+      `r e,E5 e,r e,E5 e,G5 e,E5 e,D5 e,C5 e | r e,C5 e,r e,C5 e,D5 e,E5 e,A4 | r e,A4 e,r e,C5 e,E5 e,G5 e,E5 e,C5 e | D5 q.,C5 e,B4 h
+       r e,E5 e,r e,E5 e,G5 e,E5 e,D5 e,C5 e | r e,C5 e,r e,C5 e,D5 e,E5 e,A4 | r e,A4 e,r e,C5 e,E5 e,G5 e,E5 e,C5 e | B4 q.,A4 e,A4 h`,
+      `Am 4,F 4,C 4,G 4,Am 4,F 4,C 4,G 4`),
+    song('st-synth','Night Drive','Aura',2026,{root:4,scale:'Minor'},104,
+      `B4 q.,E5 e,G5,F#5 | E5 q.,D5 e,C5 h | B4 q.,D5 e,G5,A5 | A5 h.,F#5
+       B5 q.,A5 e,G5,F#5 | E5 q.,G5 e,E5 h | D5 q.,B4 e,D5,G5 | F#5 h.,r`,
+      `Em 4,C 4,G 4,D 4,Em 4,C 4,G 4,D 4`),
+    song('st-acoustic','Acoustic Morning','Aura',2026,{root:7,scale:'Major'},100,
+      `G4 e,B4 e,D5,D5 e,E5 e,D5 | F#4 e,A4 e,D5,A4 h | G4 e,B4 e,E5,E5 e,F#5 e,G5 | E5 h.,D5
+       B4,D5 e,B4 e,G4,B4 | A4,F#4 e,A4 e,D5 h | B4,G4,E5,C5 | A4 h,G4 h`,
+      `G 4,D 4,Em 4,C 4,G 4,D 4,Em 2,C 2,D 2,G 2`),
+    song('st-epic','Epic Rise','Aura',2026,{root:2,scale:'Minor'},112,
+      `D5 h,A4,D5 | F5 h.,E5 e,D5 e | C5 h,A4,C5 | E5 h.,D5 e,C5 e
+       D5,F5,A5 h | G5 q.,F5 e,D5 h | E5,G5,C#5 h | D5 w`,
+      `Dm 4,Bb 4,F 4,C 4,Dm 4,Bb 4,C 2,A 2,Dm 4`),
+    song('st-reggaeton','Summer Heat','Aura',2026,{root:11,scale:'Minor'},96,
+      `F#5 e,F#5 e,r e,F#5 e,E5 e,D5 e,E5 | D5 e,B4 e,r e,B4 e,D5,B4 | A4 e,A4 e,r e,A4 e,D5 e,F#5 e,A5 | G5 q.,F#5 e,E5 h
+       F#5 e,F#5 e,r e,F#5 e,E5 e,D5 e,E5 | D5 e,B4 e,r e,B4 e,D5,B4 | A4 e,A4 e,r e,A4 e,D5 e,F#5 e,A5 | C#5 q.,D5 e,E5 h`,
+      `Bm 4,G 4,D 4,A 4,Bm 4,G 4,D 4,A 4`),
   ];
 
   // 16-step drum patterns. rows: 0 kick 1 snare 2 clap 3 closed hat 4 open hat 5 tom 6 rim 7 crash
@@ -199,7 +274,7 @@
 
   // Full song: intro, verse, build, chorus, breakdown, build, final chorus, outro.
   function remix(songId,genreId,opts={}){
-    const S=SONGS.find(s=>s.id===songId),G=GENRES.find(g=>g.id===genreId);if(!S||!G)throw Error('Unknown song or style');
+    const S=SONGS.find(s=>s.id===songId)||STARTER_SONGS.find(s=>s.id===songId),G=GENRES.find(g=>g.id===genreId);if(!S||!G)throw Error('Unknown song or style');
     const R=rng((opts.seed||7)+songId.length*31+genreId.length*17),scale=G.scale;
     const tracks={lead:[],lead2:[],chords:[],bass:[],pad:[],arp:[],brass:[],drums:[]};
     const L=S.len*scale,intro=4,brk=Math.min(L,16),sections=[];let t=0;
@@ -270,6 +345,6 @@
     SONGS.push(S);try{return remix('own',genreId);}finally{SONGS.pop();}
   }
 
-  const api={SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing,lead,detectKey,snapToScale,estimateTempo};
+  const api={SONGS,STARTER_SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing,lead,detectKey,snapToScale,estimateTempo};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AuraSongbook=api;
 })(typeof globalThis!=='undefined'?globalThis:this);
