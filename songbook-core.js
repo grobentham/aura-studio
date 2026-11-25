@@ -84,17 +84,19 @@
     rock:{sw:0,p:{0:'x.......x.x.....',1:'....x.......x...',3:'x.x.x.x.x.x.x.x.'}},
     reggaeton:{sw:0,p:{0:'x...x...x...x...',1:'...x..x....x..x.',3:'x.x.x.x.x.x.x.x.'}},
     cinematic:{sw:0,p:{0:'x.......x.......',5:'......x.....x.x.'}},
+    acoustic:{sw:.03,p:{0:'x.......x.......',6:'....x.......x...',3:'x.x.x.x.x.x.x.x.'}},
     piano:{sw:0,p:{}},
   };
 
   const GENRES=[
-    {id:'lofi',name:'Lo-fi',plus:false,bpm:82,scale:1,kit:'Boom Bap',lead:'Stage EP',chords:'Dynamic Upright',bass:'Finger Bass',pad:'String Ensemble',chordStyle:'lofi',bassStyle:'roots',leadOct:0,tag:'Dusty keys, lazy swing'},
-    {id:'piano',name:'Piano',plus:false,bpm:0,tempo:.9,scale:1,kit:null,lead:'Dynamic Upright',chords:'Dynamic Upright',bass:null,pad:'String Ensemble',chordStyle:'arp',bassStyle:null,leadOct:0,tag:'Solo piano with soft strings'},
+    {id:'lofi',leadRange:[36,88],name:'Lo-fi',plus:false,bpm:82,scale:1,kit:'Boom Bap',lead:'Stage EP',chords:'Dynamic Upright',bass:'Finger Bass',pad:'String Ensemble',chordStyle:'lofi',bassStyle:'roots',leadOct:0,tag:'Dusty keys, lazy swing'},
+    {id:'piano',leadRange:[22,104],name:'Piano',plus:false,bpm:0,tempo:.9,scale:1,kit:null,lead:'Concert Grand',chords:'Concert Grand',bass:null,pad:'String Ensemble',chordStyle:'arp',bassStyle:null,leadOct:0,tag:'Solo piano with soft strings'},
     {id:'trap',name:'Trap',plus:true,bpm:140,scale:2,kit:'Studio 808',lead:'Crystal Bell',chords:'Dream Pad',bass:'Sub 808',pad:null,chordStyle:'hold',bassStyle:'808',leadOct:0,tag:'808s, hi-hat rolls, bells'},
     {id:'house',name:'House',plus:true,bpm:122,scale:1,kit:'Electro',lead:'Glass Pluck',chords:'Stage EP',bass:'Fat Bass',pad:'Dream Pad',chordStyle:'offbeat',bassStyle:'offbeat',leadOct:0,tag:'Four on the floor, offbeat bass'},
     {id:'synthwave',name:'Synthwave',plus:true,bpm:104,scale:1,kit:'Electro',lead:'Super Lead',chords:'Dream Pad',bass:'Fat Bass',pad:null,arp:'Glass Pluck',chordStyle:'hold',bassStyle:'octaves',leadOct:0,tag:'Neon arps and octave bass'},
-    {id:'cinematic',name:'Cinematic',plus:true,bpm:0,tempo:.8,scale:1,kit:'Live Room Kit',lead:'Natural Violin',chords:'String Ensemble',bass:'Bowed Cellos',pad:null,brass:'Studio Trumpet',chordStyle:'hold',bassStyle:'ostinato',leadOct:0,tag:'Strings, brass and big drums'},
-    {id:'rock',name:'Rock',plus:true,bpm:128,scale:1,kit:'Punch Rock',lead:'Clean Electric',chords:'Clean Electric',bass:'Picked Bass',pad:'Drawbar Organ',chordStyle:'eighths',bassStyle:'eighths',leadOct:0,tag:'Driving guitars and live drums'},
+    {id:'cinematic',leadRange:[55,96],name:'Cinematic',plus:true,bpm:0,tempo:.8,scale:1,kit:'Orchestral Percussion',lead:'Natural Violin',chords:'String Ensemble',bass:'Bowed Cellos',pad:null,brass:'French Horn',chordStyle:'hold',bassStyle:'ostinato',leadOct:0,tag:'Strings, brass and big drums'},
+    {id:'rock',leadRange:[40,88],name:'Rock',plus:true,bpm:128,scale:1,kit:'Punch Rock',lead:'Clean Electric',chords:'Clean Electric',bass:'Picked Bass',pad:'Drawbar Organ',chordStyle:'eighths',bassStyle:'eighths',leadOct:0,tag:'Driving guitars and live drums'},
+    {id:'acoustic',leadRange:[50,86],name:'Acoustic',plus:true,bpm:0,tempo:.95,scale:1,kit:'Live Room Kit',lead:'Clarinet',chords:'Expressive Nylon',bass:'Upright Bass',pad:null,chordStyle:'arp',bassStyle:'roots',leadOct:0,tag:'Nylon guitar, upright bass, clarinet'},
     {id:'reggaeton',name:'Reggaeton',plus:true,bpm:96,scale:1,kit:'Electro',lead:'Glass Pluck',chords:'Stage EP',bass:'Sub 808',pad:'Dream Pad',chordStyle:'dembow',bassStyle:'roots',leadOct:0,tag:'Dembow groove, warm keys'},
   ];
 
@@ -139,7 +141,10 @@
     const add=(k,p,t,d,v)=>{if(t<0||d<=0||t>=L)return;d=Math.min(d,L-t+.5);if(energy===0&&(k==='drums'||k==='bass'||k==='arp'||k==='brass'||k==='lead2'))return;tracks[k].push({p,t:+(off+t).toFixed(4),d:+d.toFixed(4),v:+clamp(v+(R()-.5)*.06,.05,1).toFixed(3)});};
     // lead (melody) — auto-octave so it sits around C5..C6
     const ps=song.melody.map(n=>n.p).sort((a,b)=>a-b),med=ps[ps.length>>1];let shift=Math.round((76-med)/12)*12+G.leadOct*12;
-    for(const n of song.melody){add('lead',n.p+shift,n.t*scale,Math.max(.1,n.d*scale*.95),energy===0?.5:.7+(energy>1?.06:0));if(energy>1&&G.id!=='piano'){const q=n.p+shift-12>=55?n.p+shift-12:n.p+shift+12<=88?n.p+shift+12:null;if(q!=null)add('lead2',q,n.t*scale,Math.max(.1,n.d*scale*.95),.4);}}
+    // keep the melody inside the lead instrument's recorded range when it has one
+    const[rlo,rhi]=G.leadRange||[0,127];while(ps[ps.length-1]+shift>rhi+2&&ps[0]+shift-12>=rlo-2)shift-=12;while(ps[0]+shift<rlo-2&&ps[ps.length-1]+shift+12<=rhi+2)shift+=12;
+    const l2lo=Math.max(55,rlo),l2hi=Math.min(88,rhi);
+    for(const n of song.melody){add('lead',n.p+shift,n.t*scale,Math.max(.1,n.d*scale*.95),energy===0?.5:.7+(energy>1?.06:0));if(energy>1&&G.id!=='piano'){const q=n.p+shift-12>=l2lo?n.p+shift-12:n.p+shift+12<=l2hi?n.p+shift+12:null;if(q!=null)add('lead2',q,n.t*scale,Math.max(.1,n.d*scale*.95),.4);}}
     // harmony
     let prevV=null;
     for(const c of ch){
@@ -162,7 +167,7 @@
         // pads / arps / brass for the second, fuller pass
         if(G.pad&&(energy>1||energy===0))v.forEach(p=>add('pad',p+12,t,d-.05,energy===0?.36:.3));
         if(G.arp){const a=[v[0],v[1],v[2],v[0]+12];for(let k=0,i=0;k<d;k+=.25,i++)add('arp',a[i%4]+12,t+k,.22,energy>1?.42:.32);}
-        if(G.brass&&energy>1)[v[0],v[2]].forEach(p=>add('brass',p,t,d-.1,.4));
+        if(G.brass&&energy>1)[v[0],v[2]].forEach(p=>add('brass',p-12,t,d-.1,.42));
       }
     }
     // drums, bar by bar on the 4/4 grid of the scaled song
