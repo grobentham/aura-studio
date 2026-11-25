@@ -29,7 +29,7 @@ document.querySelector('#run').onclick=async()=>{
         click('mix');await tick();check(shown($('#mixer'))&&shown($('#trackFx')),width+'px: mixer and effects remain reachable');
         if(width<=800){$('#bLibrary').click();await tick();check(shown($('#library'))&&shown($('#libraryBackdrop'))&&$('#library').getBoundingClientRect().right<=innerWidth,width+'px: mobile sound browser fits with a dismissible backdrop');$('#libraryBackdrop').click();check(!document.body.classList.contains('library-open'),width+'px: backdrop closes the mobile sound browser');}
       }
-      check($('#welcomeSongGuide')&&$('#projectSongGuide')&&$('#quickSongGuide'),'Song guide appears in onboarding, Projects and Quick guide');
+      check($('#welcomeSongGuide')&&$('#projectSongGuide')&&$('#quickSongGuide')&&$('#openSongBacking')&&$('#openSongShort'),'Song guide appears in onboarding, Projects and Quick guide');
       $('#railHelp').click();$('#quickSongGuide').click();await tick();
       const guide=$('#songGuideModal'),guideCard=guide.querySelector('.card');
       check(shown(guideCard)&&guideCard.scrollWidth<=guideCard.clientWidth+1&&guideCard.getBoundingClientRect().right<=innerWidth,'Song guide fits the 360px workspace');
@@ -42,9 +42,9 @@ document.querySelector('#run').onclick=async()=>{
       $('#openSongPractice').click();
       for(let i=0;i<50&&!guide.hidden;i++)await tick();
       testIds.add(activeProjectId);
-      check(guide.hidden&&activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.tracks.length===4,'The song lesson opens a separate editable project in Arrange');
+      check(guide.hidden&&activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.tracks.length===5&&songEnd()===416,'The song lesson opens a separate editable project in Arrange');
       const saved=await projectRead('projects',activeProjectId),unchanged=await projectRead('projects',previousId);
-      check(saved.data.title==='My Moon My Man · Instrumental study'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening the song study preserves the previous session and saves the new one');
+      check(saved.data.title==='My Moon My Man · Full melodic study'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening the song study preserves the previous session and saves the new one');
       return results.join('\\n')+'\\nALL INTERFACE CHECKS PASSED';
     }finally{
       stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}activeProjectId=initialId;applyProject(initial);clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));
