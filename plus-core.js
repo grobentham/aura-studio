@@ -3,6 +3,8 @@
   'use strict';
   const PLAN={
     name:'Aura Plus',
+    // While true, every feature is free and the Plus checkout is hidden (public beta).
+    beta:true,
     // Paste your Stripe Payment Link here (https://buy.stripe.com/...). Leave empty to show "checkout opening soon".
     paymentLink:'',
     priceLabel:'US$4.99 / month',

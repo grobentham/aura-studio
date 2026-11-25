@@ -102,6 +102,23 @@
   const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
   function fit(pc,lo){let p=pc;while(p<lo)p+=12;while(p>=lo+12)p-=12;return p;}
   function voicing(ch,lo=55){return ch.iv.map(i=>fit(ch.root+i,lo)).sort((a,b)=>a-b);}
+  // pick the inversion (within lo..lo+16) that moves least from the previous chord
+  function lead(ch,prev,lo=55){const base=voicing(ch,lo);if(!prev)return base;let best=base,score=Infinity;
+    for(let inv=0;inv<base.length;inv++)for(const o of [-12,0,12]){const v=base.map((p,i)=>i<inv?p+12:p).map(p=>p+o).sort((a,b)=>a-b);
+      if(v[0]<lo-3||v[v.length-1]>lo+19)continue;const c=v.reduce((a,p,i)=>a+Math.abs(p-(prev[Math.min(i,prev.length-1)])),0);if(c<score){score=c;best=v;}}
+    return best;}
+  // Krumhansl-Schmuckler key estimate from note durations
+  const KMAJ=[6.35,2.23,3.48,2.33,4.38,4.09,2.52,5.19,2.39,3.66,2.29,2.88],KMIN=[6.33,2.68,3.52,5.38,2.6,3.53,2.54,4.75,3.98,2.69,3.34,3.17];
+  function detectKey(notes){const h=new Array(12).fill(0);for(const n of notes)h[((n.p%12)+12)%12]+=n.d;let best={root:0,scale:'Major',score:-Infinity};
+    const corr=(prof,r)=>{const x=h.map((_,i)=>h[(i+r)%12]),mx=x.reduce((a,b)=>a+b)/12,my=prof.reduce((a,b)=>a+b)/12;let num=0,dx=0,dy=0;for(let i=0;i<12;i++){num+=(x[i]-mx)*(prof[i]-my);dx+=(x[i]-mx)**2;dy+=(prof[i]-my)**2;}return dx&&dy?num/Math.sqrt(dx*dy):-1;};
+    const last=notes.length?((notes.reduce((a,n)=>n.t>=a.t?n:a,notes[0]).p%12)+12)%12:-1,total=h.reduce((a,b)=>a+b,0)||1,MAJ=[0,2,4,5,7,9,11];
+    // 1) choose the scale (pitch set) with the least out-of-key time; 2) choose major vs relative minor tonic
+    for(let r=0;r<12;r++){const out=h.reduce((a,w,pc)=>a+(MAJ.includes((pc-r+12)%12)?0:w),0)/total;
+      const a=corr(KMAJ,r)-2*out+(last===r?.2:0),m=(r+9)%12,b=corr(KMIN,m)-2*out+(last===m?.2:0);
+      if(a>best.score)best={root:r,scale:'Major',score:a};if(b>best.score)best={root:m,scale:'Minor',score:b};}
+    return best;}
+  function snapToScale(notes,root,scale){const st=scale==='Major'?[0,2,4,5,7,9,11]:[0,2,3,5,7,8,10];
+    return notes.map(n=>{const pc=((n.p-root)%12+12)%12;if(st.includes(pc))return{...n};const up=st.includes((pc+1)%12),dn=st.includes((pc+11)%12);return{...n,p:n.p+(dn?-1:up?1:0)};});}
 
   function chordAt(chs,t){for(const c of chs)if(t>=c.t&&t<c.t+c.d)return c;return chs[chs.length-1];}
 
@@ -112,8 +129,9 @@
     const ps=song.melody.map(n=>n.p).sort((a,b)=>a-b),med=ps[ps.length>>1];let shift=Math.round((76-med)/12)*12+G.leadOct*12;
     for(const n of song.melody){add('lead',n.p+shift,n.t*scale,Math.max(.1,n.d*scale*.95),.7+(energy>1?.06:0));if(energy>1&&G.id!=='piano'){const q=n.p+shift-12>=55?n.p+shift-12:n.p+shift+12<=88?n.p+shift+12:null;if(q!=null)add('lead2',q,n.t*scale,Math.max(.1,n.d*scale*.95),.4);}}
     // harmony
+    let prevV=null;
     for(const c of ch){
-      const v=voicing(c),bars=[];for(let t=c.t;t<c.t+c.d-1e-6;t+=4)bars.push([t,Math.min(4,c.t+c.d-t)]);
+      const v=lead(c,prevV);prevV=v;const bars=[];for(let t=c.t;t<c.t+c.d-1e-6;t+=4)bars.push([t,Math.min(4,c.t+c.d-t)]);
       for(const[t,d]of bars){
         const s=G.chordStyle;
         if(s==='hold'||(s==='lofi'&&d<2))v.forEach(p=>add('chords',p,t,d-.05,.5));
@@ -204,6 +222,6 @@
     SONGS.push(S);try{return remix('own',genreId);}finally{SONGS.pop();}
   }
 
-  const api={SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing};
+  const api={SONGS,GENRES,GROOVES,pitch,seq,chord,chords,remix,toProject,inferChords,remixMelody,voicing,lead,detectKey,snapToScale};
   if(typeof module!=='undefined'&&module.exports)module.exports=api;else root.AuraSongbook=api;
 })(typeof globalThis!=='undefined'?globalThis:this);

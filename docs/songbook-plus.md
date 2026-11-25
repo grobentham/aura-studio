@@ -1,12 +1,16 @@
 # Start screen, Songbook + Remix, Aura Plus
 
 ## What users see
+- **Hum a song** (start screen card, **🎤 Hum** in the session bar, or Actions → "Hum a song"): pick a tempo and style, get a one-bar count-in with an optional click, then hum or sing for up to 20 s. `AuraSuite.transcribe` turns the audio into notes, `toMidi` quantises them to 16ths, and the key is estimated (pitch-set fit plus Krumhansl profile, with an ending-note tie-break). Out-of-key notes are nudged one semitone into the key, chords are inferred, and the result opens as a new project. The microphone audio is never saved or uploaded; only the notes are kept.
 - **Start screen** (first visit, or **⌂ Start** in the header, or Actions → "Start screen"): Learn & remix a song · Make a beat · Record a song · Remix your own melody · Open a project.
 - **Songbook** (**♫ Songbook** in the session bar, or Actions → "Songbook"): 10 public-domain songs. Pick a style and Aura builds a full, editable arrangement as a new project, so the current project is never changed.
 - **Remix your own melody** (Plus): select a melody clip, then pick a style. Chords are inferred per bar from the melody (diatonic I/IV/V preferred), and the result opens as a new project.
 - **Aura Plus** (**✦ Get Plus** in the header): Free vs Plus comparison and Stripe checkout.
 
-## Free vs Plus
+## Beta mode
+`PLAN.beta` in `plus-core.js` is `true`: every feature is free, the header shows **✦ Free beta**, and checkout is hidden. Set it to `false` when you're ready to charge.
+
+## Free vs Plus (when beta is off)
 Free: everything that existed before (recording, editing, mixing, every export), the whole Songbook, Lo-fi and Piano styles.
 Plus: Trap, House, Synthwave, Cinematic, Rock and Reggaeton styles, plus remixing your own melodies.
 

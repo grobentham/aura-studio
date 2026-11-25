@@ -31,4 +31,11 @@
 .plus-buy{width:100%;min-height:42px}
 .plus-reason{background:#2a2418;border:1px solid #5a4a2a;border-radius:9px;padding:10px 12px;color:#f3dcaa}
 .plus-owned{color:#5fdba7;font-weight:600}
-@media (max-width:800px){#songbookButton{display:none}.songbook{grid-template-columns:1fr}.song-list{flex-direction:row;overflow-x:auto;max-height:none}.song-item{min-width:170px}.plus-columns{grid-template-columns:1fr}}
+@media (max-width:800px){#songbookButton,#humButton{display:none}.songbook{grid-template-columns:1fr}.song-list{flex-direction:row;overflow-x:auto;max-height:none}.song-item{min-width:170px}.plus-columns{grid-template-columns:1fr}}
+
+.hum-h{margin:14px 0 8px;font-size:12px;text-transform:uppercase;letter-spacing:.08em;color:var(--dim)}
+.hum-rec{min-height:44px;padding:0 22px;font-size:14px}
+.hum-stage{display:flex;flex-direction:column;align-items:center;gap:12px;padding:34px 0}
+.hum-big{font-size:56px;font-weight:700;color:var(--accent);font-variant-numeric:tabular-nums}
+.hum-meter{width:min(360px,80%);height:10px;border-radius:6px;background:#2a2f3a;overflow:hidden}
+.hum-meter i{display:block;height:100%;width:0;background:linear-gradient(90deg,#5fdba7,var(--accent));transition:width .06s}

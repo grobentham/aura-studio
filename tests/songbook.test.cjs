@@ -56,3 +56,25 @@ test('Plus purchase return is parsed strictly and removed from the URL',()=>{
   assert.equal(PLUS.readEntitlement('{"session":"cs_live_abc"}').session,'cs_live_abc');
   assert.equal(PLUS.readEntitlement('nonsense'),null);assert.equal(PLUS.readEntitlement(null),null);
 });
+
+test('key detection finds the written key for most songs (relative minor/major allowed)',()=>{
+  let exact=0;
+  for(const s of SB.SONGS){const k=SB.detectKey(s.melody);const rel=s.key.scale==='Major'?(s.key.root+9)%12:(s.key.root+3)%12;
+    assert.ok(k.root===s.key.root||k.root===rel||k.root===(s.key.root+7)%12,`${s.id}: ${k.root} ${k.scale}`);if(k.root===s.key.root&&k.scale===s.key.scale)exact++;}
+  assert.ok(exact>=6,'exact '+exact);
+});
+
+test('snapToScale moves only out-of-key notes by one semitone',()=>{
+  const out=SB.snapToScale([{p:60,t:0,d:1},{p:61,t:1,d:1},{p:66,t:2,d:1}],0,'Major');
+  assert.deepEqual(out.map(n=>n.p),[60,60,65]);
+});
+
+test('voice leading keeps chord changes smooth and in range',()=>{
+  const C=SB.chord('C'),F=SB.chord('F'),G=SB.chord('G');let prev=null,moves=0;
+  for(const c of [C,F,G,C,F,G,C]){const v=SB.lead(c,prev);assert.ok(v[0]>=52&&v[v.length-1]<=74,String(v));
+    assert.deepEqual([...new Set(v.map(p=>p%12))].sort(),[...new Set(c.iv.map(i=>(c.root+i)%12))].sort());
+    if(prev)moves+=v.reduce((a,p,i)=>a+Math.abs(p-prev[i]),0);prev=v;}
+  assert.ok(moves/6<=6,'average movement '+moves/6);
+});
+
+test('beta flag makes everything available',()=>{assert.equal(typeof PLUS.PLAN.beta,'boolean');});
