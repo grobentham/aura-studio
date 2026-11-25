@@ -27,13 +27,13 @@ document.querySelector('#run').onclick=async()=>{
       loadStarter('My Moon My Man · Instrumental study');
       check(state.bpm===125&&state.root===4&&state.scale==='Minor'&&songEnd()===80,'Song study has its 20-bar arrangement in E minor at 125 BPM');
       check(state.tracks.every(track=>track.regions.every(region=>region.notes.every(note=>note.t+note.d<=region.len))),'Instrumental study notes fit their editable clips');
-      const drums=state.tracks.find(t=>t.type==='drums');
-      check(drums.kit==='Live Room Kit'&&drums.vol>=.9&&!drums.mute,'Study drums are prominent, unmuted and use the recorded kit');
-      check(drums.regions.some(r=>r.start+r.notes[0].t===8),'Drum pickup starts at bar three');
+      const studyDrums=state.tracks.find(t=>t.type==='drums');
+      check(studyDrums.kit==='Live Room Kit'&&studyDrums.vol>=.9&&!studyDrums.mute,'Study drums are prominent, unmuted and use the recorded kit');
+      check(studyDrums.regions.some(r=>r.start+r.notes[0].t===8),'Drum pickup starts at bar three');
       const drumOptions={start:16,end:32,tail:0,masterProcessing:false,masterVolume:1};
-      const drumPart=await renderOffline([drums],drumOptions),oldLevel=await renderOffline([{...drums,vol:.69}],drumOptions);
+      const drumPart=await renderOffline([studyDrums],drumOptions),oldLevel=await renderOffline([{...studyDrums,vol:.69}],drumOptions);
       check(energy(drumPart)>energy(oldLevel)*2.5,'Raised drum fader delivers substantially more drum energy');
-      const pickup=await renderOffline([drums],{start:8,end:16,tail:0});
+      const pickup=await renderOffline([studyDrums],{start:8,end:16,tail:0});
       check(energy(pickup)>1e-8,'Early drum pickup renders audible samples');
       for(const track of state.tracks){
         const part=await renderOffline([track],{start:32,end:36,tail:0});
