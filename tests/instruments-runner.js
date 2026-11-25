@@ -24,6 +24,21 @@ document.querySelector('#run').onclick=async()=>{
       loadStarter('Acoustic Morning');const demo=await renderOffline(state.tracks,{end:8,tail:.5,masterVolume:.3});check(state.tracks.length===4&&energy(demo)>1e-8,'Acoustic Morning renders recorded piano, guitar, bass and drums together');
       performanceOpen=false;$('#instrumentStatus')?.remove();libraryTab='instruments';instrumentSearch='Concert Grand';instrumentCategory='All';renderLibrary();sampleBanks.delete('concert-grand');await ensureSampleBank('concert-grand');check($('#instrumentCards').textContent.includes('Ready to play'),'Library status updates after loading with the performance panel closed');
       const exportBytes=AuraCore.wavBytes(demo,24);check(new TextDecoder().decode(exportBytes.slice(-900)).includes('Fluid'),'WAV exports carry recorded-sound credits');ensureAudio();const decoded=await ctx.decodeAudioData(exportBytes.buffer.slice(0));check(Math.abs(decoded.duration-demo.duration)<1/ctx.sampleRate,'Credited 24-bit WAV exports remain decodable');
+      loadStarter('My Moon My Man · Instrumental study');
+      check(state.bpm===125&&state.root===4&&state.scale==='Minor'&&songEnd()===80,'Song study has its 20-bar arrangement in E minor at 125 BPM');
+      check(state.tracks.every(track=>track.regions.every(region=>region.notes.every(note=>note.t+note.d<=region.len))),'Instrumental study notes fit their editable clips');
+      const studyDrums=state.tracks.find(t=>t.type==='drums');
+      check(studyDrums.kit==='Live Room Kit'&&studyDrums.vol>=.9&&!studyDrums.mute,'Study drums are prominent, unmuted and use the recorded kit');
+      check(studyDrums.regions.some(r=>r.start+r.notes[0].t===8),'Drum pickup starts at bar three');
+      const drumOptions={start:16,end:32,tail:0,masterProcessing:false,masterVolume:1};
+      const drumPart=await renderOffline([studyDrums],drumOptions),oldLevel=await renderOffline([{...studyDrums,vol:.69}],drumOptions);
+      check(energy(drumPart)>energy(oldLevel)*2.5,'Raised drum fader delivers substantially more drum energy');
+      const pickup=await renderOffline([studyDrums],{start:8,end:16,tail:0});
+      check(energy(pickup)>1e-8,'Early drum pickup renders audible samples');
+      for(const track of state.tracks){
+        const part=await renderOffline([track],{start:32,end:36,tail:0});
+        check(energy(part)>1e-8,track.name+' renders audible audio from the song study');
+      }
       return results.join('\\n')+'\\nALL INSTRUMENT CHECKS PASSED';
     }finally{stopInstrumentPreview();if(countIn.active)cancelCountIn();if(sched.playing)stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}applyProject(initial);activeProjectId=initialId;clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));}
   })()`);}catch(e){output.textContent+='\nFAIL '+e.stack;}finally{button.disabled=false;}
