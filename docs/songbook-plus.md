@@ -7,6 +7,11 @@
 - **Remix your own melody** (Plus): select a melody clip, then pick a style. Chords are inferred per bar from the melody (diatonic I/IV/V preferred), and the result opens as a new project.
 - **Aura Plus** (**✦ Get Plus** in the header): Free vs Plus comparison and Stripe checkout.
 
+## Songs and starters
+Songbook (18 public-domain songs, most famous first): Ode to Joy, Canon in D, The Entertainer, Turkish March, William Tell Overture (finale), Spring (Vivaldi), Habanera (Carmen), In the Hall of the Mountain King, Moonlight Sonata, Here Comes the Bride, Jingle Bells, Deck the Halls, Eine kleine Nachtmusik, When the Saints, Twinkle Twinkle, Oh! Susanna, Frère Jacques, Auld Lang Syne. Melodies were written note by note from the public-domain originals; some passages are simplified.
+
+Song starters (`studio-starters.js`) are seven original Aura songs (`STARTER_SONGS`, composer "Aura") arranged by the same engine: Lo-fi Sunday, Trap Night, Deep House, Night Drive, Acoustic Morning, Epic Rise, Summer Heat, plus Empty project. The My Moon My Man study (`studio-song-guide.js`) has been removed; projects users already saved are untouched.
+
 ## Styles and instruments
 Piano uses the recorded Steinway (Concert Grand). Cinematic uses the String Ensemble (real violin, viola and cello sections), Bowed Cellos, French horn (voiced in its recorded register) and the Orchestral Percussion kit. Acoustic (new) uses Expressive Nylon guitar arpeggios, the real double bass (Upright Bass), clarinet and soft Live Room Kit cross-stick. Each style's melody is kept inside its lead instrument's recorded range (`leadRange`).
 

@@ -94,3 +94,17 @@ test('short hummed melodies are repeated to a full verse',()=>{
   const r=SB.remixMelody(four,0,'Major',100,'lofi','Hum');const verse=r.sections.find(s=>s.name==='Verse');
   assert.equal(verse.len,32);assert.ok(r.lengthBeats*60/r.bpm>60);
 });
+
+test('Songbook includes the renowned additions, all public domain',()=>{
+  const ids=SB.SONGS.map(s=>s.id);
+  for(const id of ['entertainer','spring','williamtell','turkish','habanera','bride','deckthehalls','susanna'])assert.ok(ids.includes(id),id);
+  assert.ok(SB.SONGS.length>=18);for(const s of SB.SONGS)assert.ok(s.year<1929,s.id);
+});
+
+test('every starter is an original Aura song that arranges into a full track',()=>{
+  assert.equal(SB.STARTER_SONGS.length,7);
+  for(const s of SB.STARTER_SONGS){assert.equal(s.composer,'Aura');assert.ok(!SB.SONGS.some(x=>x.id===s.id));
+    const genre={'st-lofi':'lofi','st-trap':'trap','st-house':'house','st-synth':'synthwave','st-acoustic':'acoustic','st-epic':'cinematic','st-reggaeton':'reggaeton'}[s.id];
+    const r=SB.remix(s.id,genre),p={app:'aura-studio',...SB.toProject(r,ids(),['#fff'])};
+    assert.deepEqual(C.validatePiece(p,presets,kits),[],s.id);const secs=r.lengthBeats*60/r.bpm;assert.ok(secs>60&&secs<240,s.id+' '+secs);}
+});

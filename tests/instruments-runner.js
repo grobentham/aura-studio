@@ -21,33 +21,17 @@ document.querySelector('#run').onclick=async()=>{
       sampleBanks.delete('missing-instrument-test');let failed=false;try{await ensureSampleBank('missing-instrument-test');}catch(e){failed=true;}check(failed&&!sampleBanks.has('missing-instrument-test')&&!sampleLoads.has('missing-instrument-test'),'A failed sound download is reported without a fake ready state');
       libraryTab='instruments';instrumentSearch='cello';instrumentCategory='All';renderLibrary();{const cards=[...$('#instrumentCards').querySelectorAll('.sound-card')],text=cards.map(c=>c.textContent);check(cards.length===3&&cards.every(card=>card.textContent.toLowerCase().includes('cello'))&&['Bowed Cellos','String Ensemble','Pizzicato Strings'].every(n=>text.some(t=>t.includes(n)))&&!text.some(t=>t.includes('Solo Cello')),'Instrument search finds the three recorded cello options and hides the Solo Cello duplicate');}instrumentSearch='';instrumentCategory='Guitars';renderLibrary();check([...$('#instrumentCards').querySelectorAll('.sound-card')].every(card=>card.textContent.includes('Guitars')),'Instrument categories filter the collection');
       const savedData=structuredClone(state);await newProject('Empty project');testIds.add(activeProjectId);check(state.tracks.every(t=>t.regions.length===0),'A new blank project is independent of the instrument session');await activateProject(record);check(state.tracks[0].preset===savedData.tracks[0].preset,'Reopening a project restores its recorded instrument assignment');
-      loadStarter('Acoustic Morning');const demo=await renderOffline(state.tracks,{end:8,tail:.5,masterVolume:.3});check(state.tracks.length===4&&energy(demo)>1e-8,'Acoustic Morning renders recorded piano, guitar, bass and drums together');
+      loadStarter('Acoustic Morning');{const acoustic=state.tracks.map(x=>x.type==='drums'?x.kit:x.preset);check(['Live Room Kit','Upright Bass','Expressive Nylon','Clarinet'].every(n=>acoustic.includes(n)),'Acoustic Morning uses the recorded kit, double bass, nylon guitar and clarinet');}const demo=await renderOffline(state.tracks,{start:4,end:12,tail:.5,masterVolume:.3});check(energy(demo)>1e-8,'Acoustic Morning renders its recorded instruments together');
       performanceOpen=false;$('#instrumentStatus')?.remove();libraryTab='instruments';instrumentSearch='Concert Grand';instrumentCategory='All';renderLibrary();{const cg=AuraInstruments.instruments.find(i=>i.name==='Concert Grand').bank;sampleBanks.delete(cg);await ensureSampleBank(cg);}check($('#instrumentCards').textContent.includes('Ready to play'),'Library status updates after loading with the performance panel closed');
       const exportBytes=AuraCore.wavBytes(demo,24);{const tail=new TextDecoder().decode(exportBytes.slice(-4000));check(tail.includes('VSCO 2 Community Edition')&&tail.includes('Meta Open Sound'),'WAV exports carry recorded-sound credits for the instruments used (VSCO upright bass, Meta piano and guitar)');}ensureAudio();const decoded=await ctx.decodeAudioData(exportBytes.buffer.slice(0));check(Math.abs(decoded.duration-demo.duration)<1/ctx.sampleRate,'Credited 24-bit WAV exports remain decodable');
-      loadStarter('My Moon My Man · Instrumental study');
-      check(state.bpm===125&&state.root===4&&state.scale==='Minor'&&songEnd()===80,'Song study has its 20-bar arrangement in E minor at 125 BPM');
-      check(state.tracks.every(track=>track.regions.every(region=>region.notes.every(note=>note.t+note.d<=region.len))),'Instrumental study notes fit their editable clips');
-      const studyDrums=state.tracks.find(t=>t.type==='drums');
-      check(studyDrums.kit==='Live Room Kit'&&studyDrums.vol>=.9&&!studyDrums.mute,'Study drums are prominent, unmuted and use the recorded kit');
-      check(studyDrums.regions.some(r=>r.start+r.notes[0].t===8),'Drum pickup starts at bar three');
-      const drumOptions={start:16,end:32,tail:0,masterProcessing:false,masterVolume:1};
-      const drumPart=await renderOffline([studyDrums],drumOptions),oldLevel=await renderOffline([{...studyDrums,vol:.69}],drumOptions);
-      check(energy(drumPart)>energy(oldLevel)*2.5,'Raised drum fader delivers substantially more drum energy');
-      const pickup=await renderOffline([studyDrums],{start:8,end:16,tail:0});
-      check(energy(pickup)>1e-8,'Early drum pickup renders audible samples');
-      for(const track of state.tracks){
-        const part=await renderOffline([track],{start:32,end:36,tail:0});
-        check(energy(part)>1e-8,track.name+' renders audible audio from the song study');
+      for(const name of AuraStarters.map(s=>s.name)){
+        loadStarter(name);
+        check(state.tracks.every(track=>track.regions.every(region=>region.notes.every(note=>note.t>=0&&note.t+note.d<=region.len+1e-6&&note.v>0&&note.v<=1&&note.p>=0&&note.p<=127))),name+' notes fit their clips with valid pitch and velocity');
+        const chorus=state.tracks[0].regions.find(r=>r.name==='Chorus')||state.tracks.flatMap(t=>t.regions).find(r=>r.name==='Chorus');
+        check(!!chorus&&songEnd()>=96,name+' is a full song with a chorus');
+        const melody=state.tracks.find(t=>t.name==='Melody');check(!!melody,name+' has a melody hook track');
+        const part=await renderOffline(state.tracks,{start:chorus.start,end:chorus.start+4,tail:0});check(energy(part)>1e-8,name+' chorus renders audible audio');
       }
-      loadStarter('My Moon My Man · Full backing');
-      check(songEnd()===416&&state.bars===104&&state.tracks.length===4,'Full backing lasts 104 bars without lead');
-      loadStarter('My Moon My Man · Full melodic study');
-      check(songEnd()===416&&state.tracks.length===5,'Full melodic arrangement has five tracks and 104 bars');
-      const leadStudy=state.tracks.find(t=>t.name==='Melodic lead');
-      check(leadStudy&&leadStudy.regions.length>0&&leadStudy.regions[0].start===16,'Original melodic lead enters after the intro');
-      check(state.tracks.every(t=>t.regions.every(r=>r.notes.every(n=>n.t>=0&&n.t+n.d<=r.len&&n.v<=1&&n.p>=0&&n.p<=127))),'Full study notes fit clips and valid velocity/pitch bounds');
-      const leadAudio=await renderOffline([leadStudy],{start:16,end:20,tail:0});
-      check(energy(leadAudio)>1e-8,'Original melodic lead renders audible audio');
       return results.join('\\n')+'\\nALL INSTRUMENT CHECKS PASSED';
     }finally{stopInstrumentPreview();if(countIn.active)cancelCountIn();if(sched.playing)stop();await flushProject().catch(()=>{});for(const id of testIds){const record=await projectRead('projects',id);if(record){record.trashed=true;await projectWrite(record);}}applyProject(initial);activeProjectId=initialId;clearTimeout(projectTimer);localStorage.setItem('aura-active-project',initialId);localStorage.setItem('aura-studio-v1',JSON.stringify(initial));}
   })()`);}catch(e){output.textContent+='\nFAIL '+e.stack;}finally{button.disabled=false;}

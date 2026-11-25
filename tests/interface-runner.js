@@ -29,22 +29,20 @@ document.querySelector('#run').onclick=async()=>{
         click('mix');await tick();check(shown($('#mixer'))&&shown($('#trackFx')),width+'px: mixer and effects remain reachable');
         if(width<=800){$('#bLibrary').click();await tick();check(shown($('#library'))&&shown($('#libraryBackdrop'))&&$('#library').getBoundingClientRect().right<=innerWidth,width+'px: mobile sound browser fits with a dismissible backdrop');$('#libraryBackdrop').click();check(!document.body.classList.contains('library-open'),width+'px: backdrop closes the mobile sound browser');}
       }
-      check($('#welcomeSongGuide')&&$('#projectSongGuide')&&$('#quickSongGuide')&&$('#openSongBacking')&&$('#openSongShort'),'Song guide appears in onboarding, Projects and Quick guide');
-      $('#railHelp').click();$('#quickSongGuide').click();await tick();
-      const guide=$('#songGuideModal'),guideCard=guide.querySelector('.card');
-      check(shown(guideCard)&&guideCard.scrollWidth<=guideCard.clientWidth+1&&guideCard.getBoundingClientRect().right<=innerWidth,'Song guide fits the 360px workspace');
-      guide.querySelector('button').dispatchEvent(new KeyboardEvent('keydown',{key:'Escape',bubbles:true}));
-      check(guide.hidden,'Escape closes the song guide');
+      check(!$('#songGuideModal')&&!$('#welcomeSongGuide')&&!$('#quickSongGuide')&&!Object.keys(STARTERS).some(k=>/Moon/.test(k)),'The retired song study is removed from onboarding, Quick guide, Projects and starters');
       parent.document.querySelector('#studio').style.width='1024px';parent.document.querySelector('#studio').style.height='600px';await tick();click('edit');await tick();check($('#studioFooter').getBoundingClientRect().bottom<=innerHeight+1&&$('#editor .edbody').clientHeight>=55,'Short laptop screen keeps the editor and footer within the viewport');
       await openProjects();
+      const cards=[...$('#projectsModal .starter-grid').querySelectorAll('.starter-card')].map(c=>c.querySelector('b').textContent);
+      check(cards.length===8&&['Empty project','Lo-fi Sunday','Trap Night','Deep House','Night Drive','Acoustic Morning','Epic Rise','Summer Heat'].every(n=>cards.includes(n)),'Projects lists the empty project and seven song starters');
       const previousId=activeProjectId,previous=await projectRead('projects',previousId);
-      $('#projectSongGuide').click();check(!guide.hidden&&$('#projectsModal').hidden,'Projects opens the song lesson without creating a session');
-      $('#openSongPractice').click();
-      for(let i=0;i<50&&!guide.hidden;i++)await tick();
+      [...$('#projectsModal .starter-grid').querySelectorAll('.starter-card')].find(c=>c.textContent.includes('Epic Rise')).click();
+      for(let i=0;i<50&&$('#projectsModal').hidden===false;i++)await tick();
+      for(let i=0;i<50&&activeProjectId===previousId;i++)await tick();
       testIds.add(activeProjectId);
-      check(guide.hidden&&activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.tracks.length===5&&songEnd()===416,'The song lesson opens a separate editable project in Arrange');
-      const saved=await projectRead('projects',activeProjectId),unchanged=await projectRead('projects',previousId);
-      check(saved.data.title==='My Moon My Man · Full melodic study'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening the song study preserves the previous session and saves the new one');
+      const clipNames=new Set(state.tracks.flatMap(t=>t.regions.map(r=>r.name)));
+      check(activeProjectId!==previousId&&studioWorkspace==='arrange'&&state.title==='Epic Rise'&&['Intro','Verse','Chorus','Outro'].every(n=>clipNames.has(n))&&songEnd()>=96,'A starter opens a complete arranged song in a separate project');
+      await flushProject();const saved=await projectRead('projects',activeProjectId),unchanged=await projectRead('projects',previousId);
+      check(saved.data.title==='Epic Rise'&&JSON.stringify(unchanged.data)===JSON.stringify(previous.data),'Opening a starter preserves the previous session and saves the new one');
       stop();AuraPlayCountdown.beats=4;state.pos=0;togglePlay();await new Promise(r=>setTimeout(r,120));check(countIn.active&&!sched.playing&&!$('#playCountdown').hidden,'Play countdown counts down before playback when enabled');
       togglePlay();await new Promise(r=>setTimeout(r,60));check(!countIn.active&&!sched.playing&&$('#playCountdown').hidden,'Pressing Play during the countdown cancels it');
       AuraPlayCountdown.beats=4;togglePlay();await new Promise(r=>setTimeout(r,4*spb()*1000+300));{let waited=0;while(!sched.playing&&waited<8000){await new Promise(r=>setTimeout(r,100));waited+=100;}check(!countIn.active&&sched.playing&&$('#playCountdown').hidden,'Playback starts when the countdown finishes');}stop();
