@@ -77,7 +77,7 @@ function setupStudioInterface(){
   const countLabel=h('label',{class:'count-in-label'},'Count-in',$('#countInSelect'));
   const transport=h('section',{id:'transportBar','aria-label':'Playback and recording'},$('.transport'),$('.lcd'),h('div',{class:'transport-options'},countLabel,h('span',{class:'transport-signature',title:'Time signature'},'4/4')));
   $('#top').insertAdjacentElement('afterend',transport);
-  $('#bRec').querySelector('span').textContent='Record';$('#bRec').setAttribute('title','Record instrument notes (R)');
+  $('#bRec').querySelector('span').textContent='Record notes';$('#bRec').setAttribute('title','Record instrument notes (R)');
   const rail=h('nav',{id:'studioRail','aria-label':'Studio navigation'});
   rail.append(iconButton('railProjects','projects','Your projects',openProjects),h('span',{class:'rail-divider'}));
   for(const[section,icon,label]of [['instruments','instruments','Browse instruments'],['loops','loops','Browse loops'],['record','record','Record audio input']]){

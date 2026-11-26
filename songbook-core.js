@@ -164,15 +164,15 @@
   };
 
   const GENRES=[
-    {id:'lofi',mix:{drums:0.63,bass:0.85,chords:0.67,pad:0.88,lead:0.81,lead2:0.31},masterVol:0.9,leadRange:[40,92],name:'Lo-fi',plus:false,bpm:82,scale:1,kit:'Live Room Kit',drumTone:.55,lead:'FM Electric Piano',chords:'Dynamic Upright',bass:'Upright Bass',pad:'String Ensemble',chordStyle:'lofi',bassStyle:'roots',leadOct:0,tag:'Dusty keys, lazy swing'},
+    {id:'lofi',mix:{drums:0.63,bass:0.85,chords:0.67,pad:0.88,lead:0.81,lead2:0.31},masterVol:1.05,leadRange:[40,92],name:'Lo-fi',plus:false,bpm:82,scale:1,kit:'Live Room Kit',drumTone:.55,lead:'FM Electric Piano',chords:'Dynamic Upright',bass:'Upright Bass',pad:'String Ensemble',chordStyle:'lofi',bassStyle:'roots',leadOct:0,tag:'Dusty keys, lazy swing'},
     {id:'piano',leadRange:[22,104],name:'Piano',plus:false,bpm:0,tempo:.9,scale:1,kit:null,lead:'Concert Grand',chords:'Concert Grand',bass:null,pad:'String Ensemble',chordStyle:'arp',bassStyle:null,leadOct:0,tag:'Solo piano with soft strings'},
-    {id:'trap',mix:{drums:0.42,bass:0.39,chords:0.59,lead:0.83,lead2:0.48},masterVol:0.9,leadRange:[22,108],name:'Trap',plus:true,bpm:140,scale:2,kit:'Studio 808',lead:'Bright Grand',chords:'String Ensemble',bass:'Sub 808',pad:null,chordStyle:'hold',bassStyle:'808',leadOct:0,tag:'808s, hi-hat rolls, piano'},
-    {id:'house',mix:{drums:0.43,bass:0.44,chords:0.68,pad:0.57,lead:1.0,lead2:0.46},masterVol:1.13,name:'House',plus:true,bpm:122,scale:1,kit:'Electro',lead:'Glass Pluck',chords:'Bright Grand',bass:'Fat Bass',pad:'Dream Pad',chordStyle:'offbeat',bassStyle:'offbeat',leadOct:0,tag:'Four on the floor, piano stabs'},
-    {id:'synthwave',mix:{drums:0.43,bass:0.4,chords:0.73,arp:0.57,lead:0.97,lead2:0.43},masterVol:1.1,name:'Synthwave',plus:true,bpm:104,scale:1,kit:'Electro',lead:'Super Lead',chords:'Dream Pad',bass:'Fat Bass',pad:null,arp:'Glass Pluck',chordStyle:'hold',bassStyle:'octaves',leadOct:0,tag:'Neon arps and octave bass'},
-    {id:'cinematic',leadRange:[55,96],name:'Cinematic',plus:true,bpm:0,tempo:.8,scale:1,kit:'Orchestral Percussion',lead:'Natural Violin',chords:'String Ensemble',bass:'Bowed Cellos',pad:null,brass:'French Horn',chordStyle:'hold',bassStyle:'ostinato',leadOct:0,tag:'Strings, brass and big drums'},
+    {id:'trap',mix:{drums:0.42,bass:0.39,chords:0.59,lead:0.83,lead2:0.48},masterVol:1.45,leadRange:[22,108],name:'Trap',plus:true,bpm:140,scale:2,kit:'Studio 808',lead:'Bright Grand',chords:'String Ensemble',bass:'Sub 808',pad:null,chordStyle:'hold',bassStyle:'808',leadOct:0,tag:'808s, hi-hat rolls, piano'},
+    {id:'house',mix:{drums:0.43,bass:0.44,chords:0.68,pad:0.57,lead:1.0,lead2:0.46},masterVol:1.75,name:'House',plus:true,bpm:122,scale:1,kit:'Electro',lead:'Glass Pluck',chords:'Bright Grand',bass:'Fat Bass',pad:'Dream Pad',chordStyle:'offbeat',bassStyle:'offbeat',leadOct:0,tag:'Four on the floor, piano stabs'},
+    {id:'synthwave',mix:{drums:0.43,bass:0.4,chords:0.73,arp:0.57,lead:0.97,lead2:0.43},masterVol:1.65,name:'Synthwave',plus:true,bpm:104,scale:1,kit:'Electro',lead:'Super Lead',chords:'Dream Pad',bass:'Fat Bass',pad:null,arp:'Glass Pluck',chordStyle:'hold',bassStyle:'octaves',leadOct:0,tag:'Neon arps and octave bass'},
+    {id:'cinematic',masterVol:1.45,leadRange:[55,96],name:'Cinematic',plus:true,bpm:0,tempo:.8,scale:1,kit:'Orchestral Percussion',lead:'Natural Violin',chords:'String Ensemble',bass:'Bowed Cellos',pad:null,brass:'French Horn',chordStyle:'hold',bassStyle:'ostinato',leadOct:0,tag:'Strings, brass and big drums'},
     {id:'rock',leadRange:[40,88],name:'Rock',plus:true,bpm:128,scale:1,kit:'Punch Rock',lead:'Clean Electric',chords:'Clean Electric',bass:'Picked Bass',pad:'Drawbar Organ',chordStyle:'eighths',bassStyle:'eighths',leadOct:0,tag:'Driving guitars and live drums'},
-    {id:'acoustic',mix:{drums:0.6,bass:0.85,chords:0.95,lead:0.77,lead2:0.54},masterVol:0.9,leadRange:[50,86],name:'Acoustic',plus:true,bpm:0,tempo:.95,scale:1,kit:'Live Room Kit',lead:'Clarinet',chords:'Expressive Nylon',bass:'Upright Bass',pad:null,chordStyle:'arp',bassStyle:'roots',leadOct:0,tag:'Nylon guitar, upright bass, clarinet'},
-    {id:'reggaeton',mix:{drums:0.41,bass:0.3,chords:0.7,pad:0.52,lead:0.8,lead2:0.3},masterVol:1.2,name:'Reggaeton',plus:true,bpm:96,scale:1,kit:'Electro',lead:'Marimba',chords:'Bright Grand',bass:'Sub 808',pad:'Dream Pad',chordStyle:'dembow',bassStyle:'roots',leadOct:0,tag:'Dembow groove, marimba'},
+    {id:'acoustic',mix:{drums:0.6,bass:0.85,chords:0.95,lead:0.77,lead2:0.54},masterVol:1.5,leadRange:[50,86],name:'Acoustic',plus:true,bpm:0,tempo:.95,scale:1,kit:'Live Room Kit',lead:'Clarinet',chords:'Expressive Nylon',bass:'Upright Bass',pad:null,chordStyle:'arp',bassStyle:'roots',leadOct:0,tag:'Nylon guitar, upright bass, clarinet'},
+    {id:'reggaeton',mix:{drums:0.41,bass:0.3,chords:0.7,pad:0.52,lead:0.8,lead2:0.3},masterVol:1.7,name:'Reggaeton',plus:true,bpm:96,scale:1,kit:'Electro',lead:'Marimba',chords:'Bright Grand',bass:'Sub 808',pad:'Dream Pad',chordStyle:'dembow',bassStyle:'roots',leadOct:0,tag:'Dembow groove, marimba'},
   ];
 
   function rng(seed){let s=seed>>>0||1;return()=>{s^=s<<13;s^=s>>>17;s^=s<<5;return((s>>>0)%100000)/100000;};}
@@ -297,7 +297,10 @@
     tracks.lead.push({p:fit(endChord.root,72),t,d:6,v:.5});
     sections.push(['Outro',t,8]);const end=t;
     const bpm=G.bpm||Math.round(S.bpm*(G.tempo||1));
-    const out=[];const T=(key,name,type,preset,extra={})=>{const notes=tracks[key];if(!notes||!notes.length||!preset)return;notes.sort((a,b)=>a.t-b.t||a.p-b.p);out.push({key,name,type,preset,notes,...extra});};
+    const out=[];const T=(key,name,type,preset,extra={})=>{const notes=tracks[key];if(!notes||!notes.length||!preset)return;notes.sort((a,b)=>a.t-b.t||a.p-b.p);
+      // Two hits of the same note at the same moment just double the volume (harsh drums): keep the stronger one.
+      const uniq=[];for(const n of notes){const last=uniq[uniq.length-1];if(last&&last.t===n.t&&last.p===n.p){last.v=Math.max(last.v,n.v);last.d=Math.max(last.d,n.d);}else uniq.push(n);}
+      out.push({key,name,type,preset,notes:uniq,...extra});};
     T('drums','Drums','drums',G.kit,{vol:.82});
     T('bass',G.bassStyle==='808'?'808':'Bass','synth',G.bass,{vol:.78});
     T('chords',G.id==='piano'?'Piano (left hand)':'Chords','synth',G.chords,{vol:.6});
@@ -320,7 +323,7 @@
   // Turn a remix into Aura project data, given an id factory and colours.
   function toProject(r,makeId,colors){
     const len=Math.ceil(r.lengthBeats/4)*4;
-    const mixv=r.genre.mix||{};const tracks=r.tracks.map((t,i)=>({id:makeId(),type:t.type,name:t.name,color:colors[i%colors.length],vol:mixv[t.key]??t.vol??.8,pan:t.pan||0,mute:false,solo:false,cutoff:t.type==='drums'&&r.genre.drumTone?r.genre.drumTone:1,rev:t.type==='drums'?.12:.3,dly:t.key==='lead'&&/lofi|synthwave|trap/.test(r.genre.id)?.18:0,
+    const mixv=r.genre.mix||{};const tracks=r.tracks.map((t,i)=>({id:makeId(),type:t.type,name:t.name,color:colors[i%colors.length],vol:mixv[t.key]??t.vol??.8,pan:t.pan||({chords:-.35,pad:.4,arp:.4,brass:-.3,lead2:.3}[t.key]||0),mute:false,solo:false,cutoff:t.type==='drums'&&r.genre.drumTone?r.genre.drumTone:1,rev:t.type==='drums'?.12:.3,dly:t.key==='lead'&&/lofi|synthwave|trap/.test(r.genre.id)?.18:0,
       preset:t.type==='synth'?t.preset:'Warm Keys',kit:t.type==='drums'?t.preset:'Studio 808',eq:{low:0,mid:0,high:0},compression:0,
       regions:regionsFor(t,r,len,makeId)}));
     return{title:r.title,bpm:r.bpm,root:r.root,scale:r.scale,bars:len/4,loop:{on:false,start:0,end:Math.min(16,len/4)},masterVol:r.genre.masterVol??.9,metro:false,groupMix:{},pos:0,tracks};

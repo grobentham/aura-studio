@@ -259,7 +259,7 @@ button:disabled{opacity:.4;cursor:default}button:focus-visible{outline-offset:3p
   </div>
   <div class="masterbox">
     <canvas id="miniScope" width="90" height="30"></canvas>
-    <label for="masterVol">Out</label><input id="masterVol" type="range" min="0" max="1.2" step="0.01">
+    <label for="masterVol">Out</label><input id="masterVol" type="range" min="0" max="2" step="0.01">
   </div>
 </header>
 
@@ -366,11 +366,11 @@ const LOW=24,HIGH=96,DRUM_H=30;
 
 const PRESETS={
  'Warm Keys':{o:[{t:'sine',m:1,g:.7},{t:'triangle',m:2,g:.18},{t:'sine',m:4,d:3,g:.05}],f:{freq:2200,q:.7,env:1800,d:.5},e:{a:.004,d:1.3,s:.35,r:.45},v:.32},
- 'Fat Bass':{o:[{t:'sawtooth',m:1,u:2,s:14,g:.5},{t:'square',m:.5,g:.26},{t:'sine',m:.5,g:.7}],f:{freq:300,q:4,env:1700,d:.22},e:{a:.004,d:.3,s:.65,r:.12},v:.34},
+ 'Fat Bass':{o:[{t:'sawtooth',m:1,u:2,s:14,g:.5},{t:'square',m:.5,g:.26},{t:'sine',m:.5,g:.7}],f:{freq:300,q:4,env:1700,d:.22},e:{a:.004,d:.3,s:.65,r:.12},v:.45},
  'Sub 808':{o:[{t:'sine',m:1,g:1},{t:'triangle',m:1,g:.22}],f:{freq:1200,q:.5},e:{a:.003,d:1.6,s:.35,r:.25},v:.55,glide:.07},
- 'Dream Pad':{o:[{t:'sawtooth',m:1,u:6,s:26,g:.5},{t:'triangle',m:.5,g:.3},{t:'sine',m:2,g:.06}],f:{freq:1100,q:1.2,env:900,a:1.1,d:2},e:{a:.6,d:1.5,s:.85,r:1.8},v:.15,w:.9,vib:{rate:.35,depth:6,delay:.5}},
- 'Glass Pluck':{o:[{t:'sawtooth',m:1,u:3,s:16,g:.36},{t:'square',m:2,g:.12},{t:'sine',m:1,g:.22}],f:{freq:650,q:3.5,env:6200,d:.18},e:{a:.002,d:.5,s:.0,r:.35},v:.31,w:.7},
- 'Super Lead':{o:[{t:'sawtooth',m:1,u:5,s:22,g:.62},{t:'square',m:.5,g:.16},{t:'sine',m:2,g:.06}],f:{freq:2000,q:2.2,env:2800,d:.3},e:{a:.012,d:.25,s:.78,r:.32},v:.2,w:.6,vib:{rate:5.4,depth:11,delay:.28}},
+ 'Dream Pad':{o:[{t:'sawtooth',m:1,u:6,s:26,g:.5},{t:'triangle',m:.5,g:.3},{t:'sine',m:2,g:.06}],f:{freq:1100,q:1.2,env:900,a:1.1,d:2},e:{a:.6,d:1.5,s:.85,r:1.8},v:.2,w:.9,vib:{rate:.35,depth:6,delay:.5}},
+ 'Glass Pluck':{o:[{t:'sawtooth',m:1,u:3,s:16,g:.36},{t:'square',m:2,g:.12},{t:'sine',m:1,g:.22}],f:{freq:650,q:3.5,env:6200,d:.18},e:{a:.002,d:.5,s:.0,r:.35},v:.45,w:.7},
+ 'Super Lead':{o:[{t:'sawtooth',m:1,u:5,s:22,g:.62},{t:'square',m:.5,g:.16},{t:'sine',m:2,g:.06}],f:{freq:2000,q:2.2,env:2800,d:.3},e:{a:.012,d:.25,s:.78,r:.32},v:.3,w:.6,vib:{rate:5.4,depth:11,delay:.28}},
  'Crystal Bell':{o:[{t:'sine',m:1,g:.7},{t:'sine',m:3.5,g:.22},{t:'sine',m:7.1,g:.07}],f:{freq:9000,q:.3},e:{a:.002,d:1.7,s:0,r:1.2},v:.3},
  'Soft Brass':{o:[{t:'sawtooth',m:1,u:3,s:12,g:.66},{t:'sawtooth',m:.5,g:.14}],f:{freq:450,q:1,env:2200,a:.08,d:.45},e:{a:.06,d:.4,s:.7,r:.25},v:.21},
  'Drawbar Organ':{o:[{t:'sine',m:1,g:.5},{t:'sine',m:2,g:.35},{t:'sine',m:3,g:.2},{t:'sine',m:4,g:.14}],f:{freq:6000,q:.3},e:{a:.01,d:.1,s:1,r:.08},v:.2},
@@ -823,7 +823,7 @@ function renderMixer(){const m=$('#mixer');m.innerHTML='';meterCanvases.clear();
       db,h('div',{class:'trow'},...msButtons(t)));m.append(s);}
   const mm=h('canvas',{class:'meter'});meterCanvases.set('master',mm);
   m.append(h('div',{class:'strip',style:'--c:var(--accent)'},h('div',{class:'sname'},'Master'),h('div',{class:'sinst'},'Glue comp + limiter'),
-    h('div',{class:'fadwrap'},h('input',{class:'fader',type:'range',min:0,max:1.2,step:.01,value:state.masterVol,'aria-label':'Master volume',oninput:e=>{state.masterVol=+e.target.value;$('#masterVol').value=state.masterVol;updateMix();},onchange:save}),mm),h('div',{class:'db'},'OUT')));
+    h('div',{class:'fadwrap'},h('input',{class:'fader',type:'range',min:0,max:2,step:.01,value:state.masterVol,'aria-label':'Master volume',oninput:e=>{state.masterVol=+e.target.value;$('#masterVol').value=state.masterVol;updateMix();},onchange:save}),mm),h('div',{class:'db'},'OUT')));
   m.append(h('div',{class:'masterpanel'},h('h3',{},'Spectrum'),h('p',{},'Live frequency balance of the master output, 20 Hz to 20 kHz. Tone knobs darken a track; Reverb and Echo send it to the shared space and dotted-eighth delay.'),h('canvas',{id:'spec'})));
   requestAnimationFrame(()=>{for(const[,c]of meterCanvases){const ph=c.parentElement.clientHeight;sizeCanvas(c,10,ph);}});}
 const dbText=v=>{const d=20*Math.log10(Math.max(1e-4,v*v*1.2));return(d<=-60?'−∞':(d>0?'+':'')+d.toFixed(1))+' dB';};
@@ -964,7 +964,7 @@ function blobBase64(blob){return new Promise((resolve,reject)=>{const reader=new
 function decodeBase64(value){const raw=atob(value),bytes=new Uint8Array(raw.length);for(let i=0;i<raw.length;i++)bytes[i]=raw.charCodeAt(i);return bytes.buffer;}
 offerFile=async function(filename,data){try{const blob=data instanceof Blob?data:new Blob([data],{type:'application/json'});const url=URL.createObjectURL(blob),a=h('a',{href:url,download:filename});document.body.append(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),60000);toast(`Downloaded ${filename}`);return true;}catch(e){toast('Download failed. Try opening Aura in a full browser.');return false;}};
 saveProject=async function(){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before saving.');if(hasStreamRegions())return toast('Use Tools → Portable packages to back up streamed audio.');const button=$('#bSave');button.disabled=true;try{const project={app:'aura-studio',version:2,...JSON.parse(snapshot()),masterVol:state.masterVol,assets:{}};for(const id of usedAudio()){const ab=buffers.get(id);if(!ab)throw new Error('A sample is missing. Reimport it before saving.');project.assets[id]=await blobBase64(wavBlob(ab));}await offerFile(fileSafe(state.title)+'.json',JSON.stringify(project));}catch(e){toast(e.message||'Could not save this project.');}finally{button.disabled=false;}};
-openProjectFile=async function(f,assetProvider){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before opening a project.');try{if(f.size>100*1024*1024)throw Error();const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.tracks)||o.tracks.length>128)throw Error();if(o.app&&o.app!=='aura-studio')throw Error();const finite=n=>typeof n==='number'&&Number.isFinite(n);for(const t of o.tracks){if(!['synth','drums','audio'].includes(t.type)||typeof t.id!=='string'||!Array.isArray(t.regions))throw Error();for(const r of t.regions){if(!finite(r.start)||r.start<0||!finite(r.len)||r.len<=0||!Array.isArray(r.notes))throw Error();if(r.notes.some(n=>!finite(n.p)||!finite(n.t)||!finite(n.d)||!finite(n.v)||n.t<0||n.d<=0))throw Error();}}const ids=new Set();for(const t of o.tracks){if(ids.has(t.id))throw Error();ids.add(t.id);t.name=String(t.name||'Track');t.color=/^#[0-9a-f]{6}$/i.test(t.color)?t.color:COLORS[0];for(const[key,min,max,def]of [['vol',0,1,.8],['pan',-1,1,0],['cutoff',0,1,1],['rev',0,1,.15],['dly',0,1,0]])t[key]=finite(t[key])?clamp(t[key],min,max):def;t.eq=Object.fromEntries(['low','mid','high'].map(k=>[k,finite(t.eq?.[k])?clamp(t.eq[k],-18,18):0]));t.compression=finite(t.compression)?clamp(t.compression,0,1):0;t.mute=!!t.mute;t.solo=!!t.solo;if(!PRESETS[t.preset])t.preset='Warm Keys';if(!KITS[t.kit])t.kit='Studio 808';for(const r of t.regions){if(typeof r.id!=='string'||ids.has(r.id))throw Error();ids.add(r.id);r.name=String(r.name||'');for(const key of ['fadeIn','fadeOut'])r[key]=finite(r[key])?clamp(r[key],0,r.len*30/clamp(Number(o.bpm)||120,40,240)):0;r.offset=finite(r.offset)?Math.max(0,r.offset):0;r.gain=finite(r.gain)?clamp(r.gain,0,100000):1;for(const n of r.notes){n.p=clamp(Math.round(n.p),0,t.type==='drums'?7:127);n.v=clamp(n.v,0,1);}}}o.title=String(o.title||'Untitled');const streamed=streamedAssets(o),decoded=new Map();if(streamed.size&&!assetProvider)throw Error('Streamed audio requires a portable package.');if(assetProvider){ensureAudio();for(const id of projectAudioIds(o)){const blob=await assetProvider(id);if(!blob)throw Error('Missing packaged audio');if(streamed.has(id))await AuraStream.verify(blob,streamed.get(id));else decoded.set(id,await ctx.decodeAudioData(await blob.arrayBuffer()));}}else if(o.assets){ensureAudio();for(const id of projectAudioIds(o)){if(o.assets[id])decoded.set(id,await ctx.decodeAudioData(decodeBase64(o.assets[id])));}}if(assetProvider){const db=await assetDB();for(const id of projectAudioIds(o)){const blob=await assetProvider(id);await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').add(blob,id);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Pack storage failed'));tx.onerror=()=>reject(tx.error);});}}if(sched.playing)stop();pushUndo();const s=newState();for(const key of ['title','bpm','root','scale','bars','loop','masterVol','tracks','groupMix'])if(o[key]!==undefined)s[key]=o[key];s.bpm=clamp(Number(s.bpm)||120,40,240);s.root=clamp(Math.round(Number(s.root)||0),0,11);if(!SCALES[s.scale])s.scale='Major';s.masterVol=clamp(Number.isFinite(s.masterVol)?s.masterVol:.9,0,1.2);if(!s.loop||!finite(s.loop.start)||!finite(s.loop.end)||s.loop.start<0||s.loop.end<=s.loop.start)s.loop={on:false,start:0,end:16};s.bars=clamp(Number(s.bars)||16,1,1000);state=s;for(const[id,ab]of decoded){buffers.set(id,ab);if(!assetProvider)await storeAudio(id,ab);}view.selTrack=state.tracks[0]?.id;view.selRegion=null;ed.sel.clear();syncNodes();updateDelayTime();renderAll();save();await restoreAudioAssets();toast(`Opened ${state.title}.`);}catch(e){toast('Could not open this project. Choose a valid Aura JSON file.');}};
+openProjectFile=async function(f,assetProvider){if(inputCapture.recording||inputCapture.pending)return toast('Finish the audio take before opening a project.');try{if(f.size>100*1024*1024)throw Error();const o=JSON.parse(await f.text());if(!o||!Array.isArray(o.tracks)||o.tracks.length>128)throw Error();if(o.app&&o.app!=='aura-studio')throw Error();const finite=n=>typeof n==='number'&&Number.isFinite(n);for(const t of o.tracks){if(!['synth','drums','audio'].includes(t.type)||typeof t.id!=='string'||!Array.isArray(t.regions))throw Error();for(const r of t.regions){if(!finite(r.start)||r.start<0||!finite(r.len)||r.len<=0||!Array.isArray(r.notes))throw Error();if(r.notes.some(n=>!finite(n.p)||!finite(n.t)||!finite(n.d)||!finite(n.v)||n.t<0||n.d<=0))throw Error();}}const ids=new Set();for(const t of o.tracks){if(ids.has(t.id))throw Error();ids.add(t.id);t.name=String(t.name||'Track');t.color=/^#[0-9a-f]{6}$/i.test(t.color)?t.color:COLORS[0];for(const[key,min,max,def]of [['vol',0,1,.8],['pan',-1,1,0],['cutoff',0,1,1],['rev',0,1,.15],['dly',0,1,0]])t[key]=finite(t[key])?clamp(t[key],min,max):def;t.eq=Object.fromEntries(['low','mid','high'].map(k=>[k,finite(t.eq?.[k])?clamp(t.eq[k],-18,18):0]));t.compression=finite(t.compression)?clamp(t.compression,0,1):0;t.mute=!!t.mute;t.solo=!!t.solo;if(!PRESETS[t.preset])t.preset='Warm Keys';if(!KITS[t.kit])t.kit='Studio 808';for(const r of t.regions){if(typeof r.id!=='string'||ids.has(r.id))throw Error();ids.add(r.id);r.name=String(r.name||'');for(const key of ['fadeIn','fadeOut'])r[key]=finite(r[key])?clamp(r[key],0,r.len*30/clamp(Number(o.bpm)||120,40,240)):0;r.offset=finite(r.offset)?Math.max(0,r.offset):0;r.gain=finite(r.gain)?clamp(r.gain,0,100000):1;for(const n of r.notes){n.p=clamp(Math.round(n.p),0,t.type==='drums'?7:127);n.v=clamp(n.v,0,1);}}}o.title=String(o.title||'Untitled');const streamed=streamedAssets(o),decoded=new Map();if(streamed.size&&!assetProvider)throw Error('Streamed audio requires a portable package.');if(assetProvider){ensureAudio();for(const id of projectAudioIds(o)){const blob=await assetProvider(id);if(!blob)throw Error('Missing packaged audio');if(streamed.has(id))await AuraStream.verify(blob,streamed.get(id));else decoded.set(id,await ctx.decodeAudioData(await blob.arrayBuffer()));}}else if(o.assets){ensureAudio();for(const id of projectAudioIds(o)){if(o.assets[id])decoded.set(id,await ctx.decodeAudioData(decodeBase64(o.assets[id])));}}if(assetProvider){const db=await assetDB();for(const id of projectAudioIds(o)){const blob=await assetProvider(id);await new Promise((resolve,reject)=>{const tx=db.transaction('audio','readwrite');tx.objectStore('audio').add(blob,id);tx.oncomplete=resolve;tx.onabort=()=>reject(tx.error||Error('Pack storage failed'));tx.onerror=()=>reject(tx.error);});}}if(sched.playing)stop();pushUndo();const s=newState();for(const key of ['title','bpm','root','scale','bars','loop','masterVol','tracks','groupMix'])if(o[key]!==undefined)s[key]=o[key];s.bpm=clamp(Number(s.bpm)||120,40,240);s.root=clamp(Math.round(Number(s.root)||0),0,11);if(!SCALES[s.scale])s.scale='Major';s.masterVol=clamp(Number.isFinite(s.masterVol)?s.masterVol:.9,0,2);if(!s.loop||!finite(s.loop.start)||!finite(s.loop.end)||s.loop.start<0||s.loop.end<=s.loop.start)s.loop={on:false,start:0,end:16};s.bars=clamp(Number(s.bars)||16,1,1000);state=s;for(const[id,ab]of decoded){buffers.set(id,ab);if(!assetProvider)await storeAudio(id,ab);}view.selTrack=state.tracks[0]?.id;view.selRegion=null;ed.sel.clear();syncNodes();updateDelayTime();renderAll();save();await restoreAudioAssets();toast(`Opened ${state.title}.`);}catch(e){toast('Could not open this project. Choose a valid Aura JSON file.');}};
 importAudio=async function(files,beat=state.pos){if(!files.length)return;ensureAudio();let count=0;for(const f of files){try{const ab=await ctx.decodeAudioData(await f.arrayBuffer());const id=uid();buffers.set(id,ab);pushUndo();const t=addT('audio',{name:f.name.replace(/\.[^.]+$/,'').slice(0,32),rev:0});const r=mkRegion(beat,ab.duration/spb(),[],{name:f.name,buf:id,offset:0});t.regions.push(r);view.selTrack=t.id;view.selRegion=r.id;syncNodes();count++;await storeAudio(id,ab);}catch(e){toast(`Could not read ${f.name}. Try WAV, MP3, OGG or M4A.`);}}if(count)performanceOpen=false;renderAll();save();if(count)toast(`Imported ${count} audio file${count===1?'':'s'}. Use Save to download a project with audio.`);};
 
 const LOOP_LIBRARY=[
@@ -1036,10 +1036,10 @@ initStudio();
 <script src="audio-channel-core.js?v=3"></script>
 <script src="routing-core.js?v=1"></script>
 <script src="track-alignment-core.js?v=1"></script>
-<script src="studio-pro.js?v=20261126-core11"></script>
+<script src="studio-pro.js?v=20261126-core12"></script>
 <script src="instrument-catalog.js?v=20261126-nylon"></script>
 <script src="instruments.js?v=20261125-recorded2"></script>
-<script src="studio-ui.js"></script>
+<script src="studio-ui.js?v=2"></script>
 <script src="studio-production.js?v=20261117.2"></script>
 <script src="cloud-client.js"></script>
 <script src="studio-feedback.js?v=20261117-feedback1"></script>
@@ -1047,7 +1047,7 @@ initStudio();
 <link rel="stylesheet" href="studio-workspace.css?v=20261118.1">
 <script src="recording-core.js?v=20261124.4"></script>
 <script src="recording-store.js?v=20261124.4"></script>
-<script src="studio-recording.js?v=20261125.1"></script>
+<script src="studio-recording.js?v=20261126.1"></script>
 <script src="studio-workspace.js?v=20261118.1"></script>
 <link rel="stylesheet" href="studio-producer.css?v=1">
 <script src="producer-core.js?v=2"></script>
@@ -1092,14 +1092,14 @@ initStudio();
 <script src="studio-classical.js?v=2"></script>
 <script src="songbook-core.js?v=6"></script>
 <script src="plus-core.js?v=2"></script>
-<script src="studio-songbook.js?v=4"></script>
+<script src="studio-songbook.js?v=5"></script>
 <script src="studio-tour.js?v=2"></script>
 <script src="studio-sound-upgrades.js?v=1"></script>
 <script src="studio-countdown.js?v=2"></script>
-<script src="studio-starters.js?v=2"></script>
+<script src="studio-starters.js?v=3"></script>
 <script src="studio-phone.js?v=2"></script>
 <script src="studio-simple.js?v=1"></script>
-<script src="aura-config.js?v=1"></script>
+<script src="aura-config.js?v=2"></script>
 <script src="backup-core.js?v=1"></script>
 <script src="studio-backup.js?v=1"></script>
 <link rel="stylesheet" href="studio-comfort.css?v=6">

@@ -21,7 +21,8 @@
     h('div',{class:'songbook'},h('div',{id:'songList',class:'song-list',role:'listbox','aria-label':'Songs'}),h('div',{id:'songDetail',class:'song-detail'}))]);
   const plusDialog=productionDialog('plusModal','Aura Plus',[h('div',{id:'plusBody'})]);
   for(const d of [homeDialog,songbookDialog,plusDialog])d.classList.add('wide-dialog');
-  document.addEventListener('keydown',e=>{if(e.key==='Escape')for(const d of [homeDialog,songbookDialog,plusDialog])d.hidden=true;for(const id of ['humModal','readyModal','feedbackModal']){const el=$('#'+id);if(el)el.hidden=true;}});
+  // Escape closes these dialogs (only Escape: other keys must reach text boxes such as the feedback form).
+  document.addEventListener('keydown',e=>{if(e.key!=='Escape')return;for(const d of [homeDialog,songbookDialog,plusDialog])d.hidden=true;for(const id of ['humModal','readyModal','feedbackModal']){const el=$('#'+id);if(el)el.hidden=true;}});
 
   /* ---------- Home ---------- */
   function card(icon,title,text,actions){return h('section',{class:'home-card'},h('div',{class:'home-icon','aria-hidden':'true'},icon),h('h3',{},title),h('p',{},text),h('div',{class:'home-actions'},actions));}
@@ -31,7 +32,9 @@
       card('🎤','Hum a song','Hum or sing a tune. Aura writes it down and builds a full track around it in the style you pick.',[h('button',{class:'primary',onclick:()=>{homeDialog.hidden=true;openHum();}},'Start humming')]),
       card('♫','Learn & remix a song','Turn Ode to Joy, Jingle Bells, Canon in D and more into lo-fi, trap, house or cinematic tracks.',[h('button',{onclick:()=>{homeDialog.hidden=true;openSongbook();}},'Open Songbook')]),
       card('◉','Make a beat','Start from a ready groove, then change the drums, chords and melody.',[beat('Lo-fi','Lo-fi Sunday'),beat('Trap','Trap Night'),beat('House','Deep House'),beat('Synthwave','Night Drive')]),
-      card('●','Record a song','Start an empty project and record your voice or an instrument with your microphone.',[h('button',{onclick:async()=>{homeDialog.hidden=true;await newProject('Empty project');try{showLibrary('record');}catch(e){}}},'Start recording')]),
+      card('●','Record a song','Start an empty project and record your voice or an instrument with your microphone.',[h('button',{onclick:async()=>{homeDialog.hidden=true;await newProject('Empty project');try{showLibrary('record');}catch(e){}
+        // The user asked to record, so ask for the microphone straight away.
+        try{if(!inputCapture.connected)await connectInput();}catch(e){}}},'Start recording')]),
       card('✦','Remix your own melody','Select a melody clip you made and turn it into a full arrangement in any style.',[h('button',{onclick:()=>{homeDialog.hidden=true;openRestyle();}},hasPlus()?'Remix selected clip':'Remix selected clip · Plus')]),
       card('▤','Open a project','Continue a song, mix it and export a WAV, stems or MIDI.',[h('button',{onclick:()=>{homeDialog.hidden=true;openProjects();}},'Your projects')]),
       card('✉','Help shape Aura','Aura is in free beta. Tell us what felt great and what to fix.',[h('button',{onclick:()=>{homeDialog.hidden=true;openFeedback();}},'Send feedback')]));
@@ -185,6 +188,7 @@
   /* ---------- Feedback ---------- */
   const FEEDBACK_REPO='https://github.com/grobentham/aura-studio/issues/new';
   const feedbackDialog=productionDialog('feedbackModal','Send feedback',[h('div',{id:'feedbackBody'})]);
+  window.openFeedback=()=>openFeedback();
   function openFeedback(){
     const area=h('textarea',{id:'feedbackText',rows:6,placeholder:'What felt great? What was confusing or broken? What should Aura do next?','aria-label':'Your feedback'});
     const kind=h('select',{'aria-label':'Feedback type'},...['Idea','Something is broken','Sound quality','Other'].map(k=>h('option',{},k)));
@@ -192,7 +196,9 @@
     fill($('#feedbackBody'),h('p',{class:'muted'},'Feedback goes to the Aura team. No audio or project files are sent, only what you type plus the project name and browser.'),
       h('div',{class:'production-fields'},h('label',{},'Type ',kind)),area,
       h('div',{class:'production-actions'},
-        h('button',{class:'primary',onclick:()=>{const text=area.value.trim();if(!text)return toast('Write a sentence or two first.');const url=FEEDBACK_REPO+'?labels=feedback&title='+encodeURIComponent(`[${kind.value}] ${text.slice(0,60)}`)+'&body='+encodeURIComponent(text+meta());window.open(url,'_blank','noopener');feedbackDialog.hidden=true;toast('Thanks! Your feedback opened in a new tab. Press Submit there.');}},'Send via GitHub'),
+        // Email works for everyone; it appears once an address is set in aura-config.js.
+        (window.AURA_CONFIG||{}).feedbackEmail?h('button',{class:'primary',onclick:()=>{const text=area.value.trim();if(!text)return toast('Write a sentence or two first.');location.href='mailto:'+AURA_CONFIG.feedbackEmail+'?subject='+encodeURIComponent(`Aura feedback: ${kind.value}`)+'&body='+encodeURIComponent(text+meta());feedbackDialog.hidden=true;toast('Thanks! Your email app opened with your message. Press Send there.');}},'Send by email'):null,
+        h('button',{class:(window.AURA_CONFIG||{}).feedbackEmail?'':'primary',onclick:()=>{const text=area.value.trim();if(!text)return toast('Write a sentence or two first.');const url=FEEDBACK_REPO+'?labels=feedback&title='+encodeURIComponent(`[${kind.value}] ${text.slice(0,60)}`)+'&body='+encodeURIComponent(text+meta());window.open(url,'_blank','noopener');feedbackDialog.hidden=true;toast('Thanks! Your feedback opened in a new tab. Press Submit there.');}},'Send via GitHub (needs an account)'),
         h('button',{onclick:async()=>{const text=area.value.trim();if(!text)return toast('Write a sentence or two first.');try{await navigator.clipboard.writeText(`[${kind.value}] ${text}${meta()}`);toast('Copied. Paste it wherever you talk to us.');}catch(e){toast('Copy failed. Select the text and copy it yourself.');}}},'Copy text')));
     feedbackDialog.hidden=false;requestAnimationFrame(()=>area.focus());}
 
