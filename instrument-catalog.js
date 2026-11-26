@@ -2,7 +2,7 @@
   'use strict';
   const instruments=[
     {name:'Dynamic Upright',bank:'dynamic-upright',category:'Keys',program:0,description:'Four recorded piano dynamics · full 88-key range',gain:.72,release:.5,dynamic:true,preview:[48,60,64,67]},
-    {name:'Expressive Nylon',bank:'dynamic-nylon',category:'Guitars',program:24,description:'Three recorded nylon-guitar dynamic layers',gain:.7,release:.3,dynamic:true,preview:[48,55,60,64]},
+    {name:'Expressive Nylon',bank:'dynamic-nylon',category:'Guitars',program:24,description:'Three recorded nylon-guitar dynamic layers',gain:.95,release:.3,dynamic:true,preview:[48,55,60,64]},
     {name:'Expressive Steel',bank:'dynamic-steel',category:'Guitars',program:25,description:'Three recorded steel-guitar dynamic layers',gain:.65,release:.35,dynamic:true,preview:[48,55,60,64]},
     {name:'Concert Grand',bank:'steinway-grand',category:'Keys',program:0,description:'Steinway B concert grand · three recorded dynamics',gain:.62,velocityDb:18,release:.5,recorded:true,credit:'vcsl',velocityDb:18,preview:[48,60,64,67]},
     {name:'Bright Grand',bank:'kawai-grand',category:'Keys',program:1,description:'Kawai grand, bright and present · three recorded dynamics',gain:.6,release:.45,recorded:true,credit:'vcsl',velocityDb:6,preview:[48,60,64,67]},
