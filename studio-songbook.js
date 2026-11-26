@@ -41,6 +41,7 @@
   /* ---------- Songbook ---------- */
   let current=SB.SONGS[0].id,currentStyle='lofi';
   function openSongbook(id){if(id)current=id;renderSongbook();songbookDialog.hidden=false;}
+  window.openSongbook=openSongbook;
   function renderSongbook(){
     const list=$('#songList');list.replaceChildren(...SB.SONGS.map(s=>h('button',{class:'song-item'+(s.id===current?' active':''),role:'option','aria-selected':String(s.id===current),onclick:()=>{current=s.id;renderSongbook();}},h('strong',{},s.title),h('span',{},`${s.composer} · ${s.year}`))));
     const s=SB.SONGS.find(x=>x.id===current),plus=hasPlus();

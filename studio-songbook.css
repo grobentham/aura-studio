@@ -84,3 +84,8 @@
 @keyframes countBlink{50%{opacity:.6}}
 .play-countdown-label{margin-right:10px}
 @media (prefers-reduced-motion:reduce){.play-countdown.beat span,#bPlay.counting{animation:none}}
+.classical-shelf{margin:0 0 16px;padding:12px 14px;border:1px solid #343a46;border-radius:12px;background:#1b1f27}
+.classical-shelf h4{margin:0 0 2px}.classical-shelf p{margin:0 0 10px}
+.classical-row{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px}
+.classical-chip{flex:0 0 auto;display:flex;flex-direction:column;align-items:flex-start;gap:2px;min-height:44px;padding:8px 12px;text-align:left}
+.classical-chip small{color:#9597a2;font-size:11px}

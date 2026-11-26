@@ -4,13 +4,13 @@
   const SEED_KEY='aura-classical-seeded-v1';
   const BASE='songs/classical/';
   const PIECES=[
-    {file:'Fur-Elise.json',composer:'Beethoven'},
-    {file:'Moonlight-Sonata.json',composer:'Beethoven'},
-    {file:'Ode-to-Joy.json',composer:'Beethoven'},
-    {file:'Canon-in-D.json',composer:'Pachelbel'},
-    {file:'Clair-de-Lune.json',composer:'Debussy'},
-    {file:'Gymnopedie-No1.json',composer:'Satie'},
-    {file:'Hall-of-the-Mountain-King.json',composer:'Grieg'}
+    {file:'Fur-Elise.json',name:'Für Elise',composer:'Beethoven'},
+    {file:'Moonlight-Sonata.json',name:'Moonlight Sonata',composer:'Beethoven'},
+    {file:'Ode-to-Joy.json',name:'Ode to Joy',composer:'Beethoven'},
+    {file:'Canon-in-D.json',name:'Canon in D',composer:'Pachelbel'},
+    {file:'Clair-de-Lune.json',name:'Clair de Lune',composer:'Debussy'},
+    {file:'Gymnopedie-No1.json',name:'Gymnopédie No. 1',composer:'Satie'},
+    {file:'Hall-of-the-Mountain-King.json',name:'In the Hall of the Mountain King',composer:'Grieg'}
   ];
   const finite=n=>typeof n==='number'&&Number.isFinite(n);
 

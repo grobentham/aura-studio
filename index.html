@@ -219,7 +219,7 @@ button:disabled{opacity:.4;cursor:default}button:focus-visible{outline-offset:3p
 <link rel="stylesheet" href="studio-ui.css">
 <link rel="stylesheet" href="studio-production.css?v=3">
 <link rel="stylesheet" href="studio-feedback.css?v=20261117-feedback1">
-<link rel="stylesheet" href="studio-songbook.css?v=6">
+<link rel="stylesheet" href="studio-songbook.css?v=7">
 <script src="studio-core.js"></script>
 <script src="stream-audio-core.js?v=1"></script>
 <script src="production-core.js"></script>
@@ -602,8 +602,8 @@ function msButtons(t){return[h('button',{class:'ms mute'+(t.mute?' on':''),title
 function trackHeader(t){
   const name=h('input',{class:'tname',type:'text',value:t.name,id:'tn-'+t.id,'aria-label':'Track name',onchange:e=>{pushUndo();t.name=e.target.value||'Track';renderEditorHead();save();}});
   const vol=h('input',{type:'range',min:0,max:1,step:.01,value:t.vol,'aria-label':'Volume',title:'Volume',oninput:e=>{t.vol=+e.target.value;updateMix();},onchange:save});
-  return h('div',{class:'thdr'+(t.id===view.selTrack?' sel':''),'data-tid':t.id,style:`--c:${t.color};height:${view.rowH}px`,onpointerdown:()=>selectTrack(t.id)},
-    h('div',{class:'trow'},name,...msButtons(t),h('button',{class:'xbtn',title:'Delete track','aria-label':'Delete track',onclick:e=>{e.stopPropagation();deleteTrack(t);}},'×')),
+  return h('div',{class:'thdr'+(t.id===view.selTrack?' sel':'')+(t.mute?' is-muted':'')+(t.solo?' is-solo':''),'data-tid':t.id,style:`--c:${t.color};height:${view.rowH}px`,onpointerdown:()=>selectTrack(t.id)},
+    h('div',{class:'trow'},name,...msButtons(t),h('button',{class:'tmore',title:'Track options','aria-label':'Track options for '+t.name,'aria-haspopup':'menu',onpointerdown:e=>e.stopPropagation(),onclick:e=>{e.stopPropagation();window.openTrackMenu&&openTrackMenu(t,e.currentTarget);}},'⋯'),h('button',{class:'xbtn',title:'Delete track','aria-label':'Delete track',onclick:e=>{e.stopPropagation();deleteTrack(t);}},'×')),
     h('div',{class:'trow'},instSelect(t),vol));}
 function renderArrange(){const tb=totalBeats();const W=tb*view.ppb;const ppb=view.ppb;
   hdrs.innerHTML='';lanes.innerHTML='';lanes.style.width=W+'px';timeline.style.width=W+'px';
@@ -1033,7 +1033,7 @@ initStudio();
 <script src="routing-core.js?v=1"></script>
 <script src="track-alignment-core.js?v=1"></script>
 <script src="studio-pro.js?v=20261126-core11"></script>
-<script src="instrument-catalog.js?v=20261125-recorded2"></script>
+<script src="instrument-catalog.js?v=20261126-nylon"></script>
 <script src="instruments.js?v=20261125-recorded2"></script>
 <script src="studio-ui.js"></script>
 <script src="studio-production.js?v=20261117.2"></script>
@@ -1084,14 +1084,16 @@ initStudio();
 <script src="coordinator-core.js?v=1"></script>
 <script src="studio-coordinator.js?v=1"></script>
 <script src="studio-release.js?v=1"></script>
-<script src="classical-library-core.js?v=1"></script>
-<script src="studio-classical.js?v=1"></script>
-<script src="songbook-core.js?v=5"></script>
+<script src="classical-library-core.js?v=2"></script>
+<script src="studio-classical.js?v=2"></script>
+<script src="songbook-core.js?v=6"></script>
 <script src="plus-core.js?v=2"></script>
-<script src="studio-songbook.js?v=3"></script>
+<script src="studio-songbook.js?v=4"></script>
 <script src="studio-tour.js?v=2"></script>
 <script src="studio-sound-upgrades.js?v=1"></script>
 <script src="studio-countdown.js?v=2"></script>
 <script src="studio-starters.js?v=2"></script>
+<script src="studio-phone.js?v=1"></script>
+<link rel="stylesheet" href="studio-comfort.css?v=1">
 </body>
 </html>
