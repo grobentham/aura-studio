@@ -370,7 +370,14 @@ function setupProWorkspace(){
 }
 function setEditorCollapsed(collapsed){document.body.classList.toggle('editor-collapsed',collapsed);$('#editorToggle').textContent=collapsed?'Show editor':'Hide editor';$('#editorToggle').setAttribute('aria-expanded',String(!collapsed));requestAnimationFrame(()=>renderArrange());}
 setupProWorkspace();
+// The My Moon My Man study was retired: move copies it created to Trash (recoverable) and never reopen one.
+const RETIRED_TITLES=new Set(['My Moon My Man · Instrumental study','My Moon My Man · Full backing','My Moon My Man · Full melodic study']);
+const isRetiredTitle=t=>RETIRED_TITLES.has(t)||/my moon my man/i.test(t||'');
+async function retireOldStudies(){for(const p of await projectRead('projects'))if(!p.trashed&&isRetiredTitle(p.data?.title)){p.trashed=true;await projectWrite(p);}}
 (async()=>{
+  try{await retireOldStudies();}catch(e){}
+  if(document.readyState==='loading')await new Promise(r=>document.addEventListener('DOMContentLoaded',r,{once:true}));
+  if(isRetiredTitle(state.title)&&typeof loadStarter==='function'&&STARTERS['Epic Rise']){activeProjectId=crypto.randomUUID();loadStarter('Epic Rise');}
   try{const stored=await projectRead('projects',activeProjectId);if(stored&&!stored.trashed){applyProject(stored.data);projectVersions.set(stored.id,stored.updated);projectFingerprints.set(stored.id,JSON.stringify({...JSON.parse(snapshot()),pos:0}));await restoreAudioAssets();}else activeProjectId=crypto.randomUUID();
     projectReady=true;save();await flushProject();
   }catch(e){projectReady=true;saveStatus('Local storage unavailable','error');toast('Project storage is unavailable. Use Projects → Download project to keep your work.');}
