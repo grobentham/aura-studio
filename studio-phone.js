@@ -23,3 +23,14 @@
   document.addEventListener('keydown',e=>{if(e.key==='Escape')close();});
   window.addEventListener('resize',close);
 })();
+/* On a portrait phone, suggest turning sideways the first time the note editor opens. */
+(function(){
+  let shown=false;try{shown=!!sessionStorage.getItem('aura-rotate-hint');}catch(e){}
+  const check=()=>{
+    if(shown||document.body.dataset.focus!=='edit')return;
+    if(!matchMedia('(max-width:800px) and (orientation:portrait) and (pointer:coarse)').matches)return;
+    shown=true;try{sessionStorage.setItem('aura-rotate-hint','1');}catch(e){}
+    toast('Tip: turn your phone sideways for more room to edit notes.');
+  };
+  new MutationObserver(check).observe(document.body,{attributes:true,attributeFilter:['data-focus']});
+})();

@@ -39,3 +39,18 @@
 body.simple-mode #midiConnect,body.simple-mode #fitArrangement,body.simple-mode #inspectorToggle,body.simple-mode #workspacePreset,
 body.simple-mode .transport-signature,body.simple-mode #recordingBadge,body.simple-mode #studioFooter .footer-shortcuts{display:none!important}
 @media(max-width:800px){#viewModeToggle{display:none}}
+/* Phone layout: tabs become a bottom bar, the title gets room, the editor takes the screen in Edit/Play. */
+@media(max-width:800px){
+  body.aura-ui,body.aura-ui.editor-collapsed:not(.mixing),body.aura-ui.mixing{grid-template-rows:66px 112px 0 minmax(100px,1fr) 0 calc(58px + env(safe-area-inset-bottom))!important}
+  body.aura-ui[data-focus=edit],body.aura-ui[data-focus=play],body.aura-ui.editor-expanded:not(.mixing){grid-template-rows:66px 112px 0 0 minmax(140px,1fr) calc(58px + env(safe-area-inset-bottom))!important}
+  .aura-ui #sessionBar{grid-row:6!important;border-top:1px solid #2c2f38;border-bottom:0;padding:6px 8px calc(6px + env(safe-area-inset-bottom));align-items:center;background:#15171d;z-index:5}
+  .aura-ui #studioFooter{display:none!important}
+  .aura-ui #mobileWorkspace{flex:1;display:flex}
+  .aura-ui #mobileWorkspace button{flex:1;min-height:44px;font-size:13px}
+  .aura-ui #saveStatus{display:none}
+  .aura-ui #songTitle,.aura-ui .song-title{font-size:15px}
+  .aura-ui #plusButton{font-size:0;padding:0 10px;min-width:40px}
+  .aura-ui #plusButton:before{content:'✦';font-size:16px}
+  .aura-ui #homeButton{font-size:0;padding:0 10px;min-width:40px}
+  .aura-ui #homeButton:before{content:'⌂';font-size:18px}
+}
