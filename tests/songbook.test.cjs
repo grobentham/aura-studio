@@ -108,3 +108,15 @@ test('every starter is an original Aura song that arranges into a full track',()
     const r=SB.remix(s.id,genre),p={app:'aura-studio',...SB.toProject(r,ids(),['#fff'])};
     assert.deepEqual(C.validatePiece(p,presets,kits),[],s.id);const secs=r.lengthBeats*60/r.bpm;assert.ok(secs>60&&secs<240,s.id+' '+secs);}
 });
+
+test('arrangements never stack two identical notes at the same moment',()=>{
+  for(const s of SB.STARTER_SONGS)for(const g of SB.GENRES){const r=SB.remix(s.id,g.id,{seed:11});
+    for(const t of r.tracks){const seen=new Set();for(const n of t.notes){const k=n.p+'@'+n.t;assert.ok(!seen.has(k),`${s.id}/${g.id}/${t.key} doubles ${k}`);seen.add(k);}}}
+});
+test('starter styles set a master level and spread chords, pads and arps across the stereo field',()=>{
+  const p=SB.toProject(SB.remix('st-lofi','lofi',{seed:11}),(()=>{let i=0;return()=>'x'+i++})(),['#fff']);
+  assert.ok(p.masterVol>0&&p.masterVol<=2);
+  const pan=n=>p.tracks.find(t=>t.name===n)?.pan;
+  assert.ok(pan('Chords')<0&&pan('Pad')>0,'chords left, pad right');
+  for(const g of SB.GENRES)assert.ok((g.masterVol??.9)<=2,g.id+' master level within the fader range');
+});

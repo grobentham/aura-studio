@@ -17,7 +17,7 @@
   for(const s of LIST){
     STARTERS[s.name]=()=>{
       const r=SB.remix(s.song,s.genre,{seed:11}),p=SB.toProject(r,uid,COLORS);
-      Object.assign(state,{title:s.name,bpm:p.bpm,root:p.root,scale:p.scale,bars:p.bars,loop:{on:false,start:0,end:Math.min(16,p.bars)}});
+      Object.assign(state,{title:s.name,bpm:p.bpm,root:p.root,scale:p.scale,bars:p.bars,masterVol:p.masterVol,loop:{on:false,start:0,end:Math.min(16,p.bars)}});
       state.tracks=p.tracks;ed.genre=s.genre;
     };
   }

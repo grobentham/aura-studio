@@ -179,7 +179,7 @@ scheduleRange=function(from,to,first){
     else if(first){const elapsed=(from-r.start)*spb();scheduleAudioClip(ctx,ab,beatToTime(from),(r.offset||0)+elapsed,(r.start+r.len-from)*spb(),dest,r,elapsed);}
   }}
 };
-async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true}={}){
+async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail=3,masterVolume=state.masterVol,masterProcessing=true,channelEffects=true,onProgress=null}={}){
   if(!channelEffects){tracks=tracks.map(t=>({...t,vol:1,pan:0,cutoff:1,rev:0,dly:0,eq:{},compression:0,automation:{},group:null,effects:[],plugins:[],pathLatencyMs:0}));masterVolume=1;masterProcessing=false;}
   const streamCount=tracks.flatMap(t=>t.regions).filter(r=>r.stream&&r.start<end&&r.start+r.len>start).length;
   const seconds=(end-start)*spb()+tail;if(streamCount&&(seconds>30||streamCount*seconds*192000*8>128*1048576))throw Error('Streamed audio mix export is limited to a short range (up to 30 seconds and bounded memory). Export the full source WAV separately.');if(seconds<=0||seconds>600)throw Error('Export up to 10 minutes at a time. Use the cycle range for longer projects.');
@@ -198,6 +198,8 @@ async function renderOffline(tracks,{sampleRate=44100,start=0,end=songEnd(),tail
       else{const begin=Math.max(start,absolute);synthVoice(t.preset,n.p,(begin-start)*spb(),n.v,dest,audio).release((finish-start)*spb());}
     }
   }}
+  // Offline rendering reports no progress by itself: pause briefly at 20 points so the export bar can move.
+  if(typeof onProgress==='function'){const total=audio.length/audio.sampleRate,steps=20;for(let i=1;i<steps;i++){const at=Math.floor(total*i/steps*audio.sampleRate/128)*128/audio.sampleRate;audio.suspend(at).then(()=>{try{onProgress(i/steps);}catch(e){}audio.resume();}).catch(()=>{});}}
   return audio.startRendering();
 }
 function openExport(){if(!canLeaveProject())return;if(songEnd()<=0)return toast('Add a clip before exporting.');$('#exportModal').hidden=false;$('#exportRange').value=state.loop.on?'cycle':'song';updateExportEstimate();}
@@ -216,9 +218,9 @@ async function runExport(){
   const estimated=((end-start)*spb()+3)*rate*2*(bits/8)*(kind==='stems'?tracks.length:1);if(estimated>350*1048576)return toast('This export is too large for a browser session. Choose a shorter cycle or export tracks separately.');
   if(sched.playing)stop();releaseTouch();stopLoopPreview();sched.bouncing=true;bounceCancel=false;$('#exportModal').hidden=true;$('#bounce').hidden=false;$('#bounce h2').textContent=kind==='stems'?'Rendering multitrack stems':'Rendering your WAV';$('#bounce p').textContent='Rendering instruments and effects offline. Keep this tab open. Your microphone is never included.';$('#bounceBar').style.width='5%';
   try{
-    const channelEffects=$('#exportChannels').value!=='dry',masterProcessing=$('#exportMaster').checked&&channelEffects,options={sampleRate:rate,start,end,channelEffects,masterProcessing},files=[];
+    const channelEffects=$('#exportChannels').value!=='dry',masterProcessing=$('#exportMaster').checked&&channelEffects,options={sampleRate:rate,start,end,channelEffects,masterProcessing,onProgress:f=>{$('#bounceBar').style.width=(5+90*f)+'%';}},files=[];
     if(kind==='stems'){
-      for(let i=0;i<tracks.length;i++){if(bounceCancel)break;$('#bounce p').textContent=`Rendering ${i+1} of ${tracks.length}: ${tracks[i].name}`;const buffer=await renderOffline([tracks[i]],options);if(bounceCancel)break;files.push({name:`${String(i+1).padStart(2,'0')}-${fileSafe(tracks[i].name)}.wav`,data:AuraCore.wavBytes(buffer,bits)});$('#bounceBar').style.width=(5+90*(i+1)/tracks.length)+'%';}
+      for(let i=0;i<tracks.length;i++){if(bounceCancel)break;$('#bounce p').textContent=`Rendering ${i+1} of ${tracks.length}: ${tracks[i].name}`;const buffer=await renderOffline([tracks[i]],{...options,onProgress:f=>{$('#bounceBar').style.width=(5+90*(i+f)/tracks.length)+'%';}});if(bounceCancel)break;files.push({name:`${String(i+1).padStart(2,'0')}-${fileSafe(tracks[i].name)}.wav`,data:AuraCore.wavBytes(buffer,bits)});$('#bounceBar').style.width=(5+90*(i+1)/tracks.length)+'%';}
       if(!bounceCancel){files.push({name:'README.txt',data:new TextEncoder().encode(`Aura Studio — ${state.title}\n${state.bpm} BPM. ${rate} Hz, ${bits}-bit PCM WAV.\nAll files begin at the same export position and include a 3-second effect tail.\nChannel processing: ${channelEffects?'included':'bypassed (pre-fader)'}. Master compression/limiting: ${masterProcessing?'included':'bypassed'}.\nSumming processed stems can differ from the full mix when master dynamics are enabled.\nMuted tracks and tracks excluded by solo are omitted.\n`)});await offerFile(fileSafe(state.title)+'-stems.zip',new Blob([AuraCore.zipBytes(files)],{type:'application/zip'}));}
     }else{
       const buffer=await renderOffline(tracks,options);if(!bounceCancel){$('#bounceBar').style.width='95%';await offerFile(fileSafe(state.title)+'.wav',new Blob([AuraCore.wavBytes(buffer,bits)],{type:'audio/wav'}));}
