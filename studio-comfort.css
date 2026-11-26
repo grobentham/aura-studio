@@ -1,0 +1,35 @@
+/* Comfortable hit targets: at least ~30px with a mouse, ~40-44px on touch screens. Loaded last. */
+.aura-ui .thdr .ms,.trow .ms{min-width:30px;min-height:30px}
+.trow .xbtn{min-width:28px;min-height:28px}
+.trow select{min-height:26px}
+.instrument-categories button{min-height:30px}
+.aura-ui .sound-favorite{min-width:30px;min-height:30px}
+#closeLibrary,.inspector-heading button,#editorBar .icon-button,.icon-button{min-width:30px;min-height:30px}
+#addTrack{min-height:28px}
+#helpButton{min-height:24px}
+#midiConnect,#fitArrangement{min-height:30px}
+#transportBar .count-in-label select{min-height:24px}
+@media (pointer:coarse){
+  .aura-ui .thdr .ms,.trow .ms{min-width:40px;min-height:40px}
+  .trow .xbtn{min-width:36px;min-height:36px}
+  .trow select{min-height:34px}
+  .instrument-categories button,#addTrack,#midiConnect,#fitArrangement{min-height:40px}
+  .aura-ui .sound-favorite,#closeLibrary,.inspector-heading button,#editorBar .icon-button,.icon-button{min-width:40px;min-height:40px}
+  #helpButton{min-height:32px}
+  #transportBar .count-in-label select{min-height:32px}
+  .production-dialog button,.wide-dialog button{min-height:44px}
+}
+/* Track options menu: shown instead of M / S / × on phones */
+.tmore{display:none}
+.track-menu{position:fixed;z-index:400;min-width:180px;padding:6px;border:1px solid #3b3e48;border-radius:12px;background:#1d2028;box-shadow:0 12px 32px #0009;display:flex;flex-direction:column;gap:2px}
+.track-menu strong{padding:6px 10px 4px;font-size:12px;color:#9597a2;font-weight:600}
+.track-menu button{min-height:44px;text-align:left;padding:0 12px;border:0;background:transparent;border-radius:8px;font-size:14px}
+.track-menu button.on{color:#f4ca8d}
+.track-menu button:hover,.track-menu button:focus-visible{background:#2a2e38}
+@media (max-width:800px) and (pointer:coarse){
+  .aura-ui .thdr .trow .ms,.aura-ui .thdr .trow .xbtn{display:none}
+  .tmore{display:inline-flex;align-items:center;justify-content:center;min-width:40px;min-height:40px;padding:0;font-size:20px;border-radius:8px;flex:0 0 auto}
+  .thdr .trow:first-child .tname{flex:1;min-width:0}
+  .thdr.is-muted .tname{opacity:.45;text-decoration:line-through}
+  .thdr.is-solo .tname{color:#f4ca8d}
+}
