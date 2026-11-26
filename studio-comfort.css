@@ -54,3 +54,9 @@ body.simple-mode .transport-signature,body.simple-mode #recordingBadge,body.simp
   .aura-ui #homeButton{font-size:0;padding:0 10px;min-width:40px}
   .aura-ui #homeButton:before{content:'⌂';font-size:18px}
 }
+/* Backups & sync */
+.backup-section{margin:0 0 14px;padding:12px 14px;border:1px solid #343a46;border-radius:12px;background:#1b1f27}
+.backup-section h4{margin:0 0 4px}.backup-section p{margin:0 0 10px}
+.backup-reminder{position:fixed;left:50%;bottom:calc(40px + env(safe-area-inset-bottom));transform:translateX(-50%);z-index:350;display:flex;align-items:center;gap:10px;flex-wrap:wrap;justify-content:center;max-width:calc(100vw - 24px);padding:10px 12px;border:1px solid #e2aa64;border-radius:12px;background:#231f17;color:#f1e4cc;box-shadow:0 10px 30px #0008;font-size:13px}
+.backup-reminder button{min-height:36px}
+@media(max-width:800px){.backup-reminder{bottom:calc(70px + env(safe-area-inset-bottom))}}
