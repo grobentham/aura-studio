@@ -33,3 +33,9 @@
   .thdr.is-muted .tname{opacity:.45;text-decoration:line-through}
   .thdr.is-solo .tname{color:#f4ca8d}
 }
+/* Simple view */
+.aura-ui .acoustic-demo,.acoustic-demo{display:none}
+.view-mode-toggle{white-space:nowrap}
+body.simple-mode #midiConnect,body.simple-mode #fitArrangement,body.simple-mode #inspectorToggle,body.simple-mode #workspacePreset,
+body.simple-mode .transport-signature,body.simple-mode #recordingBadge,body.simple-mode #studioFooter .footer-shortcuts{display:none!important}
+@media(max-width:800px){#viewModeToggle{display:none}}
