@@ -939,7 +939,7 @@ function init(){
   window.addEventListener('resize',()=>{renderArrange();});
   let saved=null;try{saved=JSON.parse(localStorage.getItem('aura-studio-v1')||'null');}catch(e){}
   if(saved&&Array.isArray(saved.tracks)&&saved.tracks.length){state=Object.assign(newState(),saved,{pos:0});for(const t of state.tracks)t.regions=t.regions.filter(r=>t.type!=='audio'||true);view.selTrack=state.tracks[0].id;const f=state.tracks.find(t=>t.regions.length&&t.type!=='audio');if(f){view.selTrack=f.id;view.selRegion=f.regions[0].id;}renderAll(true);}
-  else{state=newState();loadStarter('Lo-fi Sunday');}
+  else{state=newState();loadStarter('Lo-fi Sunday');window.auraFreshStart=true;}
   requestAnimationFrame(frame);}
 /* Workspace extension. Uses the original sequencer and audio graph. */
 let offerFile;
@@ -1032,7 +1032,7 @@ initStudio();
 <script src="audio-channel-core.js?v=3"></script>
 <script src="routing-core.js?v=1"></script>
 <script src="track-alignment-core.js?v=1"></script>
-<script src="studio-pro.js?v=20261126-core10"></script>
+<script src="studio-pro.js?v=20261126-core11"></script>
 <script src="instrument-catalog.js?v=20261125-recorded2"></script>
 <script src="instruments.js?v=20261125-recorded2"></script>
 <script src="studio-ui.js"></script>
@@ -1091,7 +1091,7 @@ initStudio();
 <script src="studio-songbook.js?v=3"></script>
 <script src="studio-tour.js?v=2"></script>
 <script src="studio-sound-upgrades.js?v=1"></script>
-<script src="studio-countdown.js?v=1"></script>
-<script src="studio-starters.js?v=1"></script>
+<script src="studio-countdown.js?v=2"></script>
+<script src="studio-starters.js?v=2"></script>
 </body>
 </html>

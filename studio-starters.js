@@ -4,12 +4,12 @@
   const SB=AuraSongbook;
   const LIST=[
     {name:'Lo-fi Sunday',song:'st-lofi',genre:'lofi',desc:'Dreamy keys · lazy swing · catchy hook'},
-    {name:'Trap Night',song:'st-trap',genre:'trap',desc:'808s · rolling hats · dark bell hook'},
+    {name:'Trap Night',song:'st-trap',genre:'trap',desc:'808s · rolling hats · piano hook'},
     {name:'Deep House',song:'st-house',genre:'house',desc:'Four on the floor · plucky hook'},
     {name:'Night Drive',song:'st-synth',genre:'synthwave',desc:'Neon arps · soaring synth lead'},
     {name:'Acoustic Morning',song:'st-acoustic',genre:'acoustic',desc:'Real guitar · double bass · clarinet'},
     {name:'Epic Rise',song:'st-epic',genre:'cinematic',desc:'Real strings · horns · big drums'},
-    {name:'Summer Heat',song:'st-reggaeton',genre:'reggaeton',desc:'Dembow groove · warm keys · hook'},
+    {name:'Summer Heat',song:'st-reggaeton',genre:'reggaeton',desc:'Dembow groove · marimba hook'},
   ];
 
   // Replace every built-in starter, drop the retired song study, keep "Empty project".
@@ -23,6 +23,8 @@
   }
   const empty=STARTERS['Empty project'];delete STARTERS['Empty project'];STARTERS['Empty project']=empty;
   window.AuraStarters=LIST;
+  // A first visit opens before these starters load: swap in the new Lo-fi Sunday so newcomers hear it.
+  if(window.auraFreshStart&&state.title==='Lo-fi Sunday'){loadStarter('Lo-fi Sunday');window.auraFreshStart=false;}
 
   // Menus and Projects cards
   function fillSelect(id,placeholder){const el=document.getElementById(id);if(!el)return;const keep=el.value;el.replaceChildren(h('option',{value:''},placeholder),...Object.keys(STARTERS).map(k=>h('option',{value:k},k)));el.value=STARTERS[keep]?keep:'';}
