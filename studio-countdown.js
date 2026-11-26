@@ -34,7 +34,7 @@
   const stopBeforeCountdown=stop;stop=function(){hide();$('#bPlay')?.classList.remove('counting');stopBeforeCountdown();};
 
   // Setting, next to the recording count-in.
-  const select=mkSelect([['0','Off'],['4','1 bar'],['8','2 bars']],String(beats),v=>{beats=Number(v);try{localStorage.setItem(KEY,String(beats));}catch(e){}toast(beats?`Play now counts down ${beats===4?'1 bar':'2 bars'} first.`:'Play starts straight away.');},{id:'playCountdownSelect','aria-label':'Countdown before playback'});
+  const select=mkSelect([['0','Countdown off'],['4','Countdown · 1 bar'],['8','Countdown · 2 bars']],String(beats),v=>{beats=Number(v);try{localStorage.setItem(KEY,String(beats));}catch(e){}toast(beats?`Play now counts down ${beats===4?'1 bar':'2 bars'} first.`:'Play starts straight away.');},{id:'playCountdownSelect','aria-label':'Countdown before playback'});
   const label=h('label',{class:'count-in-label play-countdown-label',title:'Count down with clicks before playback starts'},'Play countdown',select);
   const options=document.querySelector('#transportBar .transport-options');
   if(options)options.prepend(label);else $('.transport')?.append(label);

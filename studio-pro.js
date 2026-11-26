@@ -375,8 +375,9 @@ const RETIRED_TITLES=new Set(['My Moon My Man · Instrumental study','My Moon My
 const isRetiredTitle=t=>RETIRED_TITLES.has(t)||/my moon my man/i.test(t||'');
 async function retireOldStudies(){for(const p of await projectRead('projects'))if(!p.trashed&&isRetiredTitle(p.data?.title)){p.trashed=true;await projectWrite(p);}}
 (async()=>{
-  try{await retireOldStudies();}catch(e){}
+  // Wait for every script (starters included) before restoring or saving the first project.
   if(document.readyState==='loading')await new Promise(r=>document.addEventListener('DOMContentLoaded',r,{once:true}));
+  try{await retireOldStudies();}catch(e){}
   if(isRetiredTitle(state.title)&&typeof loadStarter==='function'&&STARTERS['Epic Rise']){activeProjectId=crypto.randomUUID();loadStarter('Epic Rise');}
   try{const stored=await projectRead('projects',activeProjectId);if(stored&&!stored.trashed){applyProject(stored.data);projectVersions.set(stored.id,stored.updated);projectFingerprints.set(stored.id,JSON.stringify({...JSON.parse(snapshot()),pos:0}));await restoreAudioAssets();}else activeProjectId=crypto.randomUUID();
     projectReady=true;save();await flushProject();
